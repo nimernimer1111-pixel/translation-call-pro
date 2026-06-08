@@ -1271,8 +1271,17 @@ function startRecording() {
     }
   };
 
-  recognition.onend = () => { stopRecording(); };
-
+recognition.onend = () => {
+  if (isRecording) {
+    try {
+      recognition.start();
+    } catch(e) {
+      stopRecording();
+    }
+  } else {
+    stopRecording();
+  }
+};
   try { recognition.start(); } catch(e) { stopRecording(); }
 }
 
