@@ -1816,6 +1816,11 @@ function checkAutoJoin(){
 // Init
 // ============================================
 window.onload = ()=>{
+  // أضف هذا أولاً
+  document.addEventListener('click', () => {
+    if(!audioActivated) activateAudio();
+  }, { once:true });
+
   // Load voices
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
