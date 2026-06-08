@@ -6,7 +6,6 @@
 <title>TranslationCall Pro</title>
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <style>
-/* ===== Reset & Base ===== */
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --primary:#6366f1;
@@ -32,24 +31,15 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
-
-/* ===== Background ===== */
 .bg-effects{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.bg-blob{
-  position:absolute;border-radius:50%;
-  filter:blur(100px);opacity:0.2;
-}
+.bg-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.2;}
 .blob1{width:700px;height:700px;background:var(--primary);top:-300px;right:-300px;animation:blob 20s ease-in-out infinite;}
 .blob2{width:600px;height:600px;background:var(--secondary);bottom:-200px;left:-200px;animation:blob 25s ease-in-out infinite reverse;}
 .blob3{width:400px;height:400px;background:var(--warning);top:50%;left:50%;animation:blob 15s ease-in-out infinite 5s;}
 @keyframes blob{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-30px) scale(1.1);}66%{transform:translate(-20px,20px) scale(0.9);};}
-
-/* ===== Layout ===== */
 .page{display:none;min-height:100vh;flex-direction:column;}
 .page.active{display:flex;}
 .container{position:relative;z-index:1;width:100%;max-width:1000px;margin:0 auto;padding:0 20px;}
-
-/* ===== Header ===== */
 header{
   position:sticky;top:0;z-index:100;
   background:rgba(15,23,42,0.85);
@@ -79,8 +69,6 @@ header{
 .status-dot{width:9px;height:9px;border-radius:50%;background:var(--danger);transition:all 0.3s;}
 .status-dot.connected{background:var(--secondary);box-shadow:0 0 8px var(--secondary);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.3);};}
-
-/* ===== Cards ===== */
 .card{
   background:rgba(30,41,59,0.85);
   backdrop-filter:blur(20px);
@@ -91,211 +79,66 @@ header{
   transition:all 0.3s;
 }
 .card:hover{border-color:rgba(99,102,241,0.2);}
-.card-title{
-  font-size:0.78rem;color:var(--text-muted);
-  text-transform:uppercase;letter-spacing:1.5px;
-  margin-bottom:18px;display:flex;align-items:center;gap:8px;
-}
-
-/* ===== Buttons ===== */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:13px 24px;border-radius:var(--radius-sm);border:none;
-  font-size:0.95rem;font-weight:600;cursor:pointer;
-  transition:all 0.3s;text-decoration:none;
-}
+.card-title{font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border-radius:var(--radius-sm);border:none;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;}
 .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;}
 .btn-primary{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;box-shadow:0 4px 15px rgba(99,102,241,0.4);}
 .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 25px rgba(99,102,241,0.5);}
 .btn-secondary{background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;box-shadow:0 4px 15px rgba(16,185,129,0.4);}
-.btn-secondary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 25px rgba(16,185,129,0.5);}
+.btn-secondary:hover:not(:disabled){transform:translateY(-2px);}
 .btn-danger{background:linear-gradient(135deg,var(--danger),#f97316);color:white;}
-.btn-danger:hover:not(:disabled){transform:translateY(-2px);}
-.btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--border);}
-.btn-ghost:hover{background:rgba(255,255,255,0.1);}
 .btn-full{width:100%;}
 .btn-lg{padding:16px 32px;font-size:1.05rem;}
 .btn-sm{padding:8px 16px;font-size:0.82rem;}
-.btn-icon{width:44px;height:44px;padding:0;border-radius:50%;}
-
-/* ===== Inputs ===== */
-.input{
-  width:100%;padding:13px 16px;
-  background:rgba(0,0,0,0.25);
-  border:2px solid rgba(255,255,255,0.08);
-  border-radius:var(--radius-sm);
-  color:var(--text);font-size:0.95rem;
-  transition:all 0.3s;
-}
+.input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.95rem;transition:all 0.3s;}
 .input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.15);}
 .input::placeholder{color:var(--text-muted);}
-.input-code{
-  text-align:center;font-size:1.8rem;font-weight:700;
-  letter-spacing:0.3em;text-transform:uppercase;
-}
+.input-code{text-align:center;font-size:1.8rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;}
 .input-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .input-group label{font-size:0.82rem;color:var(--text-secondary);font-weight:500;}
-
-/* ===== Toggle ===== */
 .toggle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
 .toggle-label{font-size:0.9rem;color:var(--text-secondary);}
-.toggle{
-  width:48px;height:26px;
-  background:rgba(255,255,255,0.1);
-  border-radius:13px;position:relative;cursor:pointer;transition:all 0.3s;
-}
+.toggle{width:48px;height:26px;background:rgba(255,255,255,0.1);border-radius:13px;position:relative;cursor:pointer;transition:all 0.3s;}
 .toggle.on{background:var(--primary);}
-.toggle-thumb{
-  width:20px;height:20px;background:white;border-radius:50%;
-  position:absolute;top:3px;left:3px;transition:all 0.3s;
-  box-shadow:0 2px 4px rgba(0,0,0,0.3);
-}
+.toggle-thumb{width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:3px;left:3px;transition:all 0.3s;box-shadow:0 2px 4px rgba(0,0,0,0.3);}
 .toggle.on .toggle-thumb{left:25px;}
-
-/* ===== Landing Page ===== */
-#landing{
-  background:transparent;
-}
-.hero{
-  text-align:center;
-  padding:60px 20px 40px;
-}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 18px;
-  background:rgba(99,102,241,0.1);
-  border:1px solid rgba(99,102,241,0.25);
-  border-radius:20px;color:#a5b4fc;font-size:0.82rem;
-  margin-bottom:25px;
-}
-.hero h1{
-  font-size:3.2rem;font-weight:800;line-height:1.15;
-  margin-bottom:18px;
-}
+.hero{text-align:center;padding:60px 20px 40px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:20px;color:#a5b4fc;font-size:0.82rem;margin-bottom:25px;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:18px;}
 .hero h1 .grad1{background:linear-gradient(135deg,var(--primary),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero h1 .grad2{background:linear-gradient(135deg,var(--secondary),#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero p{color:var(--text-secondary);font-size:1.1rem;line-height:1.7;margin-bottom:30px;max-width:600px;margin-left:auto;margin-right:auto;}
 .hero-features{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
-.feat-tag{
-  display:flex;align-items:center;gap:7px;
-  padding:8px 16px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:20px;color:var(--text-secondary);font-size:0.82rem;
-}
-.feat-tag span:first-child{font-size:1rem;}
-
-/* ===== Action Cards ===== */
-.action-section{
-  display:grid;grid-template-columns:1fr 1fr;gap:20px;
-  padding:0 20px 40px;
-}
-@media(max-width:700px){
-  .action-section{grid-template-columns:1fr;}
-  .hero h1{font-size:2rem;}
-}
-.action-card{
-  background:rgba(30,41,59,0.85);
-  backdrop-filter:blur(20px);
-  border-radius:20px;padding:28px;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  transition:all 0.3s;
-}
+.feat-tag{display:flex;align-items:center;gap:7px;padding:8px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;color:var(--text-secondary);font-size:0.82rem;}
+.action-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:0 20px 40px;}
+@media(max-width:700px){.action-section{grid-template-columns:1fr;}.hero h1{font-size:2rem;}}
+.action-card{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:20px;padding:28px;border:1px solid var(--border);box-shadow:var(--shadow);transition:all 0.3s;}
 .action-card:hover{transform:translateY(-4px);border-color:rgba(99,102,241,0.25);}
 .action-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
-.action-icon{
-  width:52px;height:52px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;font-size:22px;
-}
+.action-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;}
 .icon-create{background:linear-gradient(135deg,var(--primary),#8b5cf6);}
 .icon-join{background:linear-gradient(135deg,var(--secondary),#14b8a6);}
 .action-header h3{font-size:1.1rem;font-weight:700;margin-bottom:3px;}
 .action-header p{font-size:0.82rem;color:var(--text-muted);}
-
-/* Language Select */
-.lang-select{
-  width:100%;padding:11px 14px;
-  background:rgba(0,0,0,0.25);
-  border:2px solid rgba(255,255,255,0.08);
-  border-radius:var(--radius-sm);
-  color:var(--text);font-size:0.92rem;cursor:pointer;
-  transition:all 0.3s;margin-bottom:16px;
-  appearance:none;
-}
+.lang-select{width:100%;padding:11px 14px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.92rem;cursor:pointer;transition:all 0.3s;margin-bottom:16px;appearance:none;}
 .lang-select:focus{outline:none;border-color:var(--primary);}
 .lang-select option{background:#1e293b;}
-
-/* ===== Room Page ===== */
-#room-page{background:transparent;}
-.room-layout{
-  display:grid;grid-template-columns:1fr 380px;gap:20px;
-  padding:20px;max-width:1200px;margin:0 auto;
-}
-@media(max-width:900px){
-  .room-layout{grid-template-columns:1fr;}
-}
-
-/* Room Header */
-.room-header{
-  background:rgba(30,41,59,0.85);
-  backdrop-filter:blur(20px);
-  padding:15px 25px;
-  display:flex;justify-content:space-between;align-items:center;
-  border-bottom:1px solid var(--border);
-  position:sticky;top:65px;z-index:50;
-}
-.room-code-display{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 16px;
-  background:rgba(0,0,0,0.2);
-  border-radius:10px;cursor:pointer;
-  transition:all 0.2s;
-  border:1px solid var(--border);
-}
+.room-layout{display:grid;grid-template-columns:1fr 380px;gap:20px;padding:20px;max-width:1200px;margin:0 auto;}
+@media(max-width:900px){.room-layout{grid-template-columns:1fr;}}
+.room-header{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);padding:15px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:65px;z-index:50;}
+.room-code-display{display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(0,0,0,0.2);border-radius:10px;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);}
 .room-code-display:hover{background:rgba(0,0,0,0.35);}
 .room-code-display span{font-size:0.78rem;color:var(--text-muted);}
 .room-code-display strong{font-size:1.15rem;letter-spacing:0.15em;color:var(--primary);}
-.copy-icon{font-size:0.9rem;color:var(--text-muted);}
-
-/* ===== Participants ===== */
-.participants-row{
-  display:flex;align-items:center;gap:15px;
-  background:rgba(30,41,59,0.85);
-  backdrop-filter:blur(20px);
-  border-radius:var(--radius);
-  padding:20px;
-  border:1px solid var(--border);
-  margin-bottom:15px;
-}
-.participant{
-  flex:1;display:flex;align-items:center;gap:12px;
-  padding:12px;background:rgba(0,0,0,0.2);
-  border-radius:var(--radius-sm);
-  border:2px solid transparent;
-  transition:all 0.3s;
-}
+.participants-row{display:flex;align-items:center;gap:15px;background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);padding:20px;border:1px solid var(--border);margin-bottom:15px;}
+.participant{flex:1;display:flex;align-items:center;gap:12px;padding:12px;background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);border:2px solid transparent;transition:all 0.3s;}
 .participant.me{border-color:var(--primary);}
 .participant.partner{border-color:var(--secondary);}
-.participant.speaking{
-  animation:speaking-glow 1s infinite;
-}
-@keyframes speaking-glow{
-  0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.4);}
-  50%{box-shadow:0 0 15px 3px rgba(99,102,241,0.4);}
-}
-.participant.partner.speaking{
-  animation:speaking-glow-green 1s infinite;
-}
-@keyframes speaking-glow-green{
-  0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.4);}
-  50%{box-shadow:0 0 15px 3px rgba(16,185,129,0.4);}
-}
-.p-avatar{
-  width:48px;height:48px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;font-weight:700;color:white;flex-shrink:0;
-}
+.participant.speaking{animation:speaking-glow 1s infinite;}
+@keyframes speaking-glow{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.4);}50%{box-shadow:0 0 15px 3px rgba(99,102,241,0.4);};}
+.participant.partner.speaking{animation:speaking-glow-green 1s infinite;}
+@keyframes speaking-glow-green{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.4);}50%{box-shadow:0 0 15px 3px rgba(16,185,129,0.4);};}
+.p-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0;}
 .p-avatar.me-av{background:linear-gradient(135deg,var(--primary),#8b5cf6);}
 .p-avatar.partner-av{background:linear-gradient(135deg,var(--secondary),#14b8a6);}
 .p-avatar.waiting-av{background:var(--bg-elevated);color:var(--text-muted);}
@@ -306,70 +149,22 @@ header{
 .p-status.host{background:rgba(99,102,241,0.15);color:#a5b4fc;}
 .p-status.online{background:rgba(16,185,129,0.15);color:#34d399;}
 .p-status.waiting{background:rgba(100,116,139,0.15);color:var(--text-muted);}
-.connection-arrow{
-  font-size:1.5rem;color:var(--text-muted);flex-shrink:0;
-  animation:arrow-pulse 2s infinite;
-}
+.connection-arrow{font-size:1.5rem;color:var(--text-muted);flex-shrink:0;animation:arrow-pulse 2s infinite;}
 @keyframes arrow-pulse{0%,100%{opacity:0.5;}50%{opacity:1;};}
-
-/* ===== Mic Controls ===== */
-.mic-section{
-  display:flex;flex-direction:column;align-items:center;
-  gap:16px;padding:20px 0;
-}
-.mic-ring{
-  position:relative;
-  width:100px;height:100px;
-  display:flex;align-items:center;justify-content:center;
-}
-.mic-ring::before{
-  content:'';
-  position:absolute;inset:-8px;border-radius:50%;
-  border:2px solid var(--primary);opacity:0;
-  transition:all 0.3s;
-}
-.mic-ring.active::before{
-  opacity:1;
-  animation:ring-pulse 1.5s infinite;
-}
-@keyframes ring-pulse{
-  0%{transform:scale(1);opacity:1;}
-  100%{transform:scale(1.3);opacity:0;}
-}
-.mic-btn{
-  width:90px;height:90px;border-radius:50%;border:none;
-  background:linear-gradient(135deg,var(--primary),#8b5cf6);
-  color:white;font-size:2rem;cursor:pointer;
-  transition:all 0.3s;
-  box-shadow:0 8px 25px rgba(99,102,241,0.4);
-  display:flex;align-items:center;justify-content:center;
-}
-.mic-btn:hover{transform:scale(1.08);box-shadow:0 12px 35px rgba(99,102,241,0.5);}
-.mic-btn.recording{
-  background:linear-gradient(135deg,var(--danger),#f97316);
-  box-shadow:0 8px 25px rgba(239,68,68,0.5);
-  animation:recording-pulse 1.2s infinite;
-}
-@keyframes recording-pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.06);}
-  100%{transform:scale(1);}
-}
-.mic-btn:disabled{
-  background:var(--bg-elevated);
-  box-shadow:none;cursor:not-allowed;opacity:0.6;
-}
+.mic-section{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 0;}
+.mic-ring{position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center;}
+.mic-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--primary);opacity:0;transition:all 0.3s;}
+.mic-ring.active::before{opacity:1;animation:ring-pulse 1.5s infinite;}
+@keyframes ring-pulse{0%{transform:scale(1);opacity:1;}100%{transform:scale(1.3);opacity:0;};}
+.mic-btn{width:90px;height:90px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:2rem;cursor:pointer;transition:all 0.3s;box-shadow:0 8px 25px rgba(99,102,241,0.4);display:flex;align-items:center;justify-content:center;}
+.mic-btn:hover{transform:scale(1.08);}
+.mic-btn.recording{background:linear-gradient(135deg,var(--danger),#f97316);box-shadow:0 8px 25px rgba(239,68,68,0.5);animation:recording-pulse 1.2s infinite;}
+@keyframes recording-pulse{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);};}
+.mic-btn:disabled{background:var(--bg-elevated);box-shadow:none;cursor:not-allowed;opacity:0.6;}
 .mic-label{font-size:0.88rem;color:var(--text-secondary);}
-.visualizer{
-  display:flex;align-items:center;gap:4px;
-  height:40px;opacity:0;transition:opacity 0.3s;
-}
+.visualizer{display:flex;align-items:center;gap:4px;height:40px;opacity:0;transition:opacity 0.3s;}
 .visualizer.active{opacity:1;}
-.vbar{
-  width:4px;border-radius:2px;
-  background:linear-gradient(var(--primary),var(--secondary));
-  animation:vwave 0.5s ease-in-out infinite;
-}
+.vbar{width:4px;border-radius:2px;background:linear-gradient(var(--primary),var(--secondary));animation:vwave 0.5s ease-in-out infinite;}
 .vbar:nth-child(1){height:10px;animation-delay:0s;}
 .vbar:nth-child(2){height:15px;animation-delay:0.1s;}
 .vbar:nth-child(3){height:10px;animation-delay:0.2s;}
@@ -378,100 +173,33 @@ header{
 .vbar:nth-child(6){height:15px;animation-delay:0.3s;}
 .vbar:nth-child(7){height:10px;animation-delay:0.2s;}
 @keyframes vwave{0%,100%{transform:scaleY(1);}50%{transform:scaleY(3);};}
-
-/* ===== Results ===== */
 .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.result-box{
-  background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);
-  padding:15px;border:1px solid transparent;
-  transition:all 0.3s;min-height:90px;
-}
+.result-box{background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);padding:15px;border:1px solid transparent;transition:all 0.3s;min-height:90px;}
 .result-box.has-content{border-color:rgba(99,102,241,0.2);}
-.result-box h5{
-  font-size:0.72rem;color:var(--text-muted);
-  text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;
-}
+.result-box h5{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 .result-box.original h5{color:var(--primary);}
 .result-box.translated h5{color:var(--secondary);}
 .result-box p{font-size:0.95rem;line-height:1.6;color:var(--text);}
 .result-box.translated p{color:#34d399;}
-.result-actions{
-  display:flex;gap:6px;margin-top:8px;
-}
-.mini-btn{
-  padding:4px 10px;border-radius:6px;font-size:0.72rem;
-  border:1px solid var(--border);background:rgba(255,255,255,0.04);
-  color:var(--text-muted);cursor:pointer;transition:all 0.2s;
-}
+.result-actions{display:flex;gap:6px;margin-top:8px;}
+.mini-btn{padding:4px 10px;border-radius:6px;font-size:0.72rem;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-muted);cursor:pointer;transition:all 0.2s;}
 .mini-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);}
-
-/* ===== Controls Bar ===== */
-.controls-bar{
-  display:flex;justify-content:center;align-items:center;gap:12px;
-  padding:15px;
-  background:rgba(30,41,59,0.85);
-  backdrop-filter:blur(20px);
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-}
-.ctrl-btn{
-  width:48px;height:48px;border-radius:50%;border:none;
-  background:rgba(255,255,255,0.07);color:var(--text);
-  font-size:1.2rem;cursor:pointer;transition:all 0.2s;
-  display:flex;align-items:center;justify-content:center;
-}
+.controls-bar{display:flex;justify-content:center;align-items:center;gap:12px;padding:15px;background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);}
+.ctrl-btn{width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,0.07);color:var(--text);font-size:1.2rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
 .ctrl-btn:hover{background:rgba(255,255,255,0.12);transform:scale(1.08);}
 .ctrl-btn.off{background:rgba(239,68,68,0.15);color:var(--danger);}
-.ctrl-btn.active{background:var(--primary);color:white;}
-.leave-btn{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 20px;border-radius:25px;border:none;
-  background:rgba(239,68,68,0.12);color:var(--danger);
-  font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.3s;
-  border:1px solid rgba(239,68,68,0.2);
-}
+.leave-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:25px;border:none;background:rgba(239,68,68,0.12);color:var(--danger);font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.3s;border:1px solid rgba(239,68,68,0.2);}
 .leave-btn:hover{background:var(--danger);color:white;}
-
-/* ===== Right Panel ===== */
 .right-panel{display:flex;flex-direction:column;gap:15px;}
-
-/* Transcript */
-.transcript-panel{
-  background:rgba(30,41,59,0.85);
-  backdrop-filter:blur(20px);
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-  overflow:hidden;
-  max-height:350px;
-  display:flex;flex-direction:column;
-}
-.panel-head{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 18px;
-  background:rgba(0,0,0,0.15);
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
+.transcript-panel{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;max-height:350px;display:flex;flex-direction:column;}
+.panel-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);flex-shrink:0;}
 .panel-head h4{font-size:0.85rem;display:flex;align-items:center;gap:7px;}
 .panel-head-actions{display:flex;gap:6px;}
-.panel-head-actions button{
-  width:30px;height:30px;border-radius:8px;
-  border:none;background:rgba(255,255,255,0.05);
-  color:var(--text-muted);cursor:pointer;font-size:0.85rem;
-  transition:all 0.2s;display:flex;align-items:center;justify-content:center;
-}
+.panel-head-actions button{width:30px;height:30px;border-radius:8px;border:none;background:rgba(255,255,255,0.05);color:var(--text-muted);cursor:pointer;font-size:0.85rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
 .panel-head-actions button:hover{background:rgba(255,255,255,0.1);color:var(--text);}
 .messages{flex:1;overflow-y:auto;padding:12px;}
-.msg{
-  background:rgba(0,0,0,0.2);
-  border-radius:10px;padding:12px;
-  margin-bottom:10px;
-  border-right:3px solid var(--primary);
-  animation:msg-in 0.3s ease;
-}
+.msg{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px;margin-bottom:10px;border-right:3px solid var(--primary);animation:msg-in 0.3s ease;}
 .msg.partner{border-right-color:var(--secondary);}
-[dir="ltr"] .msg{border-right:none;border-left:3px solid var(--primary);}
-[dir="ltr"] .msg.partner{border-left-color:var(--secondary);}
 @keyframes msg-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);};}
 .msg-header{display:flex;justify-content:space-between;margin-bottom:7px;}
 .msg-sender{font-size:0.78rem;font-weight:600;color:var(--primary);}
@@ -480,135 +208,64 @@ header{
 .msg-original{font-size:0.88rem;color:var(--text);margin-bottom:5px;}
 .msg-translated{font-size:0.85rem;color:#34d399;font-style:italic;}
 .empty-msgs{text-align:center;padding:30px;color:var(--text-muted);font-size:0.88rem;}
-
-/* AI Panel */
-.ai-panel{
-  background:rgba(30,41,59,0.85);
-  backdrop-filter:blur(20px);
-  border-radius:var(--radius);
-  border:1px solid rgba(99,102,241,0.2);
-  overflow:hidden;
-  max-height:400px;
-  display:flex;flex-direction:column;
-}
+.ai-panel{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid rgba(99,102,241,0.2);overflow:hidden;max-height:400px;display:flex;flex-direction:column;}
 .ai-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
-.ai-bubble{
-  max-width:85%;padding:10px 14px;border-radius:12px;font-size:0.88rem;line-height:1.5;
-}
-.ai-bubble.user{
-  background:linear-gradient(135deg,var(--primary),#8b5cf6);
-  color:white;align-self:flex-end;border-radius:12px 12px 3px 12px;
-}
-.ai-bubble.bot{
-  background:rgba(255,255,255,0.06);color:var(--text);
-  border-radius:12px 12px 12px 3px;
-  border:1px solid var(--border);
-}
-.ai-bubble.tip{
-  background:rgba(245,158,11,0.1);color:#fbbf24;
-  border:1px solid rgba(245,158,11,0.2);font-size:0.82rem;
-}
-.ai-typing{
-  display:none;align-items:center;gap:4px;
-  padding:10px 14px;background:rgba(255,255,255,0.06);
-  border-radius:12px;width:fit-content;
-}
+.ai-bubble{max-width:85%;padding:10px 14px;border-radius:12px;font-size:0.88rem;line-height:1.5;}
+.ai-bubble.user{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;align-self:flex-end;border-radius:12px 12px 3px 12px;}
+.ai-bubble.bot{background:rgba(255,255,255,0.06);color:var(--text);border-radius:12px 12px 12px 3px;border:1px solid var(--border);}
+.ai-bubble.tip{background:rgba(245,158,11,0.1);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);font-size:0.82rem;}
+.ai-typing{display:none;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:12px;width:fit-content;}
 .ai-typing.show{display:flex;}
-.ai-typing span{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--text-muted);animation:typing 1.4s infinite;
-}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:typing 1.4s infinite;}
 .ai-typing span:nth-child(2){animation-delay:0.2s;}
 .ai-typing span:nth-child(3){animation-delay:0.4s;}
 @keyframes typing{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);};}
-.ai-input-area{
-  padding:12px;border-top:1px solid var(--border);
-  display:flex;gap:8px;flex-shrink:0;
-}
-.ai-input-area input{
-  flex:1;padding:10px 14px;
-  background:rgba(0,0,0,0.25);
-  border:1px solid var(--border);
-  border-radius:10px;color:var(--text);font-size:0.88rem;
-}
+.ai-input-area{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.ai-input-area input{flex:1;padding:10px 14px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.88rem;}
 .ai-input-area input:focus{outline:none;border-color:var(--primary);}
-.ai-send-btn{
-  width:38px;height:38px;border-radius:10px;border:none;
-  background:linear-gradient(135deg,var(--primary),#8b5cf6);
-  color:white;font-size:1rem;cursor:pointer;transition:all 0.2s;
-  display:flex;align-items:center;justify-content:center;
-}
+.ai-send-btn{width:38px;height:38px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
 .ai-send-btn:hover{transform:scale(1.08);}
 .ai-send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
-
-/* ===== Waiting Screen ===== */
-.waiting-overlay{
-  position:absolute;inset:0;
-  background:rgba(15,23,42,0.8);
-  backdrop-filter:blur(10px);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:20px;z-index:20;border-radius:var(--radius);
-}
-.waiting-spinner{
-  width:60px;height:60px;border-radius:50%;
-  border:3px solid var(--border);
-  border-top-color:var(--primary);
-  animation:spin 1s linear infinite;
-}
+.waiting-overlay{position:absolute;inset:0;background:rgba(15,23,42,0.85);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:20;border-radius:var(--radius);}
+.waiting-spinner{width:60px;height:60px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--primary);animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);};}
-
-/* ===== Notification ===== */
-.notification{
-  position:fixed;top:90px;left:50%;transform:translateX(-50%);
-  padding:12px 24px;border-radius:25px;
-  font-size:0.88rem;font-weight:600;
-  z-index:1000;animation:notif-in 0.3s ease;
-  display:none;
-  max-width:90vw;text-align:center;
-}
+.notification{position:fixed;top:90px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:25px;font-size:0.88rem;font-weight:600;z-index:1000;animation:notif-in 0.3s ease;display:none;max-width:90vw;text-align:center;}
 .notification.show{display:block;}
 .notification.success{background:rgba(16,185,129,0.9);color:white;}
 .notification.error{background:rgba(239,68,68,0.9);color:white;}
 .notification.info{background:rgba(99,102,241,0.9);color:white;}
 @keyframes notif-in{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
-
-/* ===== Speaking badge ===== */
-.speaking-badge{
-  display:none;align-items:center;gap:7px;
-  padding:6px 14px;
-  background:rgba(16,185,129,0.1);
-  border:1px solid rgba(16,185,129,0.25);
-  border-radius:15px;color:#34d399;font-size:0.82rem;
-}
+.speaking-badge{display:none;align-items:center;gap:7px;padding:6px 14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:15px;color:#34d399;font-size:0.82rem;}
 .speaking-badge.show{display:flex;}
-
-/* ===== Scrollbar ===== */
+.timer{font-size:1.1rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;}
+.invite-link{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 15px;
+  background:rgba(99,102,241,0.1);
+  border:1px solid rgba(99,102,241,0.2);
+  border-radius:10px;
+  font-size:0.82rem;color:var(--text-secondary);
+  cursor:pointer;transition:all 0.2s;
+  word-break:break-all;
+}
+.invite-link:hover{background:rgba(99,102,241,0.2);}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.1);}
 ::-webkit-scrollbar-thumb{background:rgba(99,102,241,0.4);border-radius:3px;}
-
-/* ===== Footer ===== */
-footer{
-  position:relative;z-index:1;
-  padding:18px;text-align:center;
-  color:var(--text-muted);font-size:0.78rem;
-  border-top:1px solid var(--border);
-}
+footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--text-muted);font-size:0.78rem;border-top:1px solid var(--border);}
 </style>
 </head>
 <body>
 
-<!-- Background -->
 <div class="bg-effects">
   <div class="bg-blob blob1"></div>
   <div class="bg-blob blob2"></div>
   <div class="bg-blob blob3"></div>
 </div>
 
-<!-- Notification -->
 <div class="notification" id="notification"></div>
 
-<!-- ==================== LANDING PAGE ==================== -->
+<!-- ==================== LANDING ==================== -->
 <div class="page active" id="landing">
   <header>
     <div class="logo">
@@ -627,14 +284,13 @@ footer{
   </header>
 
   <div style="position:relative;z-index:1;flex:1;">
-    <!-- Hero -->
     <div class="hero">
       <div class="hero-badge">✨ مدعوم بالذكاء الاصطناعي</div>
       <h1>
         <span class="grad1">محادثة حية</span><br>
         <span class="grad2">بلا حواجز اللغة</span>
       </h1>
-      <p>تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً بصوت حقيقي 🔥</p>
+      <p>تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥</p>
       <div class="hero-features">
         <div class="feat-tag"><span>🎤</span><span>تعرف على الصوت</span></div>
         <div class="feat-tag"><span>🌐</span><span>ترجمة فورية</span></div>
@@ -645,7 +301,6 @@ footer{
       </div>
     </div>
 
-    <!-- Action Cards -->
     <div class="action-section container">
       <!-- Create Room -->
       <div class="action-card">
@@ -656,14 +311,12 @@ footer{
             <p>أنشئ غرفة وادعُ شريكك</p>
           </div>
         </div>
-
         <div class="input-group">
           <label>اسمك</label>
           <input type="text" class="input" id="createName" placeholder="أدخل اسمك...">
         </div>
-
         <div class="input-group">
-          <label>لغتك (ستتحدث بها)</label>
+          <label>لغتك</label>
           <select class="lang-select" id="createLang">
             <option value="ar">🇸🇦 العربية</option>
             <option value="en">🇺🇸 English</option>
@@ -677,9 +330,8 @@ footer{
             <option value="pt">🇧🇷 Português</option>
           </select>
         </div>
-
         <div class="input-group">
-          <label>لغة الترجمة (لغة شريكك)</label>
+          <label>لغة شريكك</label>
           <select class="lang-select" id="createTargetLang">
             <option value="en">🇺🇸 English</option>
             <option value="ar">🇸🇦 العربية</option>
@@ -693,19 +345,16 @@ footer{
             <option value="pt">🇧🇷 Português</option>
           </select>
         </div>
-
         <div class="toggle-row">
-          <span class="toggle-label">🔒 غرفة خاصة بكلمة مرور</span>
+          <span class="toggle-label">🔒 غرفة خاصة</span>
           <div class="toggle" id="privateToggle" onclick="togglePrivate()">
             <div class="toggle-thumb"></div>
           </div>
         </div>
-
         <div class="input-group" id="passwordGroup" style="display:none;">
           <label>كلمة المرور</label>
           <input type="password" class="input" id="createPassword" placeholder="أدخل كلمة المرور...">
         </div>
-
         <button class="btn btn-primary btn-full btn-lg" onclick="createRoom()">
           👥 إنشاء غرفة
         </button>
@@ -720,14 +369,12 @@ footer{
             <p>أدخل رمز الغرفة للانضمام</p>
           </div>
         </div>
-
         <div class="input-group">
           <label>اسمك</label>
           <input type="text" class="input" id="joinName" placeholder="أدخل اسمك...">
         </div>
-
         <div class="input-group">
-          <label>لغتك (ستتحدث بها)</label>
+          <label>لغتك</label>
           <select class="lang-select" id="joinLang">
             <option value="en">🇺🇸 English</option>
             <option value="ar">🇸🇦 العربية</option>
@@ -741,26 +388,23 @@ footer{
             <option value="pt">🇧🇷 Português</option>
           </select>
         </div>
-
         <div class="input-group">
           <label>رمز الغرفة</label>
           <input type="text" class="input input-code" id="joinCode"
             placeholder="ABC123" maxlength="6"
             oninput="this.value=this.value.toUpperCase()">
         </div>
-
         <div class="input-group">
           <label>كلمة المرور (إن وجدت)</label>
-          <input type="password" class="input" id="joinPassword" placeholder="اتركها فارغة إن لم تكن هناك كلمة مرور">
+          <input type="password" class="input" id="joinPassword"
+            placeholder="اتركها فارغة إن لم تكن هناك كلمة مرور">
         </div>
-
         <button class="btn btn-secondary btn-full btn-lg" onclick="joinRoom()">
           🚀 انضم الآن
         </button>
       </div>
     </div>
   </div>
-
   <footer>TranslationCall Pro © 2024 | صنع بـ ❤️</footer>
 </div>
 
@@ -774,16 +418,17 @@ footer{
         <span class="logo-pro">PRO</span>
       </div>
     </div>
-    <div class="room-code-display" onclick="copyRoomCode()">
-      <span>رمز الغرفة</span>
-      <strong id="displayRoomId">------</strong>
-      <span class="copy-icon">📋</span>
-    </div>
-    <div class="header-right">
-      <div class="status-badge">
-        <div class="status-dot connected"></div>
-        <span id="roomStatusText">متصل</span>
+    <div style="display:flex;align-items:center;gap:15px;">
+      <div class="timer" id="callTimer">00:00</div>
+      <div class="room-code-display" onclick="copyRoomCode()">
+        <span>رمز الغرفة</span>
+        <strong id="displayRoomId">------</strong>
+        <span>📋</span>
       </div>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot connected"></div>
+      <span>متصل</span>
     </div>
   </header>
 
@@ -795,20 +440,15 @@ footer{
 
         <!-- Participants -->
         <div class="participants-row">
-          <!-- Me -->
           <div class="participant me" id="meParticipant">
             <div class="p-avatar me-av" id="meAvatar">أ</div>
             <div class="p-info">
               <div class="p-name" id="meName">أنت</div>
-              <div class="p-lang" id="meLang">العربية 🇸🇦</div>
+              <div class="p-lang" id="meLang">---</div>
             </div>
-            <div class="p-status host">مضيف</div>
+            <div class="p-status host" id="meStatus">مضيف</div>
           </div>
-
-          <!-- Arrow -->
           <div class="connection-arrow">⇄</div>
-
-          <!-- Partner -->
           <div class="participant partner" id="partnerParticipant">
             <div class="p-avatar waiting-av" id="partnerAvatar">؟</div>
             <div class="p-info">
@@ -826,13 +466,24 @@ footer{
           <div class="waiting-overlay" id="waitingOverlay">
             <div class="waiting-spinner"></div>
             <div style="text-align:center;">
-              <div style="font-size:1rem;font-weight:600;margin-bottom:8px;">في انتظار الشريك...</div>
-              <div style="font-size:0.85rem;color:var(--text-muted);">شارك رمز الغرفة مع شريكك للبدء</div>
+              <div style="font-size:1rem;font-weight:600;margin-bottom:8px;">
+                في انتظار الشريك...
+              </div>
+              <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:15px;">
+                شارك رمز الغرفة أو الرابط مع شريكك
+              </div>
             </div>
-            <div class="room-code-display" onclick="copyRoomCode()" style="cursor:pointer;">
-              <span>رمز الغرفة:</span>
-              <strong id="waitingRoomId" style="font-size:1.5rem;letter-spacing:0.2em;color:var(--primary);">------</strong>
-              <span>📋 انسخ</span>
+            <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;">
+              <div class="room-code-display" onclick="copyRoomCode()" style="justify-content:center;">
+                <span>رمز الغرفة:</span>
+                <strong id="waitingRoomId" style="font-size:1.5rem;letter-spacing:0.2em;color:var(--primary);">
+                  ------
+                </strong>
+                <span>📋</span>
+              </div>
+              <div class="invite-link" onclick="copyInviteLink()">
+                🔗 <span id="inviteLinkText">انسخ رابط الدعوة</span>
+              </div>
             </div>
           </div>
 
@@ -851,7 +502,7 @@ footer{
               <div class="vbar"></div>
             </div>
             <div class="speaking-badge" id="speakingBadge">
-              🔊 جاري نطق الترجمة...
+              🔊 شريكك يتحدث...
             </div>
           </div>
 
@@ -866,32 +517,34 @@ footer{
               </div>
             </div>
             <div class="result-box translated">
-              <h5>🌐 الترجمة</h5>
+              <h5>🌐 الترجمة المرسلة</h5>
               <p id="translatedText">سيظهر هنا النص المترجم...</p>
               <div class="result-actions">
                 <button class="mini-btn" onclick="copyResult('translatedText')">📋 نسخ</button>
-                <button class="mini-btn" onclick="speakTranslation()">🔊 نطق</button>
               </div>
+            </div>
+          </div>
+
+          <!-- Partner Result -->
+          <div style="margin-top:12px;">
+            <div class="result-box" style="border-color:rgba(16,185,129,0.2);">
+              <h5 style="color:var(--secondary);">🎧 ما قاله شريكك (مترجماً لك)</h5>
+              <p id="partnerTranslatedText" style="color:#34d399;">
+                سيظهر هنا ما يقوله شريكك مترجماً...
+              </p>
             </div>
           </div>
         </div>
 
-        <!-- Controls Bar -->
+        <!-- Controls -->
         <div class="controls-bar">
-          <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()" title="كتم الصوت">
-            🎤
-          </button>
+          <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()" title="كتم">🎤</button>
           <button class="mic-btn" id="mainMicBtn" onclick="toggleRecording()"
-            style="width:60px;height:60px;font-size:1.5rem;" disabled>
-            🎤
+            style="width:60px;height:60px;font-size:1.5rem;" disabled>🎤
           </button>
-          <button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()" title="إيقاف الصوت">
-            🔊
-          </button>
+          <button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()" title="صوت">🔊</button>
           <div style="flex:1;"></div>
-          <button class="leave-btn" onclick="leaveRoom()">
-            📵 مغادرة
-          </button>
+          <button class="leave-btn" onclick="leaveRoom()">📵 مغادرة</button>
         </div>
 
       </div>
@@ -899,7 +552,7 @@ footer{
       <!-- Right Panel -->
       <div class="right-panel">
 
-        <!-- Transcript Panel -->
+        <!-- Transcript -->
         <div class="transcript-panel">
           <div class="panel-head">
             <h4>💬 سجل المحادثة</h4>
@@ -909,24 +562,22 @@ footer{
             </div>
           </div>
           <div class="messages" id="messages">
-            <div class="empty-msgs">
-              لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤
-            </div>
+            <div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>
           </div>
         </div>
 
-        <!-- AI Assistant -->
+        <!-- AI -->
         <div class="ai-panel">
           <div class="panel-head">
             <h4>🤖 مساعد AI</h4>
             <div class="panel-head-actions">
-              <button onclick="clearAI()" title="مسح">🗑️</button>
+              <button onclick="clearAI()">🗑️</button>
             </div>
           </div>
           <div class="ai-msgs" id="aiMessages">
             <div class="ai-bubble bot">
               مرحباً! 👋 أنا مساعدك الذكي.<br>
-              يمكنني مساعدتك في الترجمة والنصائح الثقافية وأي شيء آخر!
+              يمكنني مساعدتك في الترجمة والنصائح الثقافية!
             </div>
           </div>
           <div class="ai-typing" id="aiTyping">
@@ -947,12 +598,12 @@ footer{
 
 <script>
 // ============================================
-// CONFIG - ضع رابط Render هنا
+// CONFIG
 // ============================================
 const SERVER_URL = 'https://translationcall-server.onrender.com';
 
 // ============================================
-// Language Config
+// Languages
 // ============================================
 const langs = {
   ar:{name:'العربية',flag:'🇸🇦',voice:'ar-SA'},
@@ -982,25 +633,27 @@ let isMuted = false;
 let isSpeakerOff = false;
 let isPrivate = false;
 let messages = [];
-let aiHistory = [];
 let partnerInfo = null;
+let callStartTime = null;
+let timerInterval = null;
+let voicesLoaded = false;
 
 // ============================================
-// Initialize Socket
+// Socket Init
 // ============================================
 function initSocket() {
   socket = io(SERVER_URL, {
-    transports: ['websocket', 'polling']
+    transports: ['websocket','polling']
   });
 
   socket.on('connect', () => {
     setStatus(true);
-    showNotification('متصل بالسيرفر ✅', 'success');
+    showNotification('متصل بالسيرفر ✅','success');
   });
 
   socket.on('disconnect', () => {
     setStatus(false);
-    showNotification('انقطع الاتصال ❌', 'error');
+    showNotification('انقطع الاتصال ❌','error');
   });
 
   socket.on('partner-joined', (data) => {
@@ -1009,7 +662,8 @@ function initSocket() {
     updatePartnerUI(data);
     hideWaiting();
     enableMic();
-    showNotification(`${data.name} انضم للمحادثة! 🎉`, 'success');
+    startTimer();
+    showNotification(`${data.name} انضم! 🎉`, 'success');
   });
 
   socket.on('partner-left', (data) => {
@@ -1017,24 +671,34 @@ function initSocket() {
     resetPartnerUI();
     showWaiting();
     disableMic();
-    showNotification(`${data.name} غادر المحادثة`, 'error');
+    stopTimer();
+    showNotification(`${data.name} غادر المحادثة`,'error');
   });
 
+  // ✅ رسالة من الشريك - الصوت يخرج لي أنا فقط
   socket.on('new-message', (msg) => {
-    if (msg.senderId !== socket.id) {
+    if(msg.senderId !== socket.id){
+      // رسالة من الشريك
       addMessage(msg, false);
-      if (!isSpeakerOff) {
+      // اعرض ترجمته لي
+      document.getElementById('partnerTranslatedText').innerText = msg.translatedText;
+      // انطق ترجمته بلغتي أنا
+      if(!isSpeakerOff){
         speakText(msg.translatedText, myLang);
       }
     }
+    // رسالتي أنا - لا تنطق شيئاً، الشريك هو من سيسمع
   });
 
   socket.on('partner-speaking', (data) => {
-    const partEl = document.getElementById('partnerParticipant');
-    if (data.speaking) {
-      partEl.classList.add('speaking');
+    const el = document.getElementById('partnerParticipant');
+    const badge = document.getElementById('speakingBadge');
+    if(data.speaking){
+      el.classList.add('speaking');
+      badge.classList.add('show');
     } else {
-      partEl.classList.remove('speaking');
+      el.classList.remove('speaking');
+      badge.classList.remove('show');
     }
   });
 }
@@ -1042,62 +706,72 @@ function initSocket() {
 // ============================================
 // Status
 // ============================================
-function setStatus(connected) {
+function setStatus(connected){
   const dot = document.getElementById('statusDot');
-  const text = document.getElementById('statusText');
-  if (connected) {
+  const txt = document.getElementById('statusText');
+  if(connected){
     dot.classList.add('connected');
-    text.innerText = 'متصل';
+    txt.innerText = 'متصل';
   } else {
     dot.classList.remove('connected');
-    text.innerText = 'غير متصل';
+    txt.innerText = 'غير متصل';
   }
+}
+
+// ============================================
+// Timer
+// ============================================
+function startTimer(){
+  callStartTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+    const m = Math.floor(elapsed / 60).toString().padStart(2,'0');
+    const s = (elapsed % 60).toString().padStart(2,'0');
+    document.getElementById('callTimer').innerText = `${m}:${s}`;
+  }, 1000);
+}
+
+function stopTimer(){
+  clearInterval(timerInterval);
+  document.getElementById('callTimer').innerText = '00:00';
 }
 
 // ============================================
 // Toggle Private
 // ============================================
-function togglePrivate() {
+function togglePrivate(){
   isPrivate = !isPrivate;
-  const toggle = document.getElementById('privateToggle');
-  const passGroup = document.getElementById('passwordGroup');
-  toggle.classList.toggle('on', isPrivate);
-  passGroup.style.display = isPrivate ? 'flex' : 'none';
+  document.getElementById('privateToggle').classList.toggle('on', isPrivate);
+  document.getElementById('passwordGroup').style.display = isPrivate ? 'flex' : 'none';
 }
 
 // ============================================
 // Create Room
 // ============================================
-function createRoom() {
+function createRoom(){
   const name = document.getElementById('createName').value.trim();
   const lang = document.getElementById('createLang').value;
   const tLang = document.getElementById('createTargetLang').value;
-  const password = document.getElementById('createPassword').value;
+  const pass = document.getElementById('createPassword').value;
 
-  if (!name) {
-    showNotification('يرجى إدخال اسمك', 'error');
-    return;
-  }
-  if (lang === tLang) {
-    showNotification('يرجى اختيار لغتين مختلفتين', 'error');
-    return;
-  }
+  if(!name){ showNotification('يرجى إدخال اسمك','error'); return; }
+  if(lang === tLang){ showNotification('اختر لغتين مختلفتين','error'); return; }
 
   myName = name;
   myLang = lang;
   targetLang = tLang;
 
-  socket.emit('create-room', {
+  socket.emit('create-room',{
     userName: name,
     language: lang,
     isPrivate,
-    password: isPrivate ? password : null
+    password: isPrivate ? pass : null
   }, (res) => {
-    if (res.success) {
+    if(res.success){
       roomId = res.roomId;
       enterRoom(true);
     } else {
-      showNotification(res.error || 'حدث خطأ', 'error');
+      showNotification(res.error || 'حدث خطأ','error');
     }
   });
 }
@@ -1105,49 +779,43 @@ function createRoom() {
 // ============================================
 // Join Room
 // ============================================
-function joinRoom() {
+function joinRoom(){
   const name = document.getElementById('joinName').value.trim();
   const lang = document.getElementById('joinLang').value;
   const code = document.getElementById('joinCode').value.trim().toUpperCase();
-  const password = document.getElementById('joinPassword').value;
+  const pass = document.getElementById('joinPassword').value;
 
-  if (!name || !code) {
-    showNotification('يرجى إدخال الاسم ورمز الغرفة', 'error');
-    return;
-  }
-  if (code.length !== 6) {
-    showNotification('رمز الغرفة يجب أن يكون 6 أحرف', 'error');
-    return;
-  }
+  if(!name || !code){ showNotification('يرجى إدخال الاسم والرمز','error'); return; }
+  if(code.length !== 6){ showNotification('الرمز يجب أن يكون 6 أحرف','error'); return; }
 
   myName = name;
   myLang = lang;
 
-  socket.emit('join-room', {
+  socket.emit('join-room',{
     roomId: code,
     userName: name,
     language: lang,
-    password
+    password: pass
   }, (res) => {
-    if (res.success) {
+    if(res.success){
       roomId = res.roomId;
-      if (res.partner) {
+      if(res.partner){
         partnerInfo = res.partner;
         partnerLang = res.partner.language;
         targetLang = partnerLang;
       }
       enterRoom(false);
-      if (res.partner) {
+      if(res.partner){
         updatePartnerUI(res.partner);
         hideWaiting();
         enableMic();
+        startTimer();
       }
-      // Load existing messages
-      if (res.messages && res.messages.length > 0) {
+      if(res.messages && res.messages.length > 0){
         res.messages.forEach(msg => addMessage(msg, msg.senderId === socket.id));
       }
     } else {
-      showNotification(res.error || 'حدث خطأ', 'error');
+      showNotification(res.error || 'حدث خطأ','error');
     }
   });
 }
@@ -1155,36 +823,36 @@ function joinRoom() {
 // ============================================
 // Enter Room
 // ============================================
-function enterRoom(isHost) {
-  // Update UI
+function enterRoom(isHost){
   document.getElementById('displayRoomId').innerText = roomId;
   document.getElementById('waitingRoomId').innerText = roomId;
-
+  document.getElementById('inviteLinkText').innerText =
+    `${window.location.href.split('?')[0]}?join=${roomId}`;
   document.getElementById('meName').innerText = myName;
   document.getElementById('meAvatar').innerText = myName.charAt(0).toUpperCase();
-  document.getElementById('meLang').innerText = `${langs[myLang]?.flag} ${langs[myLang]?.name}`;
-  document.getElementById('meParticipant').querySelector('.p-status').innerText = isHost ? 'مضيف' : 'مشارك';
+  document.getElementById('meLang').innerText =
+    `${langs[myLang]?.flag} ${langs[myLang]?.name}`;
+  document.getElementById('meStatus').innerText = isHost ? 'مضيف' : 'مشارك';
 
-  // Switch page
   document.getElementById('landing').classList.remove('active');
   document.getElementById('room-page').classList.add('active');
-
   showWaiting();
 }
 
 // ============================================
 // Update Partner UI
 // ============================================
-function updatePartnerUI(data) {
+function updatePartnerUI(data){
   document.getElementById('partnerName').innerText = data.name;
   document.getElementById('partnerAvatar').innerText = data.name.charAt(0).toUpperCase();
   document.getElementById('partnerAvatar').className = 'p-avatar partner-av';
-  document.getElementById('partnerLang').innerText = `${langs[data.language]?.flag || '🌐'} ${langs[data.language]?.name || data.language}`;
+  document.getElementById('partnerLang').innerText =
+    `${langs[data.language]?.flag || '🌐'} ${langs[data.language]?.name || data.language}`;
   document.getElementById('partnerStatus').innerText = 'متصل';
   document.getElementById('partnerStatus').className = 'p-status online';
 }
 
-function resetPartnerUI() {
+function resetPartnerUI(){
   document.getElementById('partnerName').innerText = 'في انتظار الشريك...';
   document.getElementById('partnerAvatar').innerText = '؟';
   document.getElementById('partnerAvatar').className = 'p-avatar waiting-av';
@@ -1193,49 +861,41 @@ function resetPartnerUI() {
   document.getElementById('partnerStatus').className = 'p-status waiting';
 }
 
-// ============================================
-// Waiting Overlay
-// ============================================
-function showWaiting() {
-  document.getElementById('waitingOverlay').style.display = 'flex';
-}
-function hideWaiting() {
-  document.getElementById('waitingOverlay').style.display = 'none';
-}
+function showWaiting(){ document.getElementById('waitingOverlay').style.display='flex'; }
+function hideWaiting(){ document.getElementById('waitingOverlay').style.display='none'; }
 
-// ============================================
-// Enable/Disable Mic
-// ============================================
-function enableMic() {
+function enableMic(){
   document.getElementById('micBtn').disabled = false;
   document.getElementById('mainMicBtn').disabled = false;
   document.getElementById('micLabel').innerText = 'اضغط للتحدث';
 }
-function disableMic() {
+
+function disableMic(){
   document.getElementById('micBtn').disabled = true;
   document.getElementById('mainMicBtn').disabled = true;
   document.getElementById('micLabel').innerText = 'في انتظار الشريك...';
-  if (isRecording) stopRecording();
+  if(isRecording) stopRecording();
 }
 
 // ============================================
 // Toggle Recording
 // ============================================
-function toggleRecording() {
-  if (isRecording) {
-    stopRecording();
-  } else {
-    startRecording();
-  }
+function toggleRecording(){
+  if(isRecording){ stopRecording(); }
+  else { startRecording(); }
 }
 
 // ============================================
-// Start Recording
+// Start Recording - مستمر تلقائياً
 // ============================================
-function startRecording() {
+function startRecording(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    showNotification('متصفحك لا يدعم هذه الميزة. استخدم Chrome', 'error');
+  if(!SR){
+    showNotification('استخدم Chrome أو Edge','error');
+    return;
+  }
+  if(isMuted){
+    showNotification('الميكروفون مكتوم 🔇','error');
     return;
   }
 
@@ -1252,45 +912,59 @@ function startRecording() {
     document.getElementById('mainMicBtn').innerText = '⏹️';
     document.getElementById('micRing').classList.add('active');
     document.getElementById('visualizer').classList.add('active');
-    document.getElementById('micLabel').innerText = '🎤 يستمع إليك...';
+    document.getElementById('micLabel').innerText = '🎤 يستمع...';
     document.getElementById('meParticipant').classList.add('speaking');
-    socket.emit('speaking', { roomId, speaking: true });
+    socket.emit('speaking',{ roomId, speaking:true });
   };
 
   recognition.onresult = async (event) => {
     const text = event.results[0][0].transcript;
-    document.getElementById('originalText').innerText = text;
-    await translateAndSend(text);
+    if(text.trim()){
+      document.getElementById('originalText').innerText = text;
+      await translateAndSend(text);
+    }
   };
 
   recognition.onerror = (event) => {
     console.error('Recognition error:', event.error);
-    stopRecording();
-    if (event.error === 'not-allowed') {
-      showNotification('يرجى السماح باستخدام الميكروفون', 'error');
+    if(event.error === 'not-allowed'){
+      showNotification('يرجى السماح باستخدام الميكروفون','error');
+      stopRecording();
     }
   };
 
-recognition.onend = () => {
-  if (isRecording) {
-    try {
-      recognition.start();
-    } catch(e) {
-      stopRecording();
+  // ✅ مستمر تلقائياً - يعيد التشغيل بعد كل جملة
+  recognition.onend = () => {
+    document.getElementById('meParticipant').classList.remove('speaking');
+    socket.emit('speaking',{ roomId, speaking:false });
+    if(isRecording){
+      // أعد التشغيل تلقائياً
+      setTimeout(() => {
+        if(isRecording){
+          try{ recognition.start(); }
+          catch(e){ stopRecording(); }
+        }
+      }, 300);
+    } else {
+      stopRecordingUI();
     }
-  } else {
-    stopRecording();
-  }
-};
-  try { recognition.start(); } catch(e) { stopRecording(); }
+  };
+
+  try{ recognition.start(); }
+  catch(e){ stopRecording(); }
 }
 
 // ============================================
 // Stop Recording
 // ============================================
-function stopRecording() {
+function stopRecording(){
   isRecording = false;
-  if (recognition) { try { recognition.stop(); } catch(e) {} }
+  if(recognition){ try{ recognition.stop(); }catch(e){} }
+  stopRecordingUI();
+  socket.emit('speaking',{ roomId, speaking:false });
+}
+
+function stopRecordingUI(){
   document.getElementById('micBtn').classList.remove('recording');
   document.getElementById('mainMicBtn').classList.remove('recording');
   document.getElementById('micBtn').innerText = '🎤';
@@ -1299,30 +973,28 @@ function stopRecording() {
   document.getElementById('visualizer').classList.remove('active');
   document.getElementById('micLabel').innerText = 'اضغط للتحدث';
   document.getElementById('meParticipant').classList.remove('speaking');
-  if (socket) socket.emit('speaking', { roomId, speaking: false });
 }
 
 // ============================================
 // Translate & Send
 // ============================================
-async function translateAndSend(text) {
+async function translateAndSend(text){
   const tLang = partnerInfo ? partnerInfo.language : targetLang;
 
-  try {
-    // Translate
+  try{
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${myLang}&tl=${tLang}&dt=t&q=${encodeURIComponent(text)}`;
     const res = await fetch(url);
     const data = await res.json();
 
     let translated = '';
-    if (data && data[0]) {
-      data[0].forEach(item => { if (item && item[0]) translated += item[0]; });
+    if(data && data[0]){
+      data[0].forEach(item => { if(item && item[0]) translated += item[0]; });
     }
 
     document.getElementById('translatedText').innerText = translated;
 
-    // Send to server
-    socket.emit('voice-message', {
+    // ✅ أرسل للسيرفر - الشريك سيسمع الترجمة، أنت لا تسمع شيئاً
+    socket.emit('voice-message',{
       roomId,
       originalText: text,
       translatedText: translated,
@@ -1331,7 +1003,7 @@ async function translateAndSend(text) {
       targetLanguage: tLang
     });
 
-    // Add to local messages
+    // ✅ أضف الرسالة في السجل فقط بدون صوت
     addMessage({
       senderId: socket.id,
       senderName: myName,
@@ -1342,56 +1014,42 @@ async function translateAndSend(text) {
       timestamp: new Date()
     }, true);
 
-    // Speak translation
-    if (!isSpeakerOff) {
-      speakText(translated, tLang);
-    }
+    // ✅ لا تنطق أنت - الشريك هو من يسمع
 
-  } catch(error) {
+  } catch(error){
     console.error('Translation error:', error);
-    showNotification('خطأ في الترجمة. تحقق من الإنترنت', 'error');
+    showNotification('خطأ في الترجمة','error');
   }
 }
 
 // ============================================
-// Speak Text (Improved)
+// Speak Text - محسّن للهاتف
 // ============================================
-function speakText(text, lang) {
-  if (!text || isSpeakerOff) return;
-
+function speakText(text, lang){
+  if(!text || isSpeakerOff) return;
   window.speechSynthesis.cancel();
 
   const voiceLang = langs[lang]?.voice || 'en-US';
 
-  function doSpeak(voices) {
+  function doSpeak(voices){
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = voiceLang;
     utt.rate = 0.88;
     utt.pitch = 1;
     utt.volume = 1;
 
-    // Find best voice
-    let voice = voices.find(v => v.lang === voiceLang)
+    const voice = voices.find(v => v.lang === voiceLang)
       || voices.find(v => v.lang.startsWith(lang))
-      || voices.find(v => v.lang.toLowerCase().startsWith(lang.toLowerCase()));
+      || voices.find(v => v.lang.toLowerCase().startsWith(lang));
 
-    if (voice) utt.voice = voice;
+    if(voice) utt.voice = voice;
 
-    utt.onstart = () => {
-      document.getElementById('speakingBadge').classList.add('show');
-    };
-    utt.onend = () => {
-      document.getElementById('speakingBadge').classList.remove('show');
-    };
-    utt.onerror = () => {
-      document.getElementById('speakingBadge').classList.remove('show');
-    };
-
+    utt.onerror = (e) => console.error('Speech error:', e);
     window.speechSynthesis.speak(utt);
   }
 
   const voices = window.speechSynthesis.getVoices();
-  if (voices.length > 0) {
+  if(voices.length > 0){
     doSpeak(voices);
   } else {
     window.speechSynthesis.onvoiceschanged = () => {
@@ -1401,22 +1059,16 @@ function speakText(text, lang) {
   }
 }
 
-function speakTranslation() {
-  const text = document.getElementById('translatedText').innerText;
-  const tLang = partnerInfo ? partnerInfo.language : targetLang;
-  if (text && !text.includes('سيظهر')) speakText(text, tLang);
-}
-
 // ============================================
-// Add Message to UI
+// Add Message
 // ============================================
-function addMessage(msg, isOwn) {
+function addMessage(msg, isOwn){
   const container = document.getElementById('messages');
-  const emptyMsg = container.querySelector('.empty-msgs');
-  if (emptyMsg) emptyMsg.remove();
+  const empty = container.querySelector('.empty-msgs');
+  if(empty) empty.remove();
 
-  const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA', {
-    hour: '2-digit', minute: '2-digit'
+  const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA',{
+    hour:'2-digit', minute:'2-digit'
   });
 
   const div = document.createElement('div');
@@ -1427,13 +1079,12 @@ function addMessage(msg, isOwn) {
       <span class="msg-time">${time}</span>
     </div>
     <div class="msg-original">
-      ${langs[msg.senderLanguage]?.flag || '🌐'} ${msg.originalText}
+      ${langs[msg.senderLanguage]?.flag||'🌐'} ${msg.originalText}
     </div>
     <div class="msg-translated">
-      ${langs[msg.targetLanguage]?.flag || '🌐'} ${msg.translatedText}
+      ${langs[msg.targetLanguage]?.flag||'🌐'} ${msg.translatedText}
     </div>
   `;
-
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
   messages.push(msg);
@@ -1442,64 +1093,62 @@ function addMessage(msg, isOwn) {
 // ============================================
 // Controls
 // ============================================
-function toggleMute() {
+function toggleMute(){
   isMuted = !isMuted;
   const btn = document.getElementById('muteBtn');
   btn.innerText = isMuted ? '🔇' : '🎤';
   btn.classList.toggle('off', isMuted);
-  if (isMuted && isRecording) stopRecording();
-  showNotification(isMuted ? 'تم كتم الميكروفون 🔇' : 'تم تفعيل الميكروفون 🎤', 'info');
+  if(isMuted && isRecording) stopRecording();
+  showNotification(isMuted ? 'تم كتم الميكروفون 🔇' : 'تم تفعيل الميكروفون 🎤','info');
 }
 
-function toggleSpeaker() {
+function toggleSpeaker(){
   isSpeakerOff = !isSpeakerOff;
   const btn = document.getElementById('speakerBtn');
   btn.innerText = isSpeakerOff ? '🔈' : '🔊';
   btn.classList.toggle('off', isSpeakerOff);
-  if (isSpeakerOff) window.speechSynthesis.cancel();
-  showNotification(isSpeakerOff ? 'تم إيقاف الصوت 🔈' : 'تم تفعيل الصوت 🔊', 'info');
+  if(isSpeakerOff) window.speechSynthesis.cancel();
+  showNotification(isSpeakerOff ? 'تم إيقاف الصوت 🔈' : 'تم تفعيل الصوت 🔊','info');
 }
 
 // ============================================
-// Copy Room Code
+// Copy Functions
 // ============================================
-function copyRoomCode() {
-  if (!roomId) return;
-  navigator.clipboard.writeText(roomId).then(() => {
-    showNotification('تم نسخ رمز الغرفة! 📋', 'success');
-  }).catch(() => {
-    showNotification(`رمز الغرفة: ${roomId}`, 'info');
-  });
+function copyRoomCode(){
+  if(!roomId) return;
+  navigator.clipboard.writeText(roomId)
+    .then(() => showNotification('تم نسخ الرمز 📋','success'))
+    .catch(() => showNotification(`الرمز: ${roomId}`,'info'));
 }
 
-function copyResult(id) {
+function copyInviteLink(){
+  const link = `${window.location.href.split('?')[0]}?join=${roomId}`;
+  navigator.clipboard.writeText(link)
+    .then(() => showNotification('تم نسخ رابط الدعوة 🔗','success'))
+    .catch(() => showNotification('تعذر النسخ','error'));
+}
+
+function copyResult(id){
   const text = document.getElementById(id).innerText;
-  if (!text || text.includes('سيظهر')) return;
-  navigator.clipboard.writeText(text).then(() => {
-    showNotification('تم النسخ! ✅', 'success');
-  });
+  if(!text || text.includes('سيظهر')) return;
+  navigator.clipboard.writeText(text)
+    .then(() => showNotification('تم النسخ ✅','success'));
 }
 
 // ============================================
 // Leave Room
 // ============================================
-function leaveRoom() {
-  if (!confirm('هل تريد مغادرة الغرفة؟')) return;
-
+function leaveRoom(){
+  if(!confirm('هل تريد مغادرة الغرفة؟')) return;
   stopRecording();
   window.speechSynthesis.cancel();
-
-  if (socket && roomId) {
-    socket.emit('leave-room', { roomId });
-  }
-
-  // Reset state
+  stopTimer();
+  if(socket && roomId) socket.emit('leave-room',{ roomId });
   roomId = null;
   partnerInfo = null;
   messages = [];
-  document.getElementById('messages').innerHTML = '<div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>';
-
-  // Switch page
+  document.getElementById('messages').innerHTML =
+    '<div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>';
   document.getElementById('room-page').classList.remove('active');
   document.getElementById('landing').classList.add('active');
 }
@@ -1507,189 +1156,179 @@ function leaveRoom() {
 // ============================================
 // Download History
 // ============================================
-function downloadHistory() {
-  if (messages.length === 0) {
-    showNotification('لا يوجد سجل للتحميل!', 'error');
+function downloadHistory(){
+  if(messages.length === 0){
+    showNotification('لا يوجد سجل!','error');
     return;
   }
-
-  let content = '===== TranslationCall Pro - سجل المحادثة =====\n\n';
+  let content = '===== TranslationCall Pro =====\n\n';
   messages.forEach(msg => {
     const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA');
     content += `[${time}] ${msg.senderName}:\n`;
     content += `  ${langs[msg.senderLanguage]?.flag} ${msg.originalText}\n`;
     content += `  ${langs[msg.targetLanguage]?.flag} ${msg.translatedText}\n\n`;
   });
-
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const blob = new Blob([content],{type:'text/plain;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = `TranslationCall_${roomId}_${Date.now()}.txt`;
   a.click();
   URL.revokeObjectURL(url);
-  showNotification('تم تحميل السجل ✅', 'success');
+  showNotification('تم التحميل ✅','success');
 }
 
-function clearMessages() {
-  if (!confirm('هل تريد مسح السجل؟')) return;
+function clearMessages(){
+  if(!confirm('مسح السجل؟')) return;
   messages = [];
-  document.getElementById('messages').innerHTML = '<div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>';
+  document.getElementById('messages').innerHTML =
+    '<div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>';
 }
 
 // ============================================
 // AI Assistant
 // ============================================
-async function sendAI() {
+async function sendAI(){
   const input = document.getElementById('aiInput');
   const text = input.value.trim();
-  if (!text) return;
-
+  if(!text) return;
   input.value = '';
-
   addAIMessage('user', text);
-
   document.getElementById('aiTyping').classList.add('show');
   document.getElementById('aiMessages').scrollTop = 99999;
-
-  await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
+  await new Promise(r => setTimeout(r, 600 + Math.random() * 600));
   document.getElementById('aiTyping').classList.remove('show');
-
-  const response = await processAI(text);
-  addAIMessage('bot', response.main);
-  if (response.tip) {
-    setTimeout(() => addAIMessage('tip', response.tip), 400);
-  }
-
+  const res = await processAI(text);
+  addAIMessage('bot', res.main);
+  if(res.tip) setTimeout(() => addAIMessage('tip', res.tip), 300);
   document.getElementById('aiMessages').scrollTop = 99999;
 }
 
-async function processAI(text) {
+async function processAI(text){
   const lower = text.toLowerCase();
 
-  if (/مرحبا|اهلا|hello|hi|هاي|سلام/.test(lower)) {
-    return {
-      main: 'أهلاً وسهلاً! 😊 كيف يمكنني مساعدتك؟\nيمكنني ترجمة الجمل، وإعطاء نصائح ثقافية، وشرح التعابير اللغوية.',
-      tip: null
-    };
+  if(/مرحبا|اهلا|hello|hi|سلام/.test(lower)){
+    return { main:'أهلاً! 😊 كيف يمكنني مساعدتك؟\nيمكنني ترجمة الجمل وإعطاء نصائح ثقافية وشرح التعابير.', tip:null };
   }
 
-  if (/ترجم|translate/.test(lower)) {
-    const toTranslate = text.replace(/ترجم لي:|ترجم:|translate:/gi, '').trim();
-    if (toTranslate) {
-      try {
+  if(/ترجم|translate/.test(lower)){
+    const phrase = text.replace(/ترجم لي:|ترجم:|translate:/gi,'').trim();
+    if(phrase){
+      try{
         const tLang = myLang === 'ar' ? 'en' : 'ar';
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${myLang}&tl=${tLang}&dt=t&q=${encodeURIComponent(toTranslate)}`;
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${myLang}&tl=${tLang}&dt=t&q=${encodeURIComponent(phrase)}`;
         const res = await fetch(url);
         const data = await res.json();
-        const translated = data[0][0][0];
         return {
-          main: `ترجمة: "${toTranslate}"\n\n${langs[tLang]?.flag} ${translated}`,
-          tip: '💡 يمكنك استخدام زر المايكروفون للترجمة الصوتية الفورية!'
+          main: `ترجمة "${phrase}":\n${langs[tLang]?.flag} ${data[0][0][0]}`,
+          tip: '💡 استخدم زر المايكروفون للترجمة الصوتية!'
         };
-      } catch(e) {
-        return { main: 'عذراً، حدث خطأ في الترجمة. تحقق من الإنترنت.', tip: null };
-      }
+      } catch(e){ return { main:'خطأ في الترجمة', tip:null }; }
     }
   }
 
-  if (/نصيح|ثقاف|cultural|tip/.test(lower)) {
+  if(/نصيح|ثقاف|cultural/.test(lower)){
     const tips = {
-      ar: '🇸🇦 في الثقافة العربية، الترحيب بالضيوف أمر مقدس. ويُستحسن السؤال عن الصحة والأهل قبل الدخول في أي موضوع.',
-      es: '🇪🇸 في الثقافة الإسبانية، المصافحة والتقبيل على الخد تحية شائعة. والطعام والعائلة في قلب كل تجمع.',
-      en: '🇺🇸 في الثقافة الأمريكية، الوقت ثمين جداً. والمباشرة في الكلام تُعدّ علامة احترام وليس قلة أدب.',
-      default: '🌍 تعلّم بعض الكلمات الأساسية بلغة شريكك يُظهر الاحترام ويقرب القلوب!'
+      es:'🇪🇸 في الثقافة الإسبانية، المصافحة والتقبيل على الخد تحية شائعة.',
+      ar:'🇸🇦 في الثقافة العربية، الترحيب بالضيوف أمر مقدس.',
+      en:'🇺🇸 في الثقافة الأمريكية، الوقت ثمين والمباشرة في الكلام علامة احترام.'
     };
-    if (/إسبان|spanish|español/.test(lower)) return { main: tips.es, tip: null };
-    if (/إنجليز|english/.test(lower)) return { main: tips.en, tip: null };
-    if (/عرب|arabic/.test(lower)) return { main: tips.ar, tip: null };
-    return { main: tips.default, tip: null };
+    if(/إسبان|spanish/.test(lower)) return { main:tips.es, tip:null };
+    if(/إنجليز|english/.test(lower)) return { main:tips.en, tip:null };
+    if(/عرب|arabic/.test(lower)) return { main:tips.ar, tip:null };
+    return { main:'🌍 تعلم بعض الكلمات الأساسية بلغة شريكك يقرب القلوب!', tip:null };
   }
 
-  if (/كيف أقول|how to say|كيف تقول/.test(lower)) {
-    const phrase = text.replace(/كيف أقول|how to say|كيف تقول|بالإسبانية|بالعربية|بالإنجليزية/gi, '').trim();
-    if (phrase) {
-      try {
+  if(/كيف أقول|how to say/.test(lower)){
+    const phrase = text.replace(/كيف أقول|how to say|بالإسبانية|بالعربية|بالإنجليزية/gi,'').trim();
+    if(phrase){
+      try{
         const tLang = myLang === 'ar' ? 'en' : 'ar';
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tLang}&dt=t&q=${encodeURIComponent(phrase)}`;
         const res = await fetch(url);
         const data = await res.json();
-        const translated = data[0][0][0];
         return {
-          main: `"${phrase}" بالـ${langs[tLang]?.name}:\n\n${langs[tLang]?.flag} ${translated}`,
-          tip: '💡 يمكنك الضغط على 🔊 لسماع النطق الصحيح!'
+          main:`"${phrase}" بـ${langs[tLang]?.name}:\n${langs[tLang]?.flag} ${data[0][0][0]}`,
+          tip:null
         };
-      } catch(e) {
-        return { main: 'عذراً، حدث خطأ.', tip: null };
-      }
+      } catch(e){ return { main:'خطأ في الترجمة', tip:null }; }
     }
   }
 
-  if (/مساعد|help|ساعد/.test(lower)) {
-    return {
-      main: `يمكنني مساعدتك في:\n\n🌐 ترجمة الجمل: "ترجم لي: مرحبا"\n📚 النصائح الثقافية: "أعطني نصيحة ثقافية"\n💬 تعلم عبارات: "كيف أقول شكراً بالإسبانية"\n✏️ تصحيح الجمل\n\nاسألني أي شيء! 😊`,
-      tip: null
-    };
-  }
-
-  // Default: translate what they said
-  try {
+  // Default
+  try{
     const tLang = myLang === 'ar' ? 'en' : 'ar';
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tLang}&dt=t&q=${encodeURIComponent(text)}`;
     const res = await fetch(url);
     const data = await res.json();
-    const translated = data[0][0][0];
     return {
-      main: `فهمت! إليك ترجمة ما قلته:\n\n${langs[tLang]?.flag} ${translated}`,
-      tip: '💡 هل تريد نصائح ثقافية أو مساعدة في التعبير بشكل أفضل؟'
+      main:`ترجمة ما قلته:\n${langs[tLang]?.flag} ${data[0][0][0]}`,
+      tip:'💡 هل تريد نصائح ثقافية؟ اسألني!'
     };
-  } catch(e) {
-    return {
-      main: 'يمكنني مساعدتك في الترجمة والنصائح الثقافية. جرب أن تقول: "ترجم لي: ..." أو "كيف أقول ... بالإسبانية"',
-      tip: null
-    };
+  } catch(e){
+    return { main:'يمكنني مساعدتك في الترجمة والنصائح الثقافية!', tip:null };
   }
 }
 
-function addAIMessage(type, text) {
+function addAIMessage(type, text){
   const container = document.getElementById('aiMessages');
   const div = document.createElement('div');
   div.className = `ai-bubble ${type}`;
-  div.innerHTML = text.replace(/\n/g, '<br>');
+  div.innerHTML = text.replace(/\n/g,'<br>');
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
 
-function clearAI() {
-  document.getElementById('aiMessages').innerHTML = `
-    <div class="ai-bubble bot">
-      مرحباً! 👋 أنا مساعدك الذكي.<br>
-      يمكنني مساعدتك في الترجمة والنصائح الثقافية وأي شيء آخر!
-    </div>`;
+function clearAI(){
+  document.getElementById('aiMessages').innerHTML =
+    '<div class="ai-bubble bot">مرحباً! 👋 كيف يمكنني مساعدتك؟</div>';
 }
 
 // ============================================
 // Notification
 // ============================================
-function showNotification(msg, type = 'info') {
-  const notif = document.getElementById('notification');
-  notif.innerText = msg;
-  notif.className = `notification show ${type}`;
-  setTimeout(() => { notif.classList.remove('show'); }, 3500);
+function showNotification(msg, type='info'){
+  const el = document.getElementById('notification');
+  el.innerText = msg;
+  el.className = `notification show ${type}`;
+  setTimeout(() => el.classList.remove('show'), 3500);
 }
 
 // ============================================
-// Init on Load
+// Auto Join from URL
+// ============================================
+function checkAutoJoin(){
+  const params = new URLSearchParams(window.location.search);
+  const joinCode = params.get('join');
+  if(joinCode){
+    document.getElementById('joinCode').value = joinCode.toUpperCase();
+    showNotification(`رمز الغرفة: ${joinCode} - أدخل اسمك وانضم!`,'info');
+  }
+}
+
+// ============================================
+// Init
 // ============================================
 window.onload = () => {
+  // Fix mobile audio
+  document.addEventListener('click', () => {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    ctx.resume();
+    window.speechSynthesis.cancel();
+  }, { once:true });
+
   // Load voices
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = () => {
     window.speechSynthesis.getVoices();
+    voicesLoaded = true;
   };
 
   // Init socket
   initSocket();
+
+  // Check auto join
+  checkAutoJoin();
 };
 </script>
 </body>
