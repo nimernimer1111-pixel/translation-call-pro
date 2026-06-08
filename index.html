@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translation Call</title>
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background:#0f172a;
+    color:white;
+    padding:40px;
+}
+button{
+    padding:15px 25px;
+    font-size:18px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+.start{background:#10b981;color:white;}
+.stop{background:#ef4444;color:white;}
+select{
+    padding:10px;
+    font-size:16px;
+    border-radius:8px;
+}
+.box{
+    margin-top:20px;
+    padding:20px;
+    background:#1e293b;
+    border-radius:10px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎙️ Translation Call</h1>
+
+<select id="language">
+<option value="en-US">English</option>
+<option value="ar-SA">Arabic</option>
+<option value="es-ES">Spanish</option>
+</select>
+
+<br><br>
+
+<button class="start" onclick="startRecognition()">Start</button>
+<button class="stop" onclick="stopRecognition()">Stop</button>
+
+<div class="box">
+<h3>Original Speech:</h3>
+<p id="output"></p>
+
+<h3>Translation:</h3>
+<p id="translation"></p>
+</div>
+
+<script>
+let recognition;
+function startRecognition(){
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = document.getElementById("language").value;
+    recognition.start();
+
+    recognition.onresult = function(event){
+        let text = event.results[0][0].transcript;
+        document.getElementById("output").innerText = text;
+
+        translateText(text);
+    };
+}
+
+function stopRecognition(){
+    if(recognition) recognition.stop();
+}
+
+async function translateText(text){
+    let target = document.getElementById("language").value.startsWith("ar") ? "en" : "ar";
+
+    let response = await fetch(
+        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${target}&dt=t&q=${encodeURIComponent(text)}`
+    );
+
+    let data = await response.json();
+    document.getElementById("translation").innerText = data[0][0][0];
+}
+</script>
+
+</body>
+</html>
+Initial version
+
+
