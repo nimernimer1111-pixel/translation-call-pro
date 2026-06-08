@@ -1523,10 +1523,10 @@ function speakText(text, lang){
   if(!text||isSpeakerOff) return;
 
   // ✅ Fix for mobile: need user interaction first
-  if(/Android|iPhone|iPad/i.test(navigator.userAgent)&&!audioActivated){
-    document.getElementById('audioActivateBtn').classList.add('show');
-    return;
-  }
+  if(!audioActivated){
+  document.getElementById('audioActivateBtn').classList.add('show');
+  return;
+}
 
   window.speechSynthesis.cancel();
   const voiceLang = langs[lang]?.voice||'en-US';
