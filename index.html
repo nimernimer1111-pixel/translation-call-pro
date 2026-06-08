@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TranslationCall Pro</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -47,13 +48,23 @@ header{
   display:flex;justify-content:space-between;align-items:center;
 }
 .logo{display:flex;align-items:center;gap:12px;cursor:pointer;}
-.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 15px rgba(99,102,241,0.4);}
+.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:white;box-shadow:0 4px 15px rgba(99,102,241,0.4);}
 .logo-name{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .logo-pro{font-size:0.6rem;color:var(--secondary);letter-spacing:3px;display:block;margin-top:-3px;}
+.header-right{display:flex;align-items:center;gap:12px;}
 .status-badge{display:flex;align-items:center;gap:7px;padding:7px 14px;background:rgba(255,255,255,0.05);border-radius:20px;font-size:0.82rem;color:var(--text-secondary);}
 .status-dot{width:9px;height:9px;border-radius:50%;background:var(--danger);transition:all 0.3s;}
 .status-dot.connected{background:var(--secondary);box-shadow:0 0 8px var(--secondary);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.3);};}
+/* Language Switcher */
+.lang-switcher{display:flex;gap:5px;}
+.lang-switch-btn{
+  padding:5px 10px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--text-secondary);
+  cursor:pointer;font-size:0.78rem;transition:all 0.2s;
+}
+.lang-switch-btn:hover{background:rgba(255,255,255,0.05);}
+.lang-switch-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
 .card{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);padding:25px;border:1px solid var(--border);box-shadow:var(--shadow);transition:all 0.3s;}
 .card:hover{border-color:rgba(99,102,241,0.2);}
 .card-title{font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
@@ -65,6 +76,9 @@ header{
 .btn-secondary:hover:not(:disabled){transform:translateY(-2px);}
 .btn-full{width:100%;}
 .btn-lg{padding:16px 32px;font-size:1.05rem;}
+.btn-sm{padding:8px 16px;font-size:0.82rem;}
+.btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(255,255,255,0.1);}
 .input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.95rem;transition:all 0.3s;}
 .input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.15);}
 .input::placeholder{color:var(--text-muted);}
@@ -90,7 +104,7 @@ header{
 .action-card{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:20px;padding:28px;border:1px solid var(--border);box-shadow:var(--shadow);transition:all 0.3s;}
 .action-card:hover{transform:translateY(-4px);border-color:rgba(99,102,241,0.25);}
 .action-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
-.action-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.action-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:white;}
 .icon-create{background:linear-gradient(135deg,var(--primary),#8b5cf6);}
 .icon-join{background:linear-gradient(135deg,var(--secondary),#14b8a6);}
 .action-header h3{font-size:1.1rem;font-weight:700;margin-bottom:3px;}
@@ -125,17 +139,33 @@ header{
 .p-status.waiting{background:rgba(100,116,139,0.15);color:var(--text-muted);}
 .connection-arrow{font-size:1.5rem;color:var(--text-muted);flex-shrink:0;animation:arrow-pulse 2s infinite;}
 @keyframes arrow-pulse{0%,100%{opacity:0.5;}50%{opacity:1;};}
+/* Controls */
 .mic-section{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 0;}
-.mic-ring{position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center;}
+.mic-ring{position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center;}
 .mic-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--primary);opacity:0;transition:all 0.3s;}
 .mic-ring.active::before{opacity:1;animation:ring-pulse 1.5s infinite;}
 @keyframes ring-pulse{0%{transform:scale(1);opacity:1;}100%{transform:scale(1.3);opacity:0;};}
-.mic-btn{width:90px;height:90px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:2rem;cursor:pointer;transition:all 0.3s;box-shadow:0 8px 25px rgba(99,102,241,0.4);display:flex;align-items:center;justify-content:center;}
-.mic-btn:hover{transform:scale(1.08);}
-.mic-btn.recording{background:linear-gradient(135deg,var(--danger),#f97316);box-shadow:0 8px 25px rgba(239,68,68,0.5);animation:rec-pulse 1.2s infinite;}
+/* ✅ زر الميكروفون الرئيسي */
+.mic-btn-main{
+  width:100px;height:100px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--primary),#8b5cf6);
+  color:white;font-size:2.2rem;cursor:pointer;
+  transition:all 0.3s;
+  box-shadow:0 8px 25px rgba(99,102,241,0.4);
+  display:flex;align-items:center;justify-content:center;
+}
+.mic-btn-main:hover:not(:disabled){transform:scale(1.08);box-shadow:0 12px 35px rgba(99,102,241,0.5);}
+.mic-btn-main.recording{
+  background:linear-gradient(135deg,var(--danger),#f97316);
+  box-shadow:0 8px 25px rgba(239,68,68,0.5);
+  animation:rec-pulse 1.2s infinite;
+}
 @keyframes rec-pulse{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);};}
-.mic-btn:disabled{background:var(--bg-elevated);box-shadow:none;cursor:not-allowed;opacity:0.6;}
-.mic-label{font-size:0.88rem;color:var(--text-secondary);}
+.mic-btn-main:disabled{
+  background:var(--bg-elevated);box-shadow:none;
+  cursor:not-allowed;opacity:0.5;
+}
+.mic-label{font-size:0.9rem;color:var(--text-secondary);font-weight:500;}
 .visualizer{display:flex;align-items:center;gap:4px;height:40px;opacity:0;transition:opacity 0.3s;}
 .visualizer.active{opacity:1;}
 .vbar{width:4px;border-radius:2px;background:linear-gradient(var(--primary),var(--secondary));animation:vwave 0.5s ease-in-out infinite;}
@@ -147,26 +177,53 @@ header{
 .vbar:nth-child(6){height:15px;animation-delay:0.3s;}
 .vbar:nth-child(7){height:10px;animation-delay:0.2s;}
 @keyframes vwave{0%,100%{transform:scaleY(1);}50%{transform:scaleY(3);};}
+/* ✅ Controls Bar مع أيقونات Font Awesome */
+.controls-bar{
+  display:flex;justify-content:center;align-items:center;gap:15px;
+  padding:18px 20px;
+  background:rgba(30,41,59,0.85);
+  backdrop-filter:blur(20px);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+}
+.ctrl-btn{
+  width:52px;height:52px;border-radius:50%;border:none;
+  background:rgba(255,255,255,0.08);color:var(--text);
+  font-size:1.1rem;cursor:pointer;transition:all 0.25s;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.ctrl-btn:hover{background:rgba(255,255,255,0.15);transform:scale(1.1);}
+.ctrl-btn.off{background:rgba(239,68,68,0.15);color:var(--danger);}
+.ctrl-btn.off:hover{background:rgba(239,68,68,0.25);}
+.ctrl-btn-label{
+  position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+  font-size:0.65rem;color:var(--text-muted);white-space:nowrap;
+}
+.leave-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 22px;border-radius:25px;border:none;
+  background:rgba(239,68,68,0.12);color:var(--danger);
+  font-size:0.9rem;font-weight:600;cursor:pointer;
+  transition:all 0.3s;border:1px solid rgba(239,68,68,0.2);
+}
+.leave-btn:hover{background:var(--danger);color:white;transform:scale(1.05);}
+/* Results */
 .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 .result-box{background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);padding:15px;border:1px solid transparent;transition:all 0.3s;min-height:90px;}
 .result-box.has-content{border-color:rgba(99,102,241,0.2);}
-.result-box h5{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.result-box h5{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
 .result-box.original h5{color:var(--primary);}
 .result-box.translated h5{color:var(--secondary);}
 .result-box p{font-size:0.95rem;line-height:1.6;color:var(--text);}
 .result-box.translated p{color:#34d399;}
 .result-actions{display:flex;gap:6px;margin-top:8px;}
-.mini-btn{padding:4px 10px;border-radius:6px;font-size:0.72rem;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-muted);cursor:pointer;transition:all 0.2s;}
+.mini-btn{padding:5px 12px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-muted);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;}
 .mini-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);}
 .partner-result{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:var(--radius-sm);padding:15px;}
-.partner-result h5{font-size:0.72rem;color:var(--secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.partner-result h5{font-size:0.72rem;color:var(--secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
 .partner-result p{color:#34d399;font-size:0.95rem;line-height:1.6;}
-.controls-bar{display:flex;justify-content:center;align-items:center;gap:12px;padding:15px;background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);}
-.ctrl-btn{width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,0.07);color:var(--text);font-size:1.2rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
-.ctrl-btn:hover{background:rgba(255,255,255,0.12);transform:scale(1.08);}
-.ctrl-btn.off{background:rgba(239,68,68,0.15);color:var(--danger);}
-.leave-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:25px;border:1px solid rgba(239,68,68,0.2);background:rgba(239,68,68,0.12);color:var(--danger);font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.3s;}
-.leave-btn:hover{background:var(--danger);color:white;}
+/* Right Panel */
 .right-panel{display:flex;flex-direction:column;gap:15px;}
 .transcript-panel,.ai-panel{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;}
 .transcript-panel{max-height:350px;}
@@ -174,7 +231,7 @@ header{
 .panel-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);flex-shrink:0;}
 .panel-head h4{font-size:0.85rem;display:flex;align-items:center;gap:7px;}
 .panel-head-actions{display:flex;gap:6px;}
-.panel-head-actions button{width:30px;height:30px;border-radius:8px;border:none;background:rgba(255,255,255,0.05);color:var(--text-muted);cursor:pointer;font-size:0.85rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.panel-head-actions button{width:30px;height:30px;border-radius:8px;border:none;background:rgba(255,255,255,0.05);color:var(--text-muted);cursor:pointer;font-size:0.82rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
 .panel-head-actions button:hover{background:rgba(255,255,255,0.1);color:var(--text);}
 .messages{flex:1;overflow-y:auto;padding:12px;}
 .msg{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px;margin-bottom:10px;border-right:3px solid var(--primary);animation:msg-in 0.3s ease;}
@@ -203,32 +260,42 @@ header{
 .ai-input-area input:focus{outline:none;border-color:var(--primary);}
 .ai-send-btn{width:38px;height:38px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
 .ai-send-btn:hover{transform:scale(1.08);}
+/* Waiting */
 .waiting-overlay{position:absolute;inset:0;background:rgba(15,23,42,0.9);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:20;border-radius:var(--radius);}
 .waiting-spinner{width:60px;height:60px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--primary);animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);};}
-/* ✅ زر تفعيل الصوت للهاتف */
+/* Audio Button Mobile */
 .audio-activate-btn{
-  display:none;
-  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
-  padding:14px 28px;
-  background:linear-gradient(135deg,var(--secondary),#14b8a6);
-  color:white;border:none;border-radius:25px;
-  font-size:1rem;font-weight:700;cursor:pointer;
-  box-shadow:0 8px 25px rgba(16,185,129,0.5);
-  z-index:999;animation:bounce 1s infinite;
+  display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  padding:14px 28px;background:linear-gradient(135deg,var(--secondary),#14b8a6);
+  color:white;border:none;border-radius:25px;font-size:1rem;font-weight:700;
+  cursor:pointer;box-shadow:0 8px 25px rgba(16,185,129,0.5);z-index:999;
+  animation:bounce 1s infinite;
 }
-.audio-activate-btn.show{display:block;}
+.audio-activate-btn.show{display:flex;align-items:center;gap:8px;}
 @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);};}
+/* Admin Warning */
+.admin-warning-banner{
+  display:none;position:fixed;top:80px;left:50%;transform:translateX(-50%);
+  padding:16px 24px;background:rgba(239,68,68,0.95);color:white;
+  border-radius:14px;font-weight:600;z-index:999;
+  max-width:90vw;text-align:center;
+  animation:warn-in 0.3s ease;
+}
+.admin-warning-banner.show{display:flex;align-items:center;gap:10px;}
+@keyframes warn-in{from{opacity:0;transform:translateX(-50%) translateY(-20px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
+/* Notification */
 .notification{position:fixed;top:90px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:25px;font-size:0.88rem;font-weight:600;z-index:1000;display:none;max-width:90vw;text-align:center;}
 .notification.show{display:block;animation:notif-in 0.3s ease;}
 .notification.success{background:rgba(16,185,129,0.95);color:white;}
 .notification.error{background:rgba(239,68,68,0.95);color:white;}
 .notification.info{background:rgba(99,102,241,0.95);color:white;}
+.notification.warning{background:rgba(245,158,11,0.95);color:white;}
 @keyframes notif-in{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
 .speaking-badge{display:none;align-items:center;gap:7px;padding:6px 14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:15px;color:#34d399;font-size:0.82rem;}
 .speaking-badge.show{display:flex;}
-.timer{font-size:1.1rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;}
-.invite-box{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:12px 15px;cursor:pointer;transition:all 0.2s;font-size:0.82rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;word-break:break-all;}
+.timer{font-size:1.1rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;font-variant-numeric:tabular-nums;}
+.invite-box{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:12px 15px;cursor:pointer;transition:all 0.2s;font-size:0.82rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;}
 .invite-box:hover{background:rgba(99,102,241,0.15);}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.1);}
@@ -246,42 +313,63 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 
 <div class="notification" id="notification"></div>
 
-<!-- ✅ زر تفعيل الصوت للهاتف -->
+<!-- Admin Warning Banner -->
+<div class="admin-warning-banner" id="adminWarningBanner">
+  <i class="fas fa-triangle-exclamation"></i>
+  <span id="adminWarningText"></span>
+  <button onclick="document.getElementById('adminWarningBanner').classList.remove('show')"
+    style="background:none;border:none;color:white;cursor:pointer;margin-right:auto;">
+    <i class="fas fa-xmark"></i>
+  </button>
+</div>
+
+<!-- Audio Activate Button -->
 <button class="audio-activate-btn" id="audioActivateBtn" onclick="activateAudio()">
-  🔊 اضغط لتفعيل الصوت
+  <i class="fas fa-volume-high"></i> اضغط لتفعيل الصوت
 </button>
 
 <!-- ==================== LANDING ==================== -->
 <div class="page active" id="landing">
   <header>
     <div class="logo">
-      <div class="logo-icon">🌐</div>
+      <div class="logo-icon"><i class="fas fa-language"></i></div>
       <div>
         <div class="logo-name">TranslationCall</div>
         <span class="logo-pro">PRO</span>
       </div>
     </div>
-    <div class="status-badge">
-      <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">جاري الاتصال...</span>
+    <div class="header-right">
+      <!-- ✅ Language Switcher -->
+      <div class="lang-switcher">
+        <button class="lang-switch-btn active" onclick="setUILang('ar',this)">ع</button>
+        <button class="lang-switch-btn" onclick="setUILang('en',this)">EN</button>
+        <button class="lang-switch-btn" onclick="setUILang('es',this)">ES</button>
+      </div>
+      <div class="status-badge">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">جاري الاتصال...</span>
+      </div>
     </div>
   </header>
 
   <div style="position:relative;z-index:1;flex:1;">
     <div class="hero">
-      <div class="hero-badge">✨ مدعوم بالذكاء الاصطناعي</div>
+      <div class="hero-badge">
+        <i class="fas fa-sparkles"></i>
+        <span id="heroBadge">مدعوم بالذكاء الاصطناعي</span>
+      </div>
       <h1>
-        <span class="grad1">محادثة حية</span><br>
-        <span class="grad2">بلا حواجز اللغة</span>
+        <span class="grad1" id="heroTitle1">محادثة حية</span><br>
+        <span class="grad2" id="heroTitle2">بلا حواجز اللغة</span>
       </h1>
-      <p>تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥</p>
+      <p id="heroDesc">تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥</p>
       <div class="hero-features">
-        <div class="feat-tag"><span>🎤</span><span>تعرف على الصوت</span></div>
-        <div class="feat-tag"><span>🌐</span><span>ترجمة فورية</span></div>
-        <div class="feat-tag"><span>🔊</span><span>نطق تلقائي</span></div>
-        <div class="feat-tag"><span>🤖</span><span>مساعد AI</span></div>
-        <div class="feat-tag"><span>🔒</span><span>غرف خاصة</span></div>
-        <div class="feat-tag"><span>📋</span><span>سجل المحادثة</span></div>
+        <div class="feat-tag"><i class="fas fa-microphone"></i><span id="feat1">تعرف على الصوت</span></div>
+        <div class="feat-tag"><i class="fas fa-globe"></i><span id="feat2">ترجمة فورية</span></div>
+        <div class="feat-tag"><i class="fas fa-volume-high"></i><span id="feat3">نطق تلقائي</span></div>
+        <div class="feat-tag"><i class="fas fa-robot"></i><span id="feat4">مساعد AI</span></div>
+        <div class="feat-tag"><i class="fas fa-lock"></i><span id="feat5">غرف خاصة</span></div>
+        <div class="feat-tag"><i class="fas fa-clock-rotate-left"></i><span id="feat6">سجل المحادثة</span></div>
       </div>
     </div>
 
@@ -289,18 +377,20 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
       <!-- Create Room -->
       <div class="action-card">
         <div class="action-header">
-          <div class="action-icon icon-create">👥</div>
+          <div class="action-icon icon-create">
+            <i class="fas fa-plus"></i>
+          </div>
           <div>
-            <h3>إنشاء محادثة</h3>
-            <p>أنشئ غرفة وادعُ شريكك</p>
+            <h3 id="createTitle">إنشاء محادثة</h3>
+            <p id="createDesc">أنشئ غرفة وادعُ شريكك</p>
           </div>
         </div>
         <div class="input-group">
-          <label>اسمك</label>
+          <label id="labelName1">اسمك</label>
           <input type="text" class="input" id="createName" placeholder="أدخل اسمك...">
         </div>
         <div class="input-group">
-          <label>لغتك</label>
+          <label id="labelLang1">لغتك</label>
           <select class="lang-select" id="createLang">
             <option value="ar">🇸🇦 العربية</option>
             <option value="en">🇺🇸 English</option>
@@ -315,7 +405,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
           </select>
         </div>
         <div class="input-group">
-          <label>لغة شريكك</label>
+          <label id="labelPartnerLang">لغة شريكك</label>
           <select class="lang-select" id="createTargetLang">
             <option value="en">🇺🇸 English</option>
             <option value="ar">🇸🇦 العربية</option>
@@ -329,37 +419,41 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
             <option value="pt">🇧🇷 Português</option>
           </select>
         </div>
-        <!-- ✅ كلمة المرور تظهر فقط عند تفعيل الغرفة الخاصة -->
         <div class="toggle-row">
-          <span class="toggle-label">🔒 غرفة خاصة</span>
+          <span class="toggle-label" id="privateLabel">
+            <i class="fas fa-lock"></i> غرفة خاصة
+          </span>
           <div class="toggle" id="privateToggle" onclick="togglePrivate()">
             <div class="toggle-thumb"></div>
           </div>
         </div>
         <div class="input-group" id="passwordGroup" style="display:none;">
-          <label>كلمة المرور</label>
+          <label id="labelPass">كلمة المرور</label>
           <input type="password" class="input" id="createPassword" placeholder="أدخل كلمة المرور...">
         </div>
         <button class="btn btn-primary btn-full btn-lg" onclick="createRoom()">
-          👥 إنشاء غرفة
+          <i class="fas fa-plus"></i>
+          <span id="btnCreate">إنشاء غرفة</span>
         </button>
       </div>
 
       <!-- Join Room -->
       <div class="action-card">
         <div class="action-header">
-          <div class="action-icon icon-join">🚀</div>
+          <div class="action-icon icon-join">
+            <i class="fas fa-arrow-right-to-bracket"></i>
+          </div>
           <div>
-            <h3>الانضمام لمحادثة</h3>
-            <p>أدخل رمز الغرفة للانضمام</p>
+            <h3 id="joinTitle">الانضمام لمحادثة</h3>
+            <p id="joinDesc">أدخل رمز الغرفة للانضمام</p>
           </div>
         </div>
         <div class="input-group">
-          <label>اسمك</label>
+          <label id="labelName2">اسمك</label>
           <input type="text" class="input" id="joinName" placeholder="أدخل اسمك...">
         </div>
         <div class="input-group">
-          <label>لغتك</label>
+          <label id="labelLang2">لغتك</label>
           <select class="lang-select" id="joinLang">
             <option value="en">🇺🇸 English</option>
             <option value="ar">🇸🇦 العربية</option>
@@ -374,21 +468,22 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
           </select>
         </div>
         <div class="input-group">
-          <label>رمز الغرفة</label>
+          <label id="labelCode">رمز الغرفة</label>
           <input type="text" class="input input-code" id="joinCode"
             placeholder="ABC123" maxlength="6"
             oninput="this.value=this.value.toUpperCase()">
         </div>
-        <!-- ✅ كلمة مرور الانضمام تظهر فقط إذا كانت الغرفة خاصة -->
         <div class="input-group" id="joinPasswordGroup" style="display:none;">
-          <label>كلمة المرور</label>
+          <label id="labelJoinPass">كلمة المرور</label>
           <input type="password" class="input" id="joinPassword" placeholder="كلمة مرور الغرفة">
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="checkRoomPrivacy()" style="margin-bottom:12px;">
-          🔍 تحقق من الغرفة
+        <button class="btn btn-ghost btn-sm btn-full" onclick="checkRoomPrivacy()" style="margin-bottom:12px;">
+          <i class="fas fa-magnifying-glass"></i>
+          <span id="btnCheck">تحقق من الغرفة</span>
         </button>
         <button class="btn btn-secondary btn-full btn-lg" onclick="joinRoom()">
-          🚀 انضم الآن
+          <i class="fas fa-arrow-right-to-bracket"></i>
+          <span id="btnJoin">انضم الآن</span>
         </button>
       </div>
     </div>
@@ -399,8 +494,8 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 <!-- ==================== ROOM PAGE ==================== -->
 <div class="page" id="room-page">
   <header>
-    <div class="logo" onclick="leaveRoom()">
-      <div class="logo-icon">🌐</div>
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-language"></i></div>
       <div>
         <div class="logo-name">TranslationCall</div>
         <span class="logo-pro">PRO</span>
@@ -409,19 +504,20 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
     <div style="display:flex;align-items:center;gap:15px;">
       <div class="timer" id="callTimer">00:00</div>
       <div class="room-code-display" onclick="copyRoomCode()">
-        <span>رمز الغرفة</span>
+        <i class="fas fa-hashtag" style="color:var(--primary);"></i>
         <strong id="displayRoomId">------</strong>
-        <span>📋</span>
+        <i class="fas fa-copy" style="color:var(--text-muted);font-size:0.85rem;"></i>
       </div>
     </div>
     <div class="status-badge">
       <div class="status-dot connected"></div>
-      <span>متصل</span>
+      <span id="roomStatusText">متصل</span>
     </div>
   </header>
 
   <div style="position:relative;z-index:1;flex:1;">
     <div class="room-layout">
+
       <!-- Left Column -->
       <div style="display:flex;flex-direction:column;gap:15px;">
 
@@ -435,9 +531,13 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
             </div>
             <div class="p-status host" id="meStatus">مضيف</div>
           </div>
-          <div class="connection-arrow">⇄</div>
+          <div class="connection-arrow">
+            <i class="fas fa-arrows-left-right"></i>
+          </div>
           <div class="participant partner-p" id="partnerParticipant">
-            <div class="p-avatar waiting-av" id="partnerAvatar">؟</div>
+            <div class="p-avatar waiting-av" id="partnerAvatar">
+              <i class="fas fa-user"></i>
+            </div>
             <div class="p-info">
               <div class="p-name" id="partnerName">في انتظار الشريك...</div>
               <div class="p-lang" id="partnerLang">---</div>
@@ -448,21 +548,27 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 
         <!-- Main Card -->
         <div class="card" style="position:relative;">
+
           <!-- Waiting Overlay -->
           <div class="waiting-overlay" id="waitingOverlay">
             <div class="waiting-spinner"></div>
             <div style="text-align:center;">
-              <div style="font-size:1rem;font-weight:600;margin-bottom:8px;">في انتظار الشريك...</div>
-              <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:15px;">شارك رمز الغرفة أو الرابط</div>
+              <div style="font-size:1rem;font-weight:600;margin-bottom:8px;" id="waitingTitle">
+                في انتظار الشريك...
+              </div>
+              <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:15px;" id="waitingDesc">
+                شارك رمز الغرفة أو الرابط مع شريكك
+              </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;">
               <div class="room-code-display" onclick="copyRoomCode()" style="justify-content:center;">
-                <span>رمز الغرفة:</span>
+                <i class="fas fa-hashtag" style="color:var(--primary);"></i>
                 <strong id="waitingRoomId" style="font-size:1.5rem;letter-spacing:0.2em;color:var(--primary);">------</strong>
-                <span>📋</span>
+                <i class="fas fa-copy"></i>
               </div>
               <div class="invite-box" onclick="copyInviteLink()">
-                🔗 <span>انسخ رابط الدعوة المباشر</span>
+                <i class="fas fa-link"></i>
+                <span id="inviteLinkLabel">انسخ رابط الدعوة المباشر</span>
               </div>
             </div>
           </div>
@@ -470,7 +576,15 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
           <!-- Mic Section -->
           <div class="mic-section">
             <div class="mic-ring" id="micRing">
-              <button class="mic-btn" id="micBtn" onclick="toggleRecording()" disabled>🎤</button>
+              <!-- ✅ زر الميكروفون الرئيسي المصلح -->
+              <button
+                class="mic-btn-main"
+                id="micBtnMain"
+                onclick="toggleRecording()"
+                disabled
+              >
+                <i class="fas fa-microphone" id="micBtnIcon"></i>
+              </button>
             </div>
             <div class="mic-label" id="micLabel">في انتظار الشريك...</div>
             <div class="visualizer" id="visualizer">
@@ -480,72 +594,136 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
               <div class="vbar"></div>
             </div>
             <div class="speaking-badge" id="speakingBadge">
-              🔊 شريكك يتحدث...
+              <i class="fas fa-volume-high"></i>
+              <span id="speakingText">شريكك يتحدث...</span>
             </div>
           </div>
 
           <!-- Results -->
-          <div class="card-title">📝 النتائج</div>
+          <div class="card-title">
+            <i class="fas fa-align-left"></i>
+            <span id="resultsTitle">النتائج</span>
+          </div>
           <div class="results-grid">
             <div class="result-box original">
-              <h5>🎤 ما قلته</h5>
+              <h5>
+                <i class="fas fa-microphone"></i>
+                <span id="originalLabel">ما قلته</span>
+              </h5>
               <p id="originalText">سيظهر هنا كلامك...</p>
               <div class="result-actions">
-                <button class="mini-btn" onclick="copyResult('originalText')">📋 نسخ</button>
+                <button class="mini-btn" onclick="copyResult('originalText')">
+                  <i class="fas fa-copy"></i> نسخ
+                </button>
               </div>
             </div>
             <div class="result-box translated">
-              <h5>🌐 ترجمتك المرسلة</h5>
+              <h5>
+                <i class="fas fa-globe"></i>
+                <span id="translatedLabel">ترجمتك المرسلة</span>
+              </h5>
               <p id="translatedText">سيظهر هنا النص المترجم...</p>
               <div class="result-actions">
-                <button class="mini-btn" onclick="copyResult('translatedText')">📋 نسخ</button>
+                <button class="mini-btn" onclick="copyResult('translatedText')">
+                  <i class="fas fa-copy"></i> نسخ
+                </button>
               </div>
             </div>
           </div>
           <div class="partner-result">
-            <h5>🎧 ما قاله شريكك (مترجماً إليك)</h5>
+            <h5>
+              <i class="fas fa-headphones"></i>
+              <span id="partnerResultLabel">ما قاله شريكك (مترجماً إليك)</span>
+            </h5>
             <p id="partnerTranslatedText">سيظهر هنا كلام شريكك مترجماً...</p>
           </div>
         </div>
 
-        <!-- Controls -->
+        <!-- ✅ Controls Bar مع أيقونات Font Awesome -->
         <div class="controls-bar">
-          <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()" title="كتم">🎤</button>
-          <button class="mic-btn" id="mainMicBtn" onclick="toggleRecording()"
-            style="width:60px;height:60px;font-size:1.5rem;" disabled>🎤
-          </button>
-          <button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()" title="صوت">🔊</button>
+          <!-- Mute Mic -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+            <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()" title="كتم الميكروفون">
+              <i class="fas fa-microphone" id="muteIcon"></i>
+            </button>
+            <span style="font-size:0.65rem;color:var(--text-muted);" id="muteBtnLabel">ميكروفون</span>
+          </div>
+
+          <!-- Main Mic -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+            <button
+              class="mic-btn-main"
+              id="micBtnControls"
+              onclick="toggleRecording()"
+              style="width:64px;height:64px;font-size:1.6rem;"
+              disabled
+            >
+              <i class="fas fa-microphone" id="micBtnControlsIcon"></i>
+            </button>
+            <span style="font-size:0.65rem;color:var(--text-muted);" id="micBtnLabel">تحدث</span>
+          </div>
+
+          <!-- Speaker -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+            <button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()" title="الصوت">
+              <i class="fas fa-volume-high" id="speakerIcon"></i>
+            </button>
+            <span style="font-size:0.65rem;color:var(--text-muted);" id="speakerBtnLabel">صوت</span>
+          </div>
+
           <div style="flex:1;"></div>
-          <button class="leave-btn" onclick="leaveRoom()">📵 مغادرة</button>
+
+          <!-- Leave -->
+          <button class="leave-btn" onclick="confirmLeave()">
+            <i class="fas fa-phone-slash"></i>
+            <span id="leaveLabel">مغادرة</span>
+          </button>
         </div>
+
       </div>
 
       <!-- Right Panel -->
       <div class="right-panel">
+
         <!-- Transcript -->
         <div class="transcript-panel">
           <div class="panel-head">
-            <h4>💬 سجل المحادثة</h4>
+            <h4>
+              <i class="fas fa-comments"></i>
+              <span id="transcriptTitle">سجل المحادثة</span>
+            </h4>
             <div class="panel-head-actions">
-              <button onclick="downloadHistory()" title="تحميل">⬇️</button>
-              <button onclick="clearMessages()" title="مسح">🗑️</button>
+              <button onclick="downloadHistory()" title="تحميل">
+                <i class="fas fa-download"></i>
+              </button>
+              <button onclick="clearMessages()" title="مسح">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
           </div>
           <div class="messages" id="messages">
-            <div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>
+            <div class="empty-msgs">
+              <i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>
+              لا توجد رسائل بعد<br>ابدأ بالتحدث
+            </div>
           </div>
         </div>
 
         <!-- AI -->
         <div class="ai-panel">
           <div class="panel-head">
-            <h4>🤖 مساعد AI</h4>
+            <h4>
+              <i class="fas fa-robot"></i>
+              <span id="aiTitle">مساعد AI</span>
+            </h4>
             <div class="panel-head-actions">
-              <button onclick="clearAI()">🗑️</button>
+              <button onclick="clearAI()" title="مسح">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
           </div>
           <div class="ai-msgs" id="aiMessages">
-            <div class="ai-bubble bot">
+            <div class="ai-bubble bot" id="aiWelcome">
               مرحباً! 👋 أنا مساعدك الذكي.<br>
               يمكنني مساعدتك في الترجمة والنصائح الثقافية!
             </div>
@@ -557,10 +735,36 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
             <input type="text" id="aiInput"
               placeholder="اسأل المساعد..."
               onkeypress="if(event.key==='Enter')sendAI()">
-            <button class="ai-send-btn" onclick="sendAI()">➤</button>
+            <button class="ai-send-btn" onclick="sendAI()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
           </div>
         </div>
+
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Confirm Leave Modal -->
+<div id="leaveModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);z-index:500;align-items:center;justify-content:center;">
+  <div style="background:var(--bg-card);border-radius:20px;padding:30px;width:100%;max-width:380px;border:1px solid var(--border);text-align:center;">
+    <div style="width:64px;height:64px;background:rgba(239,68,68,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem;color:var(--danger);">
+      <i class="fas fa-phone-slash"></i>
+    </div>
+    <h3 style="margin-bottom:8px;" id="leaveModalTitle">مغادرة الغرفة</h3>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:24px;" id="leaveModalDesc">
+      هل أنت متأكد أنك تريد مغادرة الغرفة؟
+    </p>
+    <div style="display:flex;gap:10px;">
+      <button onclick="leaveRoom()" style="flex:1;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--danger),#f97316);color:white;font-weight:600;cursor:pointer;font-size:0.95rem;">
+        <i class="fas fa-phone-slash"></i>
+        <span id="leaveConfirmBtn">نعم، مغادرة</span>
+      </button>
+      <button onclick="closeLeaveModal()" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-weight:600;cursor:pointer;font-size:0.95rem;">
+        <i class="fas fa-arrow-left"></i>
+        <span id="leaveCancelBtn">إلغاء</span>
+      </button>
     </div>
   </div>
 </div>
@@ -572,7 +776,182 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 const SERVER_URL = 'https://translationcall-server.onrender.com';
 
 // ============================================
-// Languages
+// UI Languages
+// ============================================
+const uiTexts = {
+  ar:{
+    statusConnecting:'جاري الاتصال...',
+    statusConnected:'متصل',
+    statusDisconnected:'غير متصل',
+    heroBadge:'مدعوم بالذكاء الاصطناعي',
+    heroTitle1:'محادثة حية',
+    heroTitle2:'بلا حواجز اللغة',
+    heroDesc:'تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥',
+    feat1:'تعرف على الصوت',feat2:'ترجمة فورية',feat3:'نطق تلقائي',
+    feat4:'مساعد AI',feat5:'غرف خاصة',feat6:'سجل المحادثة',
+    createTitle:'إنشاء محادثة',createDesc:'أنشئ غرفة وادعُ شريكك',
+    joinTitle:'الانضمام لمحادثة',joinDesc:'أدخل رمز الغرفة للانضمام',
+    labelName:'اسمك',labelLang:'لغتك',labelPartnerLang:'لغة شريكك',
+    labelCode:'رمز الغرفة',labelPass:'كلمة المرور',
+    privateLabel:'غرفة خاصة',
+    btnCreate:'إنشاء غرفة',btnJoin:'انضم الآن',btnCheck:'تحقق من الغرفة',
+    waitingTitle:'في انتظار الشريك...',
+    waitingDesc:'شارك رمز الغرفة أو الرابط مع شريكك',
+    inviteLinkLabel:'انسخ رابط الدعوة المباشر',
+    micLabelWaiting:'في انتظار الشريك...',
+    micLabelReady:'اضغط للتحدث',
+    micLabelListening:'🎤 يستمع إليك...',
+    resultsTitle:'النتائج',
+    originalLabel:'ما قلته',translatedLabel:'ترجمتك المرسلة',
+    partnerResultLabel:'ما قاله شريكك (مترجماً إليك)',
+    transcriptTitle:'سجل المحادثة',aiTitle:'مساعد AI',
+    leaveLabel:'مغادرة',
+    muteBtnLabel:'ميكروفون',micBtnLabel:'تحدث',speakerBtnLabel:'صوت',
+    speakingText:'شريكك يتحدث...',
+    leaveModalTitle:'مغادرة الغرفة',
+    leaveModalDesc:'هل أنت متأكد أنك تريد مغادرة الغرفة؟',
+    leaveConfirmBtn:'نعم، مغادرة',leaveCancelBtn:'إلغاء',
+    aiWelcome:'مرحباً! 👋 أنا مساعدك الذكي.<br>يمكنني مساعدتك في الترجمة والنصائح الثقافية!',
+    dir:'rtl',lang:'ar'
+  },
+  en:{
+    statusConnecting:'Connecting...',
+    statusConnected:'Connected',
+    statusDisconnected:'Disconnected',
+    heroBadge:'Powered by AI',
+    heroTitle1:'Live Conversation',
+    heroTitle2:'No Language Barriers',
+    heroDesc:'Talk in your language with anyone in the world. AI translates instantly 🔥',
+    feat1:'Voice Recognition',feat2:'Instant Translation',feat3:'Auto Speech',
+    feat4:'AI Assistant',feat5:'Private Rooms',feat6:'Chat History',
+    createTitle:'Create Conversation',createDesc:'Create a room and invite your partner',
+    joinTitle:'Join Conversation',joinDesc:'Enter room code to join',
+    labelName:'Your Name',labelLang:'Your Language',labelPartnerLang:"Partner's Language",
+    labelCode:'Room Code',labelPass:'Password',
+    privateLabel:'Private Room',
+    btnCreate:'Create Room',btnJoin:'Join Now',btnCheck:'Check Room',
+    waitingTitle:'Waiting for partner...',
+    waitingDesc:'Share the room code or link with your partner',
+    inviteLinkLabel:'Copy Direct Invite Link',
+    micLabelWaiting:'Waiting for partner...',
+    micLabelReady:'Press to speak',
+    micLabelListening:'🎤 Listening...',
+    resultsTitle:'Results',
+    originalLabel:'What you said',translatedLabel:'Your sent translation',
+    partnerResultLabel:"What your partner said (translated for you)",
+    transcriptTitle:'Chat History',aiTitle:'AI Assistant',
+    leaveLabel:'Leave',
+    muteBtnLabel:'Mic',micBtnLabel:'Speak',speakerBtnLabel:'Speaker',
+    speakingText:'Partner is speaking...',
+    leaveModalTitle:'Leave Room',
+    leaveModalDesc:'Are you sure you want to leave the room?',
+    leaveConfirmBtn:'Yes, Leave',leaveCancelBtn:'Cancel',
+    aiWelcome:"Hello! 👋 I'm your AI assistant.<br>I can help you with translations and cultural tips!",
+    dir:'ltr',lang:'en'
+  },
+  es:{
+    statusConnecting:'Conectando...',
+    statusConnected:'Conectado',
+    statusDisconnected:'Desconectado',
+    heroBadge:'Impulsado por IA',
+    heroTitle1:'Conversación en vivo',
+    heroTitle2:'Sin barreras de idioma',
+    heroDesc:'Habla en tu idioma con cualquier persona. La IA traduce al instante 🔥',
+    feat1:'Reconocimiento de voz',feat2:'Traducción instantánea',feat3:'Voz automática',
+    feat4:'Asistente IA',feat5:'Salas privadas',feat6:'Historial',
+    createTitle:'Crear conversación',createDesc:'Crea una sala e invita a tu compañero',
+    joinTitle:'Unirse a conversación',joinDesc:'Ingresa el código de sala para unirte',
+    labelName:'Tu nombre',labelLang:'Tu idioma',labelPartnerLang:'Idioma de tu compañero',
+    labelCode:'Código de sala',labelPass:'Contraseña',
+    privateLabel:'Sala privada',
+    btnCreate:'Crear sala',btnJoin:'Unirse ahora',btnCheck:'Verificar sala',
+    waitingTitle:'Esperando compañero...',
+    waitingDesc:'Comparte el código o el enlace con tu compañero',
+    inviteLinkLabel:'Copiar enlace de invitación',
+    micLabelWaiting:'Esperando compañero...',
+    micLabelReady:'Presiona para hablar',
+    micLabelListening:'🎤 Escuchando...',
+    resultsTitle:'Resultados',
+    originalLabel:'Lo que dijiste',translatedLabel:'Tu traducción enviada',
+    partnerResultLabel:'Lo que dijo tu compañero (traducido para ti)',
+    transcriptTitle:'Historial',aiTitle:'Asistente IA',
+    leaveLabel:'Salir',
+    muteBtnLabel:'Micrófono',micBtnLabel:'Hablar',speakerBtnLabel:'Altavoz',
+    speakingText:'Tu compañero está hablando...',
+    leaveModalTitle:'Salir de la sala',
+    leaveModalDesc:'¿Estás seguro de que quieres salir de la sala?',
+    leaveConfirmBtn:'Sí, salir',leaveCancelBtn:'Cancelar',
+    aiWelcome:"¡Hola! 👋 Soy tu asistente de IA.<br>¡Puedo ayudarte con traducciones y consejos culturales!",
+    dir:'ltr',lang:'es'
+  }
+};
+
+let currentUILang = 'ar';
+
+function setUILang(lang, btn){
+  currentUILang = lang;
+  const t = uiTexts[lang];
+
+  // Update HTML dir
+  document.documentElement.lang = t.lang;
+  document.documentElement.dir = t.dir;
+
+  // Update buttons
+  document.querySelectorAll('.lang-switch-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  // Update texts
+  document.getElementById('statusText').innerText = t.statusConnecting;
+  document.getElementById('heroBadge').innerText = t.heroBadge;
+  document.getElementById('heroTitle1').innerText = t.heroTitle1;
+  document.getElementById('heroTitle2').innerText = t.heroTitle2;
+  document.getElementById('heroDesc').innerText = t.heroDesc;
+  document.getElementById('feat1').innerText = t.feat1;
+  document.getElementById('feat2').innerText = t.feat2;
+  document.getElementById('feat3').innerText = t.feat3;
+  document.getElementById('feat4').innerText = t.feat4;
+  document.getElementById('feat5').innerText = t.feat5;
+  document.getElementById('feat6').innerText = t.feat6;
+  document.getElementById('createTitle').innerText = t.createTitle;
+  document.getElementById('createDesc').innerText = t.createDesc;
+  document.getElementById('joinTitle').innerText = t.joinTitle;
+  document.getElementById('joinDesc').innerText = t.joinDesc;
+  document.getElementById('labelName1').innerText = t.labelName;
+  document.getElementById('labelLang1').innerText = t.labelLang;
+  document.getElementById('labelPartnerLang').innerText = t.labelPartnerLang;
+  document.getElementById('labelName2').innerText = t.labelName;
+  document.getElementById('labelLang2').innerText = t.labelLang;
+  document.getElementById('labelCode').innerText = t.labelCode;
+  document.getElementById('labelPass').innerText = t.labelPass;
+  document.getElementById('labelJoinPass').innerText = t.labelPass;
+  document.getElementById('privateLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.privateLabel}`;
+  document.getElementById('btnCreate').innerText = t.btnCreate;
+  document.getElementById('btnJoin').innerText = t.btnJoin;
+  document.getElementById('btnCheck').innerText = t.btnCheck;
+  document.getElementById('waitingTitle').innerText = t.waitingTitle;
+  document.getElementById('waitingDesc').innerText = t.waitingDesc;
+  document.getElementById('inviteLinkLabel').innerText = t.inviteLinkLabel;
+  document.getElementById('resultsTitle').innerText = t.resultsTitle;
+  document.getElementById('originalLabel').innerText = t.originalLabel;
+  document.getElementById('translatedLabel').innerText = t.translatedLabel;
+  document.getElementById('partnerResultLabel').innerText = t.partnerResultLabel;
+  document.getElementById('transcriptTitle').innerText = t.transcriptTitle;
+  document.getElementById('aiTitle').innerText = t.aiTitle;
+  document.getElementById('leaveLabel').innerText = t.leaveLabel;
+  document.getElementById('muteBtnLabel').innerText = t.muteBtnLabel;
+  document.getElementById('micBtnLabel').innerText = t.micBtnLabel;
+  document.getElementById('speakerBtnLabel').innerText = t.speakerBtnLabel;
+  document.getElementById('speakingText').innerText = t.speakingText;
+  document.getElementById('leaveModalTitle').innerText = t.leaveModalTitle;
+  document.getElementById('leaveModalDesc').innerText = t.leaveModalDesc;
+  document.getElementById('leaveConfirmBtn').innerText = t.leaveConfirmBtn;
+  document.getElementById('leaveCancelBtn').innerText = t.leaveCancelBtn;
+  document.getElementById('aiWelcome').innerHTML = t.aiWelcome;
+  document.getElementById('micLabel').innerText = t.micLabelWaiting;
+}
+
+// ============================================
+// Languages Config
 // ============================================
 const langs = {
   ar:{name:'العربية',flag:'🇸🇦',voice:'ar-SA'},
@@ -607,7 +986,7 @@ let timerInterval = null;
 let audioActivated = false;
 
 // ============================================
-// ✅ تفعيل الصوت للهاتف
+// Activate Audio (Mobile Fix)
 // ============================================
 function activateAudio(){
   try{
@@ -622,41 +1001,33 @@ function activateAudio(){
     const utt = new SpeechSynthesisUtterance(' ');
     utt.volume = 0;
     window.speechSynthesis.speak(utt);
-  } catch(e){}
+  }catch(e){}
   audioActivated = true;
   document.getElementById('audioActivateBtn').classList.remove('show');
   showNotification('تم تفعيل الصوت ✅','success');
 }
 
 // ============================================
-// ✅ حفظ واسترجاع الجلسة
+// Session Management
 // ============================================
 function saveSession(){
   if(!roomId) return;
-  const session = {
-    roomId,
-    myName,
-    myLang,
-    targetLang,
-    timestamp: Date.now()
-  };
-  localStorage.setItem('tcSession', JSON.stringify(session));
+  localStorage.setItem('tcSession', JSON.stringify({
+    roomId, myName, myLang, targetLang, timestamp: Date.now()
+  }));
 }
 
 function loadSession(){
   try{
     const raw = localStorage.getItem('tcSession');
     if(!raw) return null;
-    const session = JSON.parse(raw);
-    // الجلسة صالحة لمدة ساعة فقط
-    if(Date.now() - session.timestamp > 3600000){
+    const s = JSON.parse(raw);
+    if(Date.now() - s.timestamp > 3600000){
       localStorage.removeItem('tcSession');
       return null;
     }
-    return session;
-  } catch(e){
-    return null;
-  }
+    return s;
+  }catch(e){ return null; }
 }
 
 function clearSession(){
@@ -664,24 +1035,18 @@ function clearSession(){
 }
 
 // ============================================
-// ✅ استعادة الجلسة تلقائياً
+// Restore Session
 // ============================================
 function tryRestoreSession(){
-  const session = loadSession();
-  if(!session) return;
-
-  myName = session.myName;
-  myLang = session.myLang;
-  targetLang = session.targetLang;
-
-  showNotification('جاري استعادة جلستك...','info');
-
+  const s = loadSession();
+  if(!s) return;
+  myName = s.myName;
+  myLang = s.myLang;
+  targetLang = s.targetLang;
   socket.emit('join-room',{
-    roomId: session.roomId,
-    userName: myName,
-    language: myLang,
-    password: ''
-  }, (res) => {
+    roomId: s.roomId, userName: myName,
+    language: myLang, password: ''
+  },(res)=>{
     if(res.success){
       roomId = res.roomId;
       if(res.partner){
@@ -698,7 +1063,6 @@ function tryRestoreSession(){
       }
       showNotification('تم استعادة جلستك ✅','success');
     } else {
-      // الغرفة لم تعد موجودة
       clearSession();
     }
   });
@@ -710,43 +1074,35 @@ function tryRestoreSession(){
 function initSocket(){
   socket = io(SERVER_URL,{
     transports:['websocket','polling'],
-    reconnection: true,
-    reconnectionAttempts: 10,
-    reconnectionDelay: 1000
+    reconnection:true,
+    reconnectionAttempts:10,
+    reconnectionDelay:1000
   });
 
-  socket.on('connect', () => {
+  socket.on('connect',()=>{
     setStatus(true);
-    showNotification('متصل ✅','success');
-    // ✅ محاولة استعادة الجلسة عند الاتصال
     if(!roomId) tryRestoreSession();
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect',()=>{
     setStatus(false);
     showNotification('انقطع الاتصال، جاري إعادة الاتصال...','error');
   });
 
-  socket.on('reconnect', () => {
-    showNotification('تم إعادة الاتصال ✅','success');
-    if(roomId) saveSession();
-  });
-
-  socket.on('partner-joined', (data) => {
+  socket.on('partner-joined',(data)=>{
     partnerInfo = data;
     partnerLang = data.language;
     updatePartnerUI(data);
     hideWaiting();
     enableMic();
     startTimer();
-    // ✅ أظهر زر تفعيل الصوت على الهاتف
     if(/Android|iPhone|iPad/i.test(navigator.userAgent) && !audioActivated){
       document.getElementById('audioActivateBtn').classList.add('show');
     }
     showNotification(`${data.name} انضم! 🎉`,'success');
   });
 
-  socket.on('partner-left', (data) => {
+  socket.on('partner-left',(data)=>{
     partnerInfo = null;
     resetPartnerUI();
     showWaiting();
@@ -755,20 +1111,18 @@ function initSocket(){
     showNotification(`${data.name} غادر المحادثة`,'error');
   });
 
-  // ✅ الصوت يخرج للشريك فقط - أنا أسمع ترجمة شريكي
-  socket.on('new-message', (msg) => {
+  // ✅ الصوت يخرج للشريك فقط
+  socket.on('new-message',(msg)=>{
     if(msg.senderId !== socket.id){
-      // رسالة من الشريك - اعرض وانطق ترجمته بلغتي
       addMessage(msg, false);
       document.getElementById('partnerTranslatedText').innerText = msg.translatedText;
       if(!isSpeakerOff){
         speakText(msg.translatedText, myLang);
       }
     }
-    // رسالتي - تظهر في السجل فقط، لا صوت
   });
 
-  socket.on('partner-speaking', (data) => {
+  socket.on('partner-speaking',(data)=>{
     const el = document.getElementById('partnerParticipant');
     const badge = document.getElementById('speakingBadge');
     if(data.speaking){
@@ -779,6 +1133,29 @@ function initSocket(){
       badge.classList.remove('show');
     }
   });
+
+  // Admin events
+  socket.on('blocked',()=>{
+    alert('تم حظرك من الموقع');
+    window.location.href = '/';
+  });
+
+  socket.on('maintenance',()=>{
+    alert('الموقع في وضع الصيانة حالياً. حاول لاحقاً.');
+    window.location.href = '/';
+  });
+
+  socket.on('room-deleted',()=>{
+    showNotification('تم حذف الغرفة من قبل المسؤول','error');
+    setTimeout(()=>leaveRoom(), 2000);
+  });
+
+  socket.on('admin-warning',(data)=>{
+    const banner = document.getElementById('adminWarningBanner');
+    document.getElementById('adminWarningText').innerText = `⚠️ تحذير من المسؤول: ${data.message}`;
+    banner.classList.add('show');
+    setTimeout(()=>banner.classList.remove('show'), 8000);
+  });
 }
 
 // ============================================
@@ -787,12 +1164,13 @@ function initSocket(){
 function setStatus(connected){
   const dot = document.getElementById('statusDot');
   const txt = document.getElementById('statusText');
+  const t = uiTexts[currentUILang];
   if(connected){
     dot.classList.add('connected');
-    txt.innerText = 'متصل';
+    txt.innerText = t.statusConnected;
   } else {
     dot.classList.remove('connected');
-    txt.innerText = 'غير متصل';
+    txt.innerText = t.statusDisconnected;
   }
 }
 
@@ -801,7 +1179,7 @@ function setStatus(connected){
 // ============================================
 function startTimer(){
   const start = Date.now();
-  timerInterval = setInterval(() => {
+  timerInterval = setInterval(()=>{
     const e = Math.floor((Date.now()-start)/1000);
     const m = Math.floor(e/60).toString().padStart(2,'0');
     const s = (e%60).toString().padStart(2,'0');
@@ -819,15 +1197,15 @@ function stopTimer(){
 function togglePrivate(){
   isPrivate = !isPrivate;
   document.getElementById('privateToggle').classList.toggle('on',isPrivate);
-  document.getElementById('passwordGroup').style.display = isPrivate ? 'flex' : 'none';
+  document.getElementById('passwordGroup').style.display = isPrivate?'flex':'none';
 }
 
 // ============================================
-// ✅ تحقق من الغرفة قبل الانضمام
+// Check Room Privacy
 // ============================================
 async function checkRoomPrivacy(){
   const code = document.getElementById('joinCode').value.trim().toUpperCase();
-  if(!code || code.length !== 6){
+  if(!code||code.length!==6){
     showNotification('أدخل رمز الغرفة أولاً','error');
     return;
   }
@@ -843,15 +1221,14 @@ async function checkRoomPrivacy(){
       return;
     }
     if(data.isPrivate){
-      // أظهر خانة كلمة المرور
-      document.getElementById('joinPasswordGroup').style.display = 'flex';
-      showNotification('هذه غرفة خاصة - أدخل كلمة المرور 🔒','info');
+      document.getElementById('joinPasswordGroup').style.display='flex';
+      showNotification('غرفة خاصة - أدخل كلمة المرور 🔒','info');
     } else {
-      document.getElementById('joinPasswordGroup').style.display = 'none';
+      document.getElementById('joinPasswordGroup').style.display='none';
       showNotification('الغرفة متاحة ✅','success');
     }
-  } catch(e){
-    showNotification('تعذر التحقق من الغرفة','error');
+  }catch(e){
+    showNotification('تعذر التحقق','error');
   }
 }
 
@@ -865,20 +1242,16 @@ function createRoom(){
   const pass = document.getElementById('createPassword').value;
 
   if(!name){ showNotification('يرجى إدخال اسمك','error'); return; }
-  if(lang === tLang){ showNotification('اختر لغتين مختلفتين','error'); return; }
+  if(lang===tLang){ showNotification('اختر لغتين مختلفتين','error'); return; }
 
-  myName = name;
-  myLang = lang;
-  targetLang = tLang;
+  myName=name; myLang=lang; targetLang=tLang;
 
   socket.emit('create-room',{
-    userName: name,
-    language: lang,
-    isPrivate,
-    password: isPrivate ? pass : null
-  }, (res) => {
+    userName:name, language:lang,
+    isPrivate, password:isPrivate?pass:null
+  },(res)=>{
     if(res.success){
-      roomId = res.roomId;
+      roomId=res.roomId;
       saveSession();
       enterRoom(true);
     } else {
@@ -897,23 +1270,19 @@ function joinRoom(){
   const pass = document.getElementById('joinPassword').value;
 
   if(!name||!code){ showNotification('يرجى إدخال الاسم والرمز','error'); return; }
-  if(code.length !== 6){ showNotification('الرمز يجب أن يكون 6 أحرف','error'); return; }
+  if(code.length!==6){ showNotification('الرمز يجب أن يكون 6 أحرف','error'); return; }
 
-  myName = name;
-  myLang = lang;
+  myName=name; myLang=lang;
 
   socket.emit('join-room',{
-    roomId: code,
-    userName: name,
-    language: lang,
-    password: pass
-  }, (res) => {
+    roomId:code, userName:name, language:lang, password:pass
+  },(res)=>{
     if(res.success){
-      roomId = res.roomId;
+      roomId=res.roomId;
       if(res.partner){
-        partnerInfo = res.partner;
-        partnerLang = res.partner.language;
-        targetLang = partnerLang;
+        partnerInfo=res.partner;
+        partnerLang=res.partner.language;
+        targetLang=partnerLang;
       }
       saveSession();
       enterRoom(false);
@@ -922,13 +1291,12 @@ function joinRoom(){
         hideWaiting();
         enableMic();
         startTimer();
-        // ✅ أظهر زر تفعيل الصوت على الهاتف
-        if(/Android|iPhone|iPad/i.test(navigator.userAgent) && !audioActivated){
+        if(/Android|iPhone|iPad/i.test(navigator.userAgent)&&!audioActivated){
           document.getElementById('audioActivateBtn').classList.add('show');
         }
       }
-      if(res.messages && res.messages.length > 0){
-        res.messages.forEach(msg => addMessage(msg, msg.senderId === socket.id));
+      if(res.messages&&res.messages.length>0){
+        res.messages.forEach(msg=>addMessage(msg,msg.senderId===socket.id));
       }
     } else {
       showNotification(res.error||'حدث خطأ','error');
@@ -945,7 +1313,7 @@ function enterRoom(isHost){
   document.getElementById('meName').innerText = myName;
   document.getElementById('meAvatar').innerText = myName.charAt(0).toUpperCase();
   document.getElementById('meLang').innerText = `${langs[myLang]?.flag} ${langs[myLang]?.name}`;
-  document.getElementById('meStatus').innerText = isHost ? 'مضيف' : 'مشارك';
+  document.getElementById('meStatus').innerText = isHost?'مضيف':'مشارك';
   document.getElementById('landing').classList.remove('active');
   document.getElementById('room-page').classList.add('active');
   showWaiting();
@@ -956,7 +1324,7 @@ function enterRoom(isHost){
 // ============================================
 function updatePartnerUI(data){
   document.getElementById('partnerName').innerText = data.name;
-  document.getElementById('partnerAvatar').innerText = data.name.charAt(0).toUpperCase();
+  document.getElementById('partnerAvatar').innerHTML = data.name.charAt(0).toUpperCase();
   document.getElementById('partnerAvatar').className = 'p-avatar partner-av';
   document.getElementById('partnerLang').innerText = `${langs[data.language]?.flag||'🌐'} ${langs[data.language]?.name||data.language}`;
   document.getElementById('partnerStatus').innerText = 'متصل';
@@ -965,7 +1333,7 @@ function updatePartnerUI(data){
 
 function resetPartnerUI(){
   document.getElementById('partnerName').innerText = 'في انتظار الشريك...';
-  document.getElementById('partnerAvatar').innerText = '؟';
+  document.getElementById('partnerAvatar').innerHTML = '<i class="fas fa-user"></i>';
   document.getElementById('partnerAvatar').className = 'p-avatar waiting-av';
   document.getElementById('partnerLang').innerText = '---';
   document.getElementById('partnerStatus').innerText = 'منتظر';
@@ -975,100 +1343,136 @@ function resetPartnerUI(){
 function showWaiting(){ document.getElementById('waitingOverlay').style.display='flex'; }
 function hideWaiting(){ document.getElementById('waitingOverlay').style.display='none'; }
 
+// ============================================
+// Enable/Disable Mic
+// ============================================
 function enableMic(){
-  document.getElementById('micBtn').disabled = false;
-  document.getElementById('mainMicBtn').disabled = false;
-  document.getElementById('micLabel').innerText = 'اضغط للتحدث';
+  const t = uiTexts[currentUILang];
+  document.getElementById('micBtnMain').disabled = false;
+  document.getElementById('micBtnControls').disabled = false;
+  document.getElementById('micLabel').innerText = t.micLabelReady;
 }
+
 function disableMic(){
-  document.getElementById('micBtn').disabled = true;
-  document.getElementById('mainMicBtn').disabled = true;
-  document.getElementById('micLabel').innerText = 'في انتظار الشريك...';
+  const t = uiTexts[currentUILang];
+  document.getElementById('micBtnMain').disabled = true;
+  document.getElementById('micBtnControls').disabled = true;
+  document.getElementById('micLabel').innerText = t.micLabelWaiting;
   if(isRecording) stopRecording();
 }
 
 // ============================================
-// Recording
+// ✅ Toggle Recording (Fixed)
 // ============================================
 function toggleRecording(){
   if(isRecording){ stopRecording(); }
   else { startRecording(); }
 }
 
+// ============================================
+// ✅ Start Recording (Fixed & Continuous)
+// ============================================
 function startRecording(){
   const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){ showNotification('استخدم Chrome أو Edge','error'); return; }
   if(isMuted){ showNotification('الميكروفون مكتوم 🔇','error'); return; }
+
+  const t = uiTexts[currentUILang];
 
   recognition = new SR();
   recognition.lang = langs[myLang]?.voice||'ar-SA';
   recognition.continuous = false;
   recognition.interimResults = false;
 
-  recognition.onstart = () => {
+  recognition.onstart = ()=>{
     isRecording = true;
-    document.getElementById('micBtn').classList.add('recording');
-    document.getElementById('mainMicBtn').classList.add('recording');
-    document.getElementById('micBtn').innerText = '⏹️';
-    document.getElementById('mainMicBtn').innerText = '⏹️';
-    document.getElementById('micRing').classList.add('active');
+    // Update both mic buttons
+    setMicRecording(true);
     document.getElementById('visualizer').classList.add('active');
-    document.getElementById('micLabel').innerText = '🎤 يستمع...';
+    document.getElementById('micRing').classList.add('active');
+    document.getElementById('micLabel').innerText = t.micLabelListening;
     document.getElementById('meParticipant').classList.add('speaking');
     socket.emit('speaking',{roomId, speaking:true});
   };
 
-  recognition.onresult = async (event) => {
+  recognition.onresult = async(event)=>{
     const text = event.results[0][0].transcript;
     if(text.trim()){
       document.getElementById('originalText').innerText = text;
+      document.getElementById('originalBox')?.classList.add('has-content');
       await translateAndSend(text);
     }
   };
 
-  recognition.onerror = (event) => {
-    if(event.error === 'not-allowed'){
+  recognition.onerror = (event)=>{
+    if(event.error==='not-allowed'){
       showNotification('يرجى السماح باستخدام الميكروفون','error');
       stopRecording();
+    } else if(event.error==='no-speech'){
+      // Continue listening
     }
   };
 
   // ✅ مستمر تلقائياً
-  recognition.onend = () => {
+  recognition.onend = ()=>{
     document.getElementById('meParticipant').classList.remove('speaking');
     socket.emit('speaking',{roomId, speaking:false});
     if(isRecording){
-      setTimeout(() => {
+      setTimeout(()=>{
         if(isRecording){
           try{ recognition.start(); }
           catch(e){ stopRecording(); }
         }
-      }, 200);
+      },200);
     } else {
-      stopRecordingUI();
+      setMicRecording(false);
+      document.getElementById('visualizer').classList.remove('active');
+      document.getElementById('micRing').classList.remove('active');
+      const t2 = uiTexts[currentUILang];
+      document.getElementById('micLabel').innerText = t2.micLabelReady;
     }
   };
 
   try{ recognition.start(); }
-  catch(e){ stopRecording(); }
+  catch(e){
+    console.error('Recognition start error:',e);
+    stopRecording();
+  }
 }
 
+// ✅ Update both mic buttons UI
+function setMicRecording(recording){
+  const mainBtn = document.getElementById('micBtnMain');
+  const ctrlBtn = document.getElementById('micBtnControls');
+  const mainIcon = document.getElementById('micBtnIcon');
+  const ctrlIcon = document.getElementById('micBtnControlsIcon');
+
+  if(recording){
+    mainBtn.classList.add('recording');
+    ctrlBtn.classList.add('recording');
+    mainIcon.className = 'fas fa-stop';
+    ctrlIcon.className = 'fas fa-stop';
+  } else {
+    mainBtn.classList.remove('recording');
+    ctrlBtn.classList.remove('recording');
+    mainIcon.className = 'fas fa-microphone';
+    ctrlIcon.className = 'fas fa-microphone';
+  }
+}
+
+// ============================================
+// Stop Recording
+// ============================================
 function stopRecording(){
   isRecording = false;
   if(recognition){ try{ recognition.stop(); }catch(e){} }
-  stopRecordingUI();
-  if(socket) socket.emit('speaking',{roomId, speaking:false});
-}
-
-function stopRecordingUI(){
-  document.getElementById('micBtn').classList.remove('recording');
-  document.getElementById('mainMicBtn').classList.remove('recording');
-  document.getElementById('micBtn').innerText = '🎤';
-  document.getElementById('mainMicBtn').innerText = '🎤';
-  document.getElementById('micRing').classList.remove('active');
+  setMicRecording(false);
   document.getElementById('visualizer').classList.remove('active');
-  document.getElementById('micLabel').innerText = 'اضغط للتحدث';
+  document.getElementById('micRing').classList.remove('active');
   document.getElementById('meParticipant').classList.remove('speaking');
+  const t = uiTexts[currentUILang];
+  document.getElementById('micLabel').innerText = t.micLabelReady;
+  if(socket) socket.emit('speaking',{roomId, speaking:false});
 }
 
 // ============================================
@@ -1081,45 +1485,49 @@ async function translateAndSend(text){
     const res = await fetch(url);
     const data = await res.json();
     let translated = '';
-    if(data && data[0]){
-      data[0].forEach(item => { if(item&&item[0]) translated += item[0]; });
+    if(data&&data[0]){
+      data[0].forEach(item=>{ if(item&&item[0]) translated+=item[0]; });
     }
     document.getElementById('translatedText').innerText = translated;
 
-    // ✅ أرسل للسيرفر - الشريك يسمع، أنا لا أسمع
+    // ✅ أرسل للشريك - هو يسمع، أنا لا أسمع
     socket.emit('voice-message',{
       roomId,
-      originalText: text,
-      translatedText: translated,
-      senderName: myName,
-      senderLanguage: myLang,
-      targetLanguage: tLang
+      originalText:text,
+      translatedText:translated,
+      senderName:myName,
+      senderLanguage:myLang,
+      targetLanguage:tLang
     });
 
-    // أضف في سجلي فقط بدون صوت
     addMessage({
-      senderId: socket.id,
-      senderName: myName,
-      originalText: text,
-      translatedText: translated,
-      senderLanguage: myLang,
-      targetLanguage: tLang,
-      timestamp: new Date()
+      senderId:socket.id,
+      senderName:myName,
+      originalText:text,
+      translatedText:translated,
+      senderLanguage:myLang,
+      targetLanguage:tLang,
+      timestamp:new Date()
     }, true);
 
-    // ✅ لا صوت لي - الشريك هو من يسمع
-
-  } catch(err){
+  }catch(err){
     console.error(err);
     showNotification('خطأ في الترجمة','error');
   }
 }
 
 // ============================================
-// Speak Text
+// ✅ Speak Text (Fixed for Mobile)
 // ============================================
 function speakText(text, lang){
   if(!text||isSpeakerOff) return;
+
+  // ✅ Fix for mobile: need user interaction first
+  if(/Android|iPhone|iPad/i.test(navigator.userAgent)&&!audioActivated){
+    document.getElementById('audioActivateBtn').classList.add('show');
+    return;
+  }
+
   window.speechSynthesis.cancel();
   const voiceLang = langs[lang]?.voice||'en-US';
 
@@ -1129,19 +1537,36 @@ function speakText(text, lang){
     utt.rate = 0.88;
     utt.pitch = 1;
     utt.volume = 1;
+
     const voice = voices.find(v=>v.lang===voiceLang)
       ||voices.find(v=>v.lang.startsWith(lang))
-      ||voices.find(v=>v.lang.toLowerCase().startsWith(lang));
+      ||voices.find(v=>v.lang.toLowerCase().startsWith(lang.toLowerCase()));
+
     if(voice) utt.voice = voice;
-    utt.onerror = e => console.error('TTS error:',e);
+
+    // ✅ Fix for Chrome mobile TTS cutoff
+    utt.onstart = ()=>{
+      // Keep speech synthesis alive on mobile
+      const keepAlive = setInterval(()=>{
+        if(window.speechSynthesis.speaking){
+          window.speechSynthesis.resume();
+        } else {
+          clearInterval(keepAlive);
+        }
+      }, 5000);
+    };
+
+    utt.onerror = e=>console.error('TTS:',e);
     window.speechSynthesis.speak(utt);
   }
 
   const voices = window.speechSynthesis.getVoices();
-  if(voices.length > 0){ doSpeak(voices); }
+  if(voices.length>0){ doSpeak(voices); }
   else{
-    window.speechSynthesis.onvoiceschanged = () => doSpeak(window.speechSynthesis.getVoices());
-    setTimeout(() => doSpeak(window.speechSynthesis.getVoices()), 500);
+    window.speechSynthesis.onvoiceschanged = ()=>{
+      doSpeak(window.speechSynthesis.getVoices());
+    };
+    setTimeout(()=>doSpeak(window.speechSynthesis.getVoices()),500);
   }
 }
 
@@ -1152,7 +1577,11 @@ function addMessage(msg, isOwn){
   const container = document.getElementById('messages');
   const empty = container.querySelector('.empty-msgs');
   if(empty) empty.remove();
-  const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+
+  const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA',{
+    hour:'2-digit',minute:'2-digit'
+  });
+
   const div = document.createElement('div');
   div.className = `msg ${isOwn?'':'partner'}`;
   div.innerHTML = `
@@ -1160,8 +1589,12 @@ function addMessage(msg, isOwn){
       <span class="msg-sender">${msg.senderName}</span>
       <span class="msg-time">${time}</span>
     </div>
-    <div class="msg-original">${langs[msg.senderLanguage]?.flag||'🌐'} ${msg.originalText}</div>
-    <div class="msg-translated">${langs[msg.targetLanguage]?.flag||'🌐'} ${msg.translatedText}</div>
+    <div class="msg-original">
+      ${langs[msg.senderLanguage]?.flag||'🌐'} ${msg.originalText}
+    </div>
+    <div class="msg-translated">
+      ${langs[msg.targetLanguage]?.flag||'🌐'} ${msg.translatedText}
+    </div>
   `;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
@@ -1173,22 +1606,63 @@ function addMessage(msg, isOwn){
 // ============================================
 function toggleMute(){
   isMuted = !isMuted;
-  document.getElementById('muteBtn').innerText = isMuted?'🔇':'🎤';
-  document.getElementById('muteBtn').classList.toggle('off',isMuted);
-  if(isMuted&&isRecording) stopRecording();
-  showNotification(isMuted?'تم كتم الميكروفون 🔇':'تم تفعيل الميكروفون 🎤','info');
+  const icon = document.getElementById('muteIcon');
+  const btn = document.getElementById('muteBtn');
+  if(isMuted){
+    icon.className = 'fas fa-microphone-slash';
+    btn.classList.add('off');
+    if(isRecording) stopRecording();
+    showNotification('تم كتم الميكروفون 🔇','info');
+  } else {
+    icon.className = 'fas fa-microphone';
+    btn.classList.remove('off');
+    showNotification('تم تفعيل الميكروفون 🎤','info');
+  }
 }
 
 function toggleSpeaker(){
   isSpeakerOff = !isSpeakerOff;
-  document.getElementById('speakerBtn').innerText = isSpeakerOff?'🔈':'🔊';
-  document.getElementById('speakerBtn').classList.toggle('off',isSpeakerOff);
-  if(isSpeakerOff) window.speechSynthesis.cancel();
-  showNotification(isSpeakerOff?'تم إيقاف الصوت 🔈':'تم تفعيل الصوت 🔊','info');
+  const icon = document.getElementById('speakerIcon');
+  const btn = document.getElementById('speakerBtn');
+  if(isSpeakerOff){
+    icon.className = 'fas fa-volume-xmark';
+    btn.classList.add('off');
+    window.speechSynthesis.cancel();
+    showNotification('تم إيقاف الصوت 🔈','info');
+  } else {
+    icon.className = 'fas fa-volume-high';
+    btn.classList.remove('off');
+    showNotification('تم تفعيل الصوت 🔊','info');
+  }
 }
 
 // ============================================
-// Copy
+// ✅ Confirm Leave Modal
+// ============================================
+function confirmLeave(){
+  document.getElementById('leaveModal').style.display = 'flex';
+}
+
+function closeLeaveModal(){
+  document.getElementById('leaveModal').style.display = 'none';
+}
+
+function leaveRoom(){
+  closeLeaveModal();
+  stopRecording();
+  window.speechSynthesis.cancel();
+  stopTimer();
+  clearSession();
+  if(socket&&roomId) socket.emit('leave-room',{roomId});
+  roomId=null; partnerInfo=null; messages=[];
+  document.getElementById('messages').innerHTML =
+    '<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد<br>ابدأ بالتحدث</div>';
+  document.getElementById('room-page').classList.remove('active');
+  document.getElementById('landing').classList.add('active');
+}
+
+// ============================================
+// Copy Functions
 // ============================================
 function copyRoomCode(){
   if(!roomId) return;
@@ -1213,31 +1687,12 @@ function copyResult(id){
 }
 
 // ============================================
-// Leave Room
-// ============================================
-function leaveRoom(){
-  if(!confirm('هل تريد مغادرة الغرفة؟')) return;
-  stopRecording();
-  window.speechSynthesis.cancel();
-  stopTimer();
-  clearSession();
-  if(socket&&roomId) socket.emit('leave-room',{roomId});
-  roomId = null;
-  partnerInfo = null;
-  messages = [];
-  document.getElementById('messages').innerHTML =
-    '<div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>';
-  document.getElementById('room-page').classList.remove('active');
-  document.getElementById('landing').classList.add('active');
-}
-
-// ============================================
 // Download History
 // ============================================
 function downloadHistory(){
   if(messages.length===0){ showNotification('لا يوجد سجل!','error'); return; }
   let content = '===== TranslationCall Pro =====\n\n';
-  messages.forEach(msg => {
+  messages.forEach(msg=>{
     const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA');
     content += `[${time}] ${msg.senderName}:\n`;
     content += `  ${langs[msg.senderLanguage]?.flag} ${msg.originalText}\n`;
@@ -1253,9 +1708,9 @@ function downloadHistory(){
 
 function clearMessages(){
   if(!confirm('مسح السجل؟')) return;
-  messages = [];
+  messages=[];
   document.getElementById('messages').innerHTML =
-    '<div class="empty-msgs">لا توجد رسائل بعد<br>ابدأ بالتحدث 🎤</div>';
+    '<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد<br>ابدأ بالتحدث</div>';
 }
 
 // ============================================
@@ -1265,25 +1720,25 @@ async function sendAI(){
   const input = document.getElementById('aiInput');
   const text = input.value.trim();
   if(!text) return;
-  input.value = '';
-  addAIMessage('user', text);
+  input.value='';
+  addAIMessage('user',text);
   document.getElementById('aiTyping').classList.add('show');
-  document.getElementById('aiMessages').scrollTop = 99999;
-  await new Promise(r=>setTimeout(r, 600+Math.random()*600));
+  document.getElementById('aiMessages').scrollTop=99999;
+  await new Promise(r=>setTimeout(r,600+Math.random()*600));
   document.getElementById('aiTyping').classList.remove('show');
   const res = await processAI(text);
-  addAIMessage('bot', res.main);
+  addAIMessage('bot',res.main);
   if(res.tip) setTimeout(()=>addAIMessage('tip',res.tip),300);
-  document.getElementById('aiMessages').scrollTop = 99999;
+  document.getElementById('aiMessages').scrollTop=99999;
 }
 
 async function processAI(text){
   const lower = text.toLowerCase();
-  if(/مرحبا|اهلا|hello|hi|سلام/.test(lower)){
-    return{main:'أهلاً! 😊 كيف يمكنني مساعدتك؟\nيمكنني ترجمة الجمل وإعطاء نصائح ثقافية وشرح التعابير.',tip:null};
+  if(/مرحبا|اهلا|hello|hi|hola|سلام/.test(lower)){
+    return{main:'أهلاً! 😊 يمكنني ترجمة الجمل وإعطاء نصائح ثقافية وشرح التعابير.',tip:null};
   }
-  if(/ترجم|translate/.test(lower)){
-    const phrase = text.replace(/ترجم لي:|ترجم:|translate:/gi,'').trim();
+  if(/ترجم|translate|traducir/.test(lower)){
+    const phrase = text.replace(/ترجم لي:|ترجم:|translate:|traducir:/gi,'').trim();
     if(phrase){
       try{
         const tLang = myLang==='ar'?'en':'ar';
@@ -1293,8 +1748,8 @@ async function processAI(text){
       }catch(e){return{main:'خطأ في الترجمة',tip:null};}
     }
   }
-  if(/نصيح|ثقاف|cultural/.test(lower)){
-    if(/إسبان|spanish/.test(lower)) return{main:'🇪🇸 في الثقافة الإسبانية، المصافحة والتقبيل على الخد تحية شائعة.',tip:null};
+  if(/نصيح|ثقاف|cultural|tip/.test(lower)){
+    if(/إسبان|spanish|español/.test(lower)) return{main:'🇪🇸 في الثقافة الإسبانية، المصافحة والتقبيل على الخد تحية شائعة.',tip:null};
     if(/إنجليز|english/.test(lower)) return{main:'🇺🇸 في الثقافة الأمريكية، الوقت ثمين والمباشرة علامة احترام.',tip:null};
     if(/عرب|arabic/.test(lower)) return{main:'🇸🇦 في الثقافة العربية، الترحيب بالضيوف أمر مقدس.',tip:null};
     return{main:'🌍 تعلم بعض الكلمات بلغة شريكك يقرب القلوب!',tip:null};
@@ -1320,7 +1775,7 @@ async function processAI(text){
   }
 }
 
-function addAIMessage(type, text){
+function addAIMessage(type,text){
   const container = document.getElementById('aiMessages');
   const div = document.createElement('div');
   div.className = `ai-bubble ${type}`;
@@ -1330,17 +1785,18 @@ function addAIMessage(type, text){
 }
 
 function clearAI(){
+  const t = uiTexts[currentUILang];
   document.getElementById('aiMessages').innerHTML =
-    '<div class="ai-bubble bot">مرحباً! 👋 كيف يمكنني مساعدتك؟</div>';
+    `<div class="ai-bubble bot" id="aiWelcome">${t.aiWelcome}</div>`;
 }
 
 // ============================================
 // Notification
 // ============================================
-function showNotification(msg, type='info'){
+function showNotification(msg,type='info'){
   const el = document.getElementById('notification');
-  el.innerText = msg;
-  el.className = `notification show ${type}`;
+  el.innerText=msg;
+  el.className=`notification show ${type}`;
   setTimeout(()=>el.classList.remove('show'),3500);
 }
 
@@ -1359,16 +1815,19 @@ function checkAutoJoin(){
 // ============================================
 // Init
 // ============================================
-window.onload = () => {
+window.onload = ()=>{
   // Load voices
   window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
 
   // Init socket
   initSocket();
 
-  // Check URL params
+  // Check URL
   checkAutoJoin();
+
+  // Set default UI language
+  setUILang('ar', document.querySelector('.lang-switch-btn.active'));
 };
 </script>
 </body>
