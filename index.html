@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Translation Call</title>
+<title>Translation Call AI</title>
+
 <style>
 body{
     font-family: Arial;
@@ -35,14 +36,15 @@ select{
 }
 </style>
 </head>
+
 <body>
 
-<h1>🎙️ Translation Call</h1>
+<h1>🎙️ Translation Call AI</h1>
 
 <select id="language">
-<option value="en-US">English</option>
-<option value="ar-SA">Arabic</option>
-<option value="es-ES">Spanish</option>
+<option value="ar">Arabic</option>
+<option value="en">English</option>
+<option value="es">Spanish</option>
 </select>
 
 <br><br>
@@ -60,17 +62,20 @@ select{
 
 <script>
 let recognition;
+
 function startRecognition(){
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     recognition = new SpeechRecognition();
-    recognition.lang = document.getElementById("language").value;
+    
+    let selectedLang = document.getElementById("language").value;
+    recognition.lang = selectedLang;
+    
     recognition.start();
 
     recognition.onresult = function(event){
         let text = event.results[0][0].transcript;
         document.getElementById("output").innerText = text;
-
-        translateText(text);
+        translateText(text, selectedLang);
     };
 }
 
@@ -78,20 +83,28 @@ function stopRecognition(){
     if(recognition) recognition.stop();
 }
 
-async function translateText(text){
-    let target = document.getElementById("language").value.startsWith("ar") ? "en" : "ar";
+async function translateText(text, sourceLang){
+    let targetLang = sourceLang === "ar" ? "en" : "ar";
 
     let response = await fetch(
-        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${target}&dt=t&q=${encodeURIComponent(text)}`
+        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`
     );
 
     let data = await response.json();
-    document.getElementById("translation").innerText = data[0][0][0];
+    let translatedText = data[0][0][0];
+
+    document.getElementById("translation").innerText = translatedText;
+
+    speak(translatedText, targetLang);
+}
+
+function speak(text, lang){
+    let speech = new SpeechSynthesisUtterance(text);
+    speech.lang = lang;
+    speech.rate = 0.95;
+    window.speechSynthesis.speak(speech);
 }
 </script>
 
 </body>
 </html>
-Initial version
-
-
