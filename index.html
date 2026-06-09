@@ -351,7 +351,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
         </div>
         <div class="card" style="position:relative;">
           <div class="mic-section">
-            <div class="mic-ring" id="micRing"><button class="mic-btn-main" id="micBtnMain" onclick="toggleRecording()" disabled><i class="fas fa-microphone" id="micBtnIcon"></i></button></div>
+            <div class="mic-ring" id="micRing"><button class="mic-btn-main" id="micBtnMain" onclick="toggleRecording()" ontouchend="event.preventDefault();toggleRecording();" disabled><i class="fas fa-microphone" id="micBtnIcon"></i></button></div>
             <div class="mic-label" id="micLabel">في انتظار الشريك...</div>
             <div class="visualizer" id="visualizer"><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div></div>
             <div class="speaking-badge" id="speakingBadge"><i class="fas fa-volume-high"></i><span>شريكك يتحدث...</span></div>
