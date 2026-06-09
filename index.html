@@ -738,10 +738,13 @@ async function setupPeerConnection(){
   };
 
   peerConnection.oniceconnectionstatechange=()=>{
-    console.log('ICE state:',peerConnection.iceConnectionState);
-    if(peerConnection.iceConnectionState==='connected'){
-      showNotification('✅ تم الاتصال بالفيديو','success');
-    }
+    if(!peerConnection) return;
+    try{
+      console.log('ICE state:',peerConnection.iceConnectionState);
+      if(peerConnection.iceConnectionState==='connected'){
+        showNotification('✅ تم الاتصال بالفيديو','success');
+      }
+    }catch(e){console.log('ICE state error:',e);}
   };
 
   return peerConnection;
@@ -1048,8 +1051,13 @@ function showWaiting(){document.getElementById('waitingOverlay').style.display='
 function hideWaiting(){document.getElementById('waitingOverlay').style.display='none';}
 
 function enableMic(){
-  document.getElementById('micBtnMain').disabled=false;
+  const btn=document.getElementById('micBtnMain');
+  if(btn){
+    btn.disabled=false;
+    btn.onclick=function(){toggleRecording();};
+  }
   document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelReady;
+  console.log('✅ Mic enabled');
 }
 function disableMic(){
   document.getElementById('micBtnMain').disabled=true;
@@ -1066,9 +1074,11 @@ function toggleRecording(){
 }
 
 function startRecording(){
+  console.log('🎤 startRecording called, partner:',partnerInfo, 'roomId:',roomId);
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){showNotification('استخدم Chrome أو Edge','error');return;}
   if(isMuted){showNotification('الميكروفون مكتوم 🔇','error');return;}
+  if(!roomId){showNotification('يرجى الانضمام لغرفة أولاً','error');return;}
 
   recognition=new SR();
   recognition.lang=langs[myLang]?.voice||'ar-SA';
