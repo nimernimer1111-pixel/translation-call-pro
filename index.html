@@ -1047,8 +1047,18 @@ function resetPartnerUI(){
   document.getElementById('remotePlaceholderText').innerText='في انتظار الشريك...';
 }
 
-function showWaiting(){document.getElementById('waitingOverlay').style.display='flex';}
-function hideWaiting(){document.getElementById('waitingOverlay').style.display='none';}
+function showWaiting(){
+  const overlay=document.getElementById('waitingOverlay');
+  overlay.style.display='flex';
+  overlay.style.pointerEvents='all';
+  overlay.style.zIndex='20';
+}
+function hideWaiting(){
+  const overlay=document.getElementById('waitingOverlay');
+  overlay.style.display='none';
+  overlay.style.pointerEvents='none';
+  overlay.style.zIndex='-1';
+}
 
 function enableMic(){
   const btn=document.getElementById('micBtnMain');
