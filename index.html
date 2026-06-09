@@ -1578,14 +1578,14 @@ function checkInvite(){
     // لديه كود محفوظ، تحقق منه
     socket.emit('verify-invite',{code:saved},(res)=>{
       if(res.success){
-        hideInviteGate();
+        
       }else{
         localStorage.removeItem('tcInviteCode');
-        showInviteGate();
+        
       }
     });
   }else{
-    showInviteGate();
+    
   }
 }
 
@@ -1608,7 +1608,7 @@ function verifyInvite(){
   socket.emit('verify-invite',{code},(res)=>{
     if(res.success){
       localStorage.setItem('tcInviteCode',code);
-      hideInviteGate();
+      
       showNotification('مرحباً بك! ✅','success');
     }else{
       document.getElementById('inviteError').style.display='block';
