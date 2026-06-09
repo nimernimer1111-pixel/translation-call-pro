@@ -26,10 +26,8 @@
 }
 body{
   font-family:'Segoe UI',Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
 }
 .bg-effects{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
 .bg-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.2;}
@@ -41,8 +39,7 @@ body{
 .page.active{display:flex;}
 header{
   position:sticky;top:0;z-index:100;
-  background:rgba(15,23,42,0.85);
-  backdrop-filter:blur(20px);
+  background:rgba(15,23,42,0.85);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
   padding:15px 30px;
   display:flex;justify-content:space-between;align-items:center;
@@ -56,18 +53,9 @@ header{
 .status-dot{width:9px;height:9px;border-radius:50%;background:var(--danger);transition:all 0.3s;}
 .status-dot.connected{background:var(--secondary);box-shadow:0 0 8px var(--secondary);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.3);};}
-/* Language Switcher */
 .lang-switcher{display:flex;gap:5px;}
-.lang-switch-btn{
-  padding:5px 10px;border-radius:8px;border:1px solid var(--border);
-  background:transparent;color:var(--text-secondary);
-  cursor:pointer;font-size:0.78rem;transition:all 0.2s;
-}
-.lang-switch-btn:hover{background:rgba(255,255,255,0.05);}
+.lang-switch-btn{padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:0.78rem;transition:all 0.2s;}
 .lang-switch-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
-.card{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);padding:25px;border:1px solid var(--border);box-shadow:var(--shadow);transition:all 0.3s;}
-.card:hover{border-color:rgba(99,102,241,0.2);}
-.card-title{font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border-radius:var(--radius-sm);border:none;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;}
 .btn:disabled{opacity:0.5;cursor:not-allowed;}
 .btn-primary{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;box-shadow:0 4px 15px rgba(99,102,241,0.4);}
@@ -112,11 +100,10 @@ header{
 .lang-select{width:100%;padding:11px 14px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.92rem;cursor:pointer;transition:all 0.3s;margin-bottom:16px;appearance:none;}
 .lang-select:focus{outline:none;border-color:var(--primary);}
 .lang-select option{background:#1e293b;}
-.room-layout{display:grid;grid-template-columns:1fr 380px;gap:20px;padding:20px;max-width:1200px;margin:0 auto;}
+.room-layout{display:grid;grid-template-columns:1fr 400px;gap:20px;padding:20px;max-width:1300px;margin:0 auto;}
 @media(max-width:900px){.room-layout{grid-template-columns:1fr;}}
 .room-code-display{display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(0,0,0,0.2);border-radius:10px;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);}
 .room-code-display:hover{background:rgba(0,0,0,0.35);}
-.room-code-display span{font-size:0.78rem;color:var(--text-muted);}
 .room-code-display strong{font-size:1.15rem;letter-spacing:0.15em;color:var(--primary);}
 .participants-row{display:flex;align-items:center;gap:15px;background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);padding:20px;border:1px solid var(--border);margin-bottom:15px;}
 .participant{flex:1;display:flex;align-items:center;gap:12px;padding:12px;background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);border:2px solid transparent;transition:all 0.3s;}
@@ -131,40 +118,23 @@ header{
 .p-avatar.partner-av{background:linear-gradient(135deg,var(--secondary),#14b8a6);}
 .p-avatar.waiting-av{background:var(--bg-elevated);color:var(--text-muted);}
 .p-info{flex:1;min-width:0;}
-.p-name{font-weight:600;font-size:0.95rem;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.p-name{font-weight:600;font-size:0.95rem;margin-bottom:3px;}
 .p-lang{font-size:0.78rem;color:var(--text-muted);}
 .p-status{font-size:0.75rem;padding:3px 10px;border-radius:10px;}
 .p-status.host{background:rgba(99,102,241,0.15);color:#a5b4fc;}
 .p-status.online{background:rgba(16,185,129,0.15);color:#34d399;}
 .p-status.waiting{background:rgba(100,116,139,0.15);color:var(--text-muted);}
-.connection-arrow{font-size:1.5rem;color:var(--text-muted);flex-shrink:0;animation:arrow-pulse 2s infinite;}
-@keyframes arrow-pulse{0%,100%{opacity:0.5;}50%{opacity:1;};}
-/* Controls */
+.connection-arrow{font-size:1.5rem;color:var(--text-muted);flex-shrink:0;}
 .mic-section{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 0;}
 .mic-ring{position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center;}
 .mic-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--primary);opacity:0;transition:all 0.3s;}
 .mic-ring.active::before{opacity:1;animation:ring-pulse 1.5s infinite;}
 @keyframes ring-pulse{0%{transform:scale(1);opacity:1;}100%{transform:scale(1.3);opacity:0;};}
-/* ✅ زر الميكروفون الرئيسي */
-.mic-btn-main{
-  width:100px;height:100px;border-radius:50%;border:none;
-  background:linear-gradient(135deg,var(--primary),#8b5cf6);
-  color:white;font-size:2.2rem;cursor:pointer;
-  transition:all 0.3s;
-  box-shadow:0 8px 25px rgba(99,102,241,0.4);
-  display:flex;align-items:center;justify-content:center;
-}
-.mic-btn-main:hover:not(:disabled){transform:scale(1.08);box-shadow:0 12px 35px rgba(99,102,241,0.5);}
-.mic-btn-main.recording{
-  background:linear-gradient(135deg,var(--danger),#f97316);
-  box-shadow:0 8px 25px rgba(239,68,68,0.5);
-  animation:rec-pulse 1.2s infinite;
-}
+.mic-btn-main{width:100px;height:100px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:2.2rem;cursor:pointer;transition:all 0.3s;box-shadow:0 8px 25px rgba(99,102,241,0.4);display:flex;align-items:center;justify-content:center;}
+.mic-btn-main:hover:not(:disabled){transform:scale(1.08);}
+.mic-btn-main.recording{background:linear-gradient(135deg,var(--danger),#f97316);box-shadow:0 8px 25px rgba(239,68,68,0.5);animation:rec-pulse 1.2s infinite;}
 @keyframes rec-pulse{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);};}
-.mic-btn-main:disabled{
-  background:var(--bg-elevated);box-shadow:none;
-  cursor:not-allowed;opacity:0.5;
-}
+.mic-btn-main:disabled{background:var(--bg-elevated);box-shadow:none;cursor:not-allowed;opacity:0.5;}
 .mic-label{font-size:0.9rem;color:var(--text-secondary);font-weight:500;}
 .visualizer{display:flex;align-items:center;gap:4px;height:40px;opacity:0;transition:opacity 0.3s;}
 .visualizer.active{opacity:1;}
@@ -177,41 +147,14 @@ header{
 .vbar:nth-child(6){height:15px;animation-delay:0.3s;}
 .vbar:nth-child(7){height:10px;animation-delay:0.2s;}
 @keyframes vwave{0%,100%{transform:scaleY(1);}50%{transform:scaleY(3);};}
-/* ✅ Controls Bar مع أيقونات Font Awesome */
-.controls-bar{
-  display:flex;justify-content:center;align-items:center;gap:15px;
-  padding:18px 20px;
-  background:rgba(30,41,59,0.85);
-  backdrop-filter:blur(20px);
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-}
-.ctrl-btn{
-  width:52px;height:52px;border-radius:50%;border:none;
-  background:rgba(255,255,255,0.08);color:var(--text);
-  font-size:1.1rem;cursor:pointer;transition:all 0.25s;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;
-}
+.controls-bar{display:flex;justify-content:center;align-items:center;gap:15px;padding:18px 20px;background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);}
+.ctrl-btn{width:52px;height:52px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:var(--text);font-size:1.1rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;}
 .ctrl-btn:hover{background:rgba(255,255,255,0.15);transform:scale(1.1);}
 .ctrl-btn.off{background:rgba(239,68,68,0.15);color:var(--danger);}
-.ctrl-btn.off:hover{background:rgba(239,68,68,0.25);}
-.ctrl-btn-label{
-  position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
-  font-size:0.65rem;color:var(--text-muted);white-space:nowrap;
-}
-.leave-btn{
-  display:flex;align-items:center;gap:8px;
-  padding:12px 22px;border-radius:25px;border:none;
-  background:rgba(239,68,68,0.12);color:var(--danger);
-  font-size:0.9rem;font-weight:600;cursor:pointer;
-  transition:all 0.3s;border:1px solid rgba(239,68,68,0.2);
-}
-.leave-btn:hover{background:var(--danger);color:white;transform:scale(1.05);}
-/* Results */
+.leave-btn{display:flex;align-items:center;gap:8px;padding:12px 22px;border-radius:25px;border:1px solid rgba(239,68,68,0.2);background:rgba(239,68,68,0.12);color:var(--danger);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s;}
+.leave-btn:hover{background:var(--danger);color:white;}
 .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 .result-box{background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);padding:15px;border:1px solid transparent;transition:all 0.3s;min-height:90px;}
-.result-box.has-content{border-color:rgba(99,102,241,0.2);}
 .result-box h5{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
 .result-box.original h5{color:var(--primary);}
 .result-box.translated h5{color:var(--secondary);}
@@ -223,11 +166,96 @@ header{
 .partner-result{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:var(--radius-sm);padding:15px;}
 .partner-result h5{font-size:0.72rem;color:var(--secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
 .partner-result p{color:#34d399;font-size:0.95rem;line-height:1.6;}
-/* Right Panel */
 .right-panel{display:flex;flex-direction:column;gap:15px;}
-.transcript-panel,.ai-panel{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;}
-.transcript-panel{max-height:350px;}
-.ai-panel{max-height:420px;border-color:rgba(99,102,241,0.2);}
+/* ==================== AI Panel ==================== */
+.ai-panel{
+  background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);
+  border-radius:var(--radius);border:1px solid rgba(99,102,241,0.2);
+  overflow:hidden;display:flex;flex-direction:column;
+  max-height:600px;
+}
+/* AI Mode Tabs */
+.ai-modes{
+  display:flex;gap:0;
+  border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,0.15);
+  flex-shrink:0;
+}
+.ai-mode-btn{
+  flex:1;padding:10px 8px;border:none;background:transparent;
+  color:var(--text-muted);cursor:pointer;font-size:0.75rem;
+  transition:all 0.2s;display:flex;flex-direction:column;
+  align-items:center;gap:4px;border-bottom:2px solid transparent;
+}
+.ai-mode-btn:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+.ai-mode-btn.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(99,102,241,0.05);}
+.ai-mode-btn i{font-size:1rem;}
+/* Language Practice */
+.practice-setup{
+  padding:15px;background:rgba(0,0,0,0.15);
+  border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.practice-setup.hidden{display:none;}
+.practice-lang-select{
+  width:100%;padding:9px 12px;background:rgba(0,0,0,0.25);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-size:0.85rem;margin-bottom:8px;appearance:none;
+}
+.practice-btn{
+  width:100%;padding:10px;border-radius:8px;border:none;
+  background:linear-gradient(135deg,var(--primary),#8b5cf6);
+  color:white;font-size:0.85rem;font-weight:600;cursor:pointer;
+  transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.practice-btn:hover{transform:scale(1.02);}
+/* AI Messages */
+.ai-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+.ai-bubble{max-width:88%;padding:10px 14px;border-radius:12px;font-size:0.88rem;line-height:1.6;}
+.ai-bubble.user{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;align-self:flex-end;border-radius:12px 12px 3px 12px;}
+.ai-bubble.bot{background:rgba(255,255,255,0.06);color:var(--text);border-radius:12px 12px 12px 3px;border:1px solid var(--border);}
+.ai-bubble.feedback{
+  background:rgba(16,185,129,0.08);color:var(--text);
+  border:1px solid rgba(16,185,129,0.2);
+  border-radius:12px;font-size:0.82rem;
+  white-space:pre-line;
+}
+.ai-bubble.tip{background:rgba(245,158,11,0.1);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);font-size:0.82rem;}
+.ai-bubble.error{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
+.ai-typing{display:none;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:12px;width:fit-content;}
+.ai-typing.show{display:flex;}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:typing 1.4s infinite;}
+.ai-typing span:nth-child(2){animation-delay:0.2s;}
+.ai-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes typing{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);};}
+/* AI Input */
+.ai-input-area{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;align-items:center;}
+.ai-input{flex:1;padding:10px 14px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.88rem;}
+.ai-input:focus{outline:none;border-color:var(--primary);}
+.ai-send-btn{width:38px;height:38px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-send-btn:hover{transform:scale(1.08);}
+.ai-send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+/* Voice AI Button */
+.ai-voice-btn{
+  width:38px;height:38px;border-radius:10px;border:none;
+  background:rgba(255,255,255,0.08);color:var(--text-secondary);
+  font-size:1rem;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ai-voice-btn:hover{background:rgba(255,255,255,0.15);color:var(--text);}
+.ai-voice-btn.recording{background:var(--danger);color:white;animation:rec-pulse 1s infinite;}
+/* Suggestions */
+.ai-suggestions{
+  display:flex;gap:6px;flex-wrap:wrap;
+  padding:10px 12px 0;flex-shrink:0;
+}
+.ai-suggestion{
+  padding:5px 12px;border-radius:15px;
+  background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);
+  color:#a5b4fc;font-size:0.75rem;cursor:pointer;transition:all 0.2s;
+}
+.ai-suggestion:hover{background:rgba(99,102,241,0.2);}
+/* Transcript */
+.transcript-panel{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;max-height:300px;}
 .panel-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);flex-shrink:0;}
 .panel-head h4{font-size:0.85rem;display:flex;align-items:center;gap:7px;}
 .panel-head-actions{display:flex;gap:6px;}
@@ -243,48 +271,16 @@ header{
 .msg-time{font-size:0.7rem;color:var(--text-muted);}
 .msg-original{font-size:0.88rem;color:var(--text);margin-bottom:5px;}
 .msg-translated{font-size:0.85rem;color:#34d399;font-style:italic;}
-.empty-msgs{text-align:center;padding:30px;color:var(--text-muted);font-size:0.88rem;}
-.ai-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
-.ai-bubble{max-width:85%;padding:10px 14px;border-radius:12px;font-size:0.88rem;line-height:1.5;}
-.ai-bubble.user{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;align-self:flex-end;border-radius:12px 12px 3px 12px;}
-.ai-bubble.bot{background:rgba(255,255,255,0.06);color:var(--text);border-radius:12px 12px 12px 3px;border:1px solid var(--border);}
-.ai-bubble.tip{background:rgba(245,158,11,0.1);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);font-size:0.82rem;}
-.ai-typing{display:none;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,0.06);border-radius:12px;width:fit-content;}
-.ai-typing.show{display:flex;}
-.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:typing 1.4s infinite;}
-.ai-typing span:nth-child(2){animation-delay:0.2s;}
-.ai-typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes typing{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);};}
-.ai-input-area{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
-.ai-input-area input{flex:1;padding:10px 14px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.88rem;}
-.ai-input-area input:focus{outline:none;border-color:var(--primary);}
-.ai-send-btn{width:38px;height:38px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
-.ai-send-btn:hover{transform:scale(1.08);}
+.empty-msgs{text-align:center;padding:25px;color:var(--text-muted);font-size:0.88rem;}
 /* Waiting */
 .waiting-overlay{position:absolute;inset:0;background:rgba(15,23,42,0.9);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:20;border-radius:var(--radius);}
 .waiting-spinner{width:60px;height:60px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--primary);animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);};}
-/* Audio Button Mobile */
-.audio-activate-btn{
-  display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
-  padding:14px 28px;background:linear-gradient(135deg,var(--secondary),#14b8a6);
-  color:white;border:none;border-radius:25px;font-size:1rem;font-weight:700;
-  cursor:pointer;box-shadow:0 8px 25px rgba(16,185,129,0.5);z-index:999;
-  animation:bounce 1s infinite;
-}
+.audio-activate-btn{display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);padding:14px 28px;background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;border:none;border-radius:25px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 8px 25px rgba(16,185,129,0.5);z-index:999;animation:bounce 1s infinite;}
 .audio-activate-btn.show{display:flex;align-items:center;gap:8px;}
 @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);};}
-/* Admin Warning */
-.admin-warning-banner{
-  display:none;position:fixed;top:80px;left:50%;transform:translateX(-50%);
-  padding:16px 24px;background:rgba(239,68,68,0.95);color:white;
-  border-radius:14px;font-weight:600;z-index:999;
-  max-width:90vw;text-align:center;
-  animation:warn-in 0.3s ease;
-}
+.admin-warning-banner{display:none;position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:16px 24px;background:rgba(239,68,68,0.95);color:white;border-radius:14px;font-weight:600;z-index:999;max-width:90vw;text-align:center;}
 .admin-warning-banner.show{display:flex;align-items:center;gap:10px;}
-@keyframes warn-in{from{opacity:0;transform:translateX(-50%) translateY(-20px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
-/* Notification */
 .notification{position:fixed;top:90px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:25px;font-size:0.88rem;font-weight:600;z-index:1000;display:none;max-width:90vw;text-align:center;}
 .notification.show{display:block;animation:notif-in 0.3s ease;}
 .notification.success{background:rgba(16,185,129,0.95);color:white;}
@@ -294,9 +290,18 @@ header{
 @keyframes notif-in{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
 .speaking-badge{display:none;align-items:center;gap:7px;padding:6px 14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:15px;color:#34d399;font-size:0.82rem;}
 .speaking-badge.show{display:flex;}
-.timer{font-size:1.1rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;font-variant-numeric:tabular-nums;}
+.timer{font-size:1.1rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;}
 .invite-box{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:12px 15px;cursor:pointer;transition:all 0.2s;font-size:0.82rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;}
 .invite-box:hover{background:rgba(99,102,241,0.15);}
+/* Practice Mode Banner */
+.practice-banner{
+  display:none;padding:10px 15px;
+  background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));
+  border-bottom:1px solid rgba(99,102,241,0.2);
+  font-size:0.82rem;color:#a5b4fc;
+  flex-shrink:0;align-items:center;gap:8px;
+}
+.practice-banner.show{display:flex;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.1);}
 ::-webkit-scrollbar-thumb{background:rgba(99,102,241,0.4);border-radius:3px;}
@@ -312,18 +317,11 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 </div>
 
 <div class="notification" id="notification"></div>
-
-<!-- Admin Warning Banner -->
 <div class="admin-warning-banner" id="adminWarningBanner">
   <i class="fas fa-triangle-exclamation"></i>
   <span id="adminWarningText"></span>
-  <button onclick="document.getElementById('adminWarningBanner').classList.remove('show')"
-    style="background:none;border:none;color:white;cursor:pointer;margin-right:auto;">
-    <i class="fas fa-xmark"></i>
-  </button>
+  <button onclick="document.getElementById('adminWarningBanner').classList.remove('show')" style="background:none;border:none;color:white;cursor:pointer;margin-right:auto;"><i class="fas fa-xmark"></i></button>
 </div>
-
-<!-- Audio Activate Button -->
 <button class="audio-activate-btn" id="audioActivateBtn" onclick="activateAudio()">
   <i class="fas fa-volume-high"></i> اضغط لتفعيل الصوت
 </button>
@@ -339,7 +337,6 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
       </div>
     </div>
     <div class="header-right">
-      <!-- ✅ Language Switcher -->
       <div class="lang-switcher">
         <button class="lang-switch-btn active" onclick="setUILang('ar',this)">ع</button>
         <button class="lang-switch-btn" onclick="setUILang('en',this)">EN</button>
@@ -354,36 +351,24 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 
   <div style="position:relative;z-index:1;flex:1;">
     <div class="hero">
-      <div class="hero-badge">
-        <i class="fas fa-sparkles"></i>
-        <span id="heroBadge">مدعوم بالذكاء الاصطناعي</span>
-      </div>
-      <h1>
-        <span class="grad1" id="heroTitle1">محادثة حية</span><br>
-        <span class="grad2" id="heroTitle2">بلا حواجز اللغة</span>
-      </h1>
+      <div class="hero-badge"><i class="fas fa-sparkles"></i><span id="heroBadge">مدعوم بالذكاء الاصطناعي</span></div>
+      <h1><span class="grad1" id="heroTitle1">محادثة حية</span><br><span class="grad2" id="heroTitle2">بلا حواجز اللغة</span></h1>
       <p id="heroDesc">تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥</p>
       <div class="hero-features">
         <div class="feat-tag"><i class="fas fa-microphone"></i><span id="feat1">تعرف على الصوت</span></div>
         <div class="feat-tag"><i class="fas fa-globe"></i><span id="feat2">ترجمة فورية</span></div>
         <div class="feat-tag"><i class="fas fa-volume-high"></i><span id="feat3">نطق تلقائي</span></div>
         <div class="feat-tag"><i class="fas fa-robot"></i><span id="feat4">مساعد AI</span></div>
-        <div class="feat-tag"><i class="fas fa-lock"></i><span id="feat5">غرف خاصة</span></div>
-        <div class="feat-tag"><i class="fas fa-clock-rotate-left"></i><span id="feat6">سجل المحادثة</span></div>
+        <div class="feat-tag"><i class="fas fa-graduation-cap"></i><span id="feat5">تعلم اللغات</span></div>
+        <div class="feat-tag"><i class="fas fa-lock"></i><span id="feat6">غرف خاصة</span></div>
       </div>
     </div>
 
     <div class="action-section">
-      <!-- Create Room -->
       <div class="action-card">
         <div class="action-header">
-          <div class="action-icon icon-create">
-            <i class="fas fa-plus"></i>
-          </div>
-          <div>
-            <h3 id="createTitle">إنشاء محادثة</h3>
-            <p id="createDesc">أنشئ غرفة وادعُ شريكك</p>
-          </div>
+          <div class="action-icon icon-create"><i class="fas fa-plus"></i></div>
+          <div><h3 id="createTitle">إنشاء محادثة</h3><p id="createDesc">أنشئ غرفة وادعُ شريكك</p></div>
         </div>
         <div class="input-group">
           <label id="labelName1">اسمك</label>
@@ -420,33 +405,22 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
           </select>
         </div>
         <div class="toggle-row">
-          <span class="toggle-label" id="privateLabel">
-            <i class="fas fa-lock"></i> غرفة خاصة
-          </span>
-          <div class="toggle" id="privateToggle" onclick="togglePrivate()">
-            <div class="toggle-thumb"></div>
-          </div>
+          <span class="toggle-label" id="privateLabel"><i class="fas fa-lock"></i> غرفة خاصة</span>
+          <div class="toggle" id="privateToggle" onclick="togglePrivate()"><div class="toggle-thumb"></div></div>
         </div>
         <div class="input-group" id="passwordGroup" style="display:none;">
           <label id="labelPass">كلمة المرور</label>
           <input type="password" class="input" id="createPassword" placeholder="أدخل كلمة المرور...">
         </div>
         <button class="btn btn-primary btn-full btn-lg" onclick="createRoom()">
-          <i class="fas fa-plus"></i>
-          <span id="btnCreate">إنشاء غرفة</span>
+          <i class="fas fa-plus"></i><span id="btnCreate">إنشاء غرفة</span>
         </button>
       </div>
 
-      <!-- Join Room -->
       <div class="action-card">
         <div class="action-header">
-          <div class="action-icon icon-join">
-            <i class="fas fa-arrow-right-to-bracket"></i>
-          </div>
-          <div>
-            <h3 id="joinTitle">الانضمام لمحادثة</h3>
-            <p id="joinDesc">أدخل رمز الغرفة للانضمام</p>
-          </div>
+          <div class="action-icon icon-join"><i class="fas fa-arrow-right-to-bracket"></i></div>
+          <div><h3 id="joinTitle">الانضمام لمحادثة</h3><p id="joinDesc">أدخل رمز الغرفة للانضمام</p></div>
         </div>
         <div class="input-group">
           <label id="labelName2">اسمك</label>
@@ -469,21 +443,17 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
         </div>
         <div class="input-group">
           <label id="labelCode">رمز الغرفة</label>
-          <input type="text" class="input input-code" id="joinCode"
-            placeholder="ABC123" maxlength="6"
-            oninput="this.value=this.value.toUpperCase()">
+          <input type="text" class="input input-code" id="joinCode" placeholder="ABC123" maxlength="6" oninput="this.value=this.value.toUpperCase()">
         </div>
         <div class="input-group" id="joinPasswordGroup" style="display:none;">
           <label id="labelJoinPass">كلمة المرور</label>
           <input type="password" class="input" id="joinPassword" placeholder="كلمة مرور الغرفة">
         </div>
         <button class="btn btn-ghost btn-sm btn-full" onclick="checkRoomPrivacy()" style="margin-bottom:12px;">
-          <i class="fas fa-magnifying-glass"></i>
-          <span id="btnCheck">تحقق من الغرفة</span>
+          <i class="fas fa-magnifying-glass"></i><span id="btnCheck">تحقق من الغرفة</span>
         </button>
         <button class="btn btn-secondary btn-full btn-lg" onclick="joinRoom()">
-          <i class="fas fa-arrow-right-to-bracket"></i>
-          <span id="btnJoin">انضم الآن</span>
+          <i class="fas fa-arrow-right-to-bracket"></i><span id="btnJoin">انضم الآن</span>
         </button>
       </div>
     </div>
@@ -496,10 +466,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
   <header>
     <div class="logo">
       <div class="logo-icon"><i class="fas fa-language"></i></div>
-      <div>
-        <div class="logo-name">TranslationCall</div>
-        <span class="logo-pro">PRO</span>
-      </div>
+      <div><div class="logo-name">TranslationCall</div><span class="logo-pro">PRO</span></div>
     </div>
     <div style="display:flex;align-items:center;gap:15px;">
       <div class="timer" id="callTimer">00:00</div>
@@ -511,7 +478,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
     </div>
     <div class="status-badge">
       <div class="status-dot connected"></div>
-      <span id="roomStatusText">متصل</span>
+      <span>متصل</span>
     </div>
   </header>
 
@@ -531,13 +498,9 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
             </div>
             <div class="p-status host" id="meStatus">مضيف</div>
           </div>
-          <div class="connection-arrow">
-            <i class="fas fa-arrows-left-right"></i>
-          </div>
+          <div class="connection-arrow"><i class="fas fa-arrows-left-right"></i></div>
           <div class="participant partner-p" id="partnerParticipant">
-            <div class="p-avatar waiting-av" id="partnerAvatar">
-              <i class="fas fa-user"></i>
-            </div>
+            <div class="p-avatar waiting-av" id="partnerAvatar"><i class="fas fa-user"></i></div>
             <div class="p-info">
               <div class="p-name" id="partnerName">في انتظار الشريك...</div>
               <div class="p-lang" id="partnerLang">---</div>
@@ -548,17 +511,12 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 
         <!-- Main Card -->
         <div class="card" style="position:relative;">
-
           <!-- Waiting Overlay -->
           <div class="waiting-overlay" id="waitingOverlay">
             <div class="waiting-spinner"></div>
             <div style="text-align:center;">
-              <div style="font-size:1rem;font-weight:600;margin-bottom:8px;" id="waitingTitle">
-                في انتظار الشريك...
-              </div>
-              <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:15px;" id="waitingDesc">
-                شارك رمز الغرفة أو الرابط مع شريكك
-              </div>
+              <div style="font-size:1rem;font-weight:600;margin-bottom:8px;" id="waitingTitle">في انتظار الشريك...</div>
+              <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:15px;" id="waitingDesc">شارك رمز الغرفة أو الرابط مع شريكك</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;">
               <div class="room-code-display" onclick="copyRoomCode()" style="justify-content:center;">
@@ -567,8 +525,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
                 <i class="fas fa-copy"></i>
               </div>
               <div class="invite-box" onclick="copyInviteLink()">
-                <i class="fas fa-link"></i>
-                <span id="inviteLinkLabel">انسخ رابط الدعوة المباشر</span>
+                <i class="fas fa-link"></i><span id="inviteLinkLabel">انسخ رابط الدعوة المباشر</span>
               </div>
             </div>
           </div>
@@ -576,107 +533,57 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
           <!-- Mic Section -->
           <div class="mic-section">
             <div class="mic-ring" id="micRing">
-              <!-- ✅ زر الميكروفون الرئيسي المصلح -->
-              <button
-                class="mic-btn-main"
-                id="micBtnMain"
-                onclick="toggleRecording()"
-                disabled
-              >
+              <button class="mic-btn-main" id="micBtnMain" onclick="toggleRecording()" disabled>
                 <i class="fas fa-microphone" id="micBtnIcon"></i>
               </button>
             </div>
             <div class="mic-label" id="micLabel">في انتظار الشريك...</div>
             <div class="visualizer" id="visualizer">
-              <div class="vbar"></div><div class="vbar"></div>
-              <div class="vbar"></div><div class="vbar"></div>
-              <div class="vbar"></div><div class="vbar"></div>
+              <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+              <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
               <div class="vbar"></div>
             </div>
             <div class="speaking-badge" id="speakingBadge">
-              <i class="fas fa-volume-high"></i>
-              <span id="speakingText">شريكك يتحدث...</span>
+              <i class="fas fa-volume-high"></i><span>شريكك يتحدث...</span>
             </div>
           </div>
 
-          <!-- Results -->
-          <div class="card-title">
-            <i class="fas fa-align-left"></i>
-            <span id="resultsTitle">النتائج</span>
-          </div>
+          <div class="card-title"><i class="fas fa-align-left"></i><span>النتائج</span></div>
           <div class="results-grid">
             <div class="result-box original">
-              <h5>
-                <i class="fas fa-microphone"></i>
-                <span id="originalLabel">ما قلته</span>
-              </h5>
+              <h5><i class="fas fa-microphone"></i><span>ما قلته</span></h5>
               <p id="originalText">سيظهر هنا كلامك...</p>
               <div class="result-actions">
-                <button class="mini-btn" onclick="copyResult('originalText')">
-                  <i class="fas fa-copy"></i> نسخ
-                </button>
+                <button class="mini-btn" onclick="copyResult('originalText')"><i class="fas fa-copy"></i> نسخ</button>
               </div>
             </div>
             <div class="result-box translated">
-              <h5>
-                <i class="fas fa-globe"></i>
-                <span id="translatedLabel">ترجمتك المرسلة</span>
-              </h5>
+              <h5><i class="fas fa-globe"></i><span>ترجمتك</span></h5>
               <p id="translatedText">سيظهر هنا النص المترجم...</p>
               <div class="result-actions">
-                <button class="mini-btn" onclick="copyResult('translatedText')">
-                  <i class="fas fa-copy"></i> نسخ
-                </button>
+                <button class="mini-btn" onclick="copyResult('translatedText')"><i class="fas fa-copy"></i> نسخ</button>
               </div>
             </div>
           </div>
           <div class="partner-result">
-            <h5>
-              <i class="fas fa-headphones"></i>
-              <span id="partnerResultLabel">ما قاله شريكك (مترجماً إليك)</span>
-            </h5>
+            <h5><i class="fas fa-headphones"></i><span>ما قاله شريكك (مترجماً إليك)</span></h5>
             <p id="partnerTranslatedText">سيظهر هنا كلام شريكك مترجماً...</p>
           </div>
         </div>
 
-        <!-- ✅ Controls Bar مع أيقونات Font Awesome -->
+        <!-- Controls Bar -->
         <div class="controls-bar">
-          <!-- Mute Mic -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
-            <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()" title="كتم الميكروفون">
-              <i class="fas fa-microphone" id="muteIcon"></i>
-            </button>
-            <span style="font-size:0.65rem;color:var(--text-muted);" id="muteBtnLabel">ميكروفون</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()"><i class="fas fa-microphone" id="muteIcon"></i></button>
+            <span style="font-size:0.65rem;color:var(--text-muted);">ميكروفون</span>
           </div>
-
-          <!-- Main Mic -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
-            <button
-              class="mic-btn-main"
-              id="micBtnControls"
-              onclick="toggleRecording()"
-              style="width:64px;height:64px;font-size:1.6rem;"
-              disabled
-            >
-              <i class="fas fa-microphone" id="micBtnControlsIcon"></i>
-            </button>
-            <span style="font-size:0.65rem;color:var(--text-muted);" id="micBtnLabel">تحدث</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()"><i class="fas fa-volume-high" id="speakerIcon"></i></button>
+            <span style="font-size:0.65rem;color:var(--text-muted);">صوت</span>
           </div>
-
-          <!-- Speaker -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
-            <button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()" title="الصوت">
-              <i class="fas fa-volume-high" id="speakerIcon"></i>
-            </button>
-            <span style="font-size:0.65rem;color:var(--text-muted);" id="speakerBtnLabel">صوت</span>
-          </div>
-
           <div style="flex:1;"></div>
-
-          <!-- Leave -->
           <button class="leave-btn" onclick="confirmLeave()">
-            <i class="fas fa-phone-slash"></i>
-            <span id="leaveLabel">مغادرة</span>
+            <i class="fas fa-phone-slash"></i><span>مغادرة</span>
           </button>
         </div>
 
@@ -688,54 +595,106 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
         <!-- Transcript -->
         <div class="transcript-panel">
           <div class="panel-head">
-            <h4>
-              <i class="fas fa-comments"></i>
-              <span id="transcriptTitle">سجل المحادثة</span>
-            </h4>
+            <h4><i class="fas fa-comments"></i> سجل المحادثة</h4>
             <div class="panel-head-actions">
-              <button onclick="downloadHistory()" title="تحميل">
-                <i class="fas fa-download"></i>
-              </button>
-              <button onclick="clearMessages()" title="مسح">
-                <i class="fas fa-trash"></i>
-              </button>
+              <button onclick="downloadHistory()" title="تحميل"><i class="fas fa-download"></i></button>
+              <button onclick="clearMessages()" title="مسح"><i class="fas fa-trash"></i></button>
             </div>
           </div>
           <div class="messages" id="messages">
-            <div class="empty-msgs">
-              <i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>
-              لا توجد رسائل بعد<br>ابدأ بالتحدث
-            </div>
+            <div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div>
           </div>
         </div>
 
-        <!-- AI -->
+        <!-- AI Panel -->
         <div class="ai-panel">
           <div class="panel-head">
-            <h4>
-              <i class="fas fa-robot"></i>
-              <span id="aiTitle">مساعد AI</span>
-            </h4>
+            <h4><i class="fas fa-robot"></i> مساعد Gemini AI</h4>
             <div class="panel-head-actions">
-              <button onclick="clearAI()" title="مسح">
-                <i class="fas fa-trash"></i>
-              </button>
+              <button onclick="clearAI()" title="مسح المحادثة"><i class="fas fa-trash"></i></button>
             </div>
           </div>
+
+          <!-- AI Mode Tabs -->
+          <div class="ai-modes">
+            <button class="ai-mode-btn active" onclick="setAIMode('general',this)" id="modeGeneral">
+              <i class="fas fa-robot"></i>
+              <span>مساعد</span>
+            </button>
+            <button class="ai-mode-btn" onclick="setAIMode('translator',this)" id="modeTranslator">
+              <i class="fas fa-language"></i>
+              <span>مترجم</span>
+            </button>
+            <button class="ai-mode-btn" onclick="setAIMode('language-teacher',this)" id="modeTeacher">
+              <i class="fas fa-graduation-cap"></i>
+              <span>مدرّس</span>
+            </button>
+          </div>
+
+          <!-- Practice Setup (for language teacher mode) -->
+          <div class="practice-setup hidden" id="practiceSetup">
+            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">
+              <i class="fas fa-graduation-cap"></i> اختر اللغة التي تريد تعلمها:
+            </div>
+            <select class="practice-lang-select" id="practiceTargetLang">
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="ar">🇸🇦 العربية</option>
+              <option value="tr">🇹🇷 Türkçe</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="ru">🇷🇺 Русский</option>
+              <option value="pt">🇧🇷 Português</option>
+            </select>
+            <button class="practice-btn" onclick="startPractice()">
+              <i class="fas fa-play"></i> ابدأ جلسة التعلم
+            </button>
+          </div>
+
+          <!-- Practice Banner -->
+          <div class="practice-banner" id="practiceBanner">
+            <i class="fas fa-graduation-cap"></i>
+            <span id="practiceBannerText">وضع التعلم نشط - تحدث وسيصحح AI أخطاءك</span>
+            <button onclick="stopPractice()" style="margin-right:auto;background:none;border:none;color:#a5b4fc;cursor:pointer;font-size:0.8rem;">
+              إيقاف <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Suggestions -->
+          <div class="ai-suggestions" id="aiSuggestions">
+            <button class="ai-suggestion" onclick="sendAISuggestion('ترجم لي: مرحبا كيف حالك')">ترجم جملة</button>
+            <button class="ai-suggestion" onclick="sendAISuggestion('أعطني نصيحة ثقافية')">نصيحة ثقافية</button>
+            <button class="ai-suggestion" onclick="sendAISuggestion('كيف أقول شكراً بالإسبانية')">تعابير مهمة</button>
+          </div>
+
+          <!-- Messages -->
           <div class="ai-msgs" id="aiMessages">
             <div class="ai-bubble bot" id="aiWelcome">
-              مرحباً! 👋 أنا مساعدك الذكي.<br>
-              يمكنني مساعدتك في الترجمة والنصائح الثقافية!
+              مرحباً! 👋 أنا <strong>Gemini AI</strong> مساعدك الذكي.<br><br>
+              يمكنني:<br>
+              🌐 <strong>ترجمة</strong> أي جملة بدقة عالية<br>
+              🎓 <strong>تعليمك لغة</strong> وتصحيح أخطاءك<br>
+              💡 <strong>نصائح ثقافية</strong> متقدمة<br>
+              💬 <strong>محادثة ذكية</strong> بأي لغة<br><br>
+              اختر وضعاً من الأعلى وابدأ! 😊
             </div>
           </div>
+
           <div class="ai-typing" id="aiTyping">
             <span></span><span></span><span></span>
           </div>
+
+          <!-- Input Area -->
           <div class="ai-input-area">
-            <input type="text" id="aiInput"
-              placeholder="اسأل المساعد..."
+            <button class="ai-voice-btn" id="aiVoiceBtn" onclick="toggleAIVoice()" title="تحدث للمساعد">
+              <i class="fas fa-microphone" id="aiVoiceIcon"></i>
+            </button>
+            <input type="text" class="ai-input" id="aiInput"
+              placeholder="اسأل Gemini AI..."
               onkeypress="if(event.key==='Enter')sendAI()">
-            <button class="ai-send-btn" onclick="sendAI()">
+            <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()">
               <i class="fas fa-paper-plane"></i>
             </button>
           </div>
@@ -746,24 +705,20 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
   </div>
 </div>
 
-<!-- ✅ Confirm Leave Modal -->
+<!-- Leave Modal -->
 <div id="leaveModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);z-index:500;align-items:center;justify-content:center;">
   <div style="background:var(--bg-card);border-radius:20px;padding:30px;width:100%;max-width:380px;border:1px solid var(--border);text-align:center;">
     <div style="width:64px;height:64px;background:rgba(239,68,68,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem;color:var(--danger);">
       <i class="fas fa-phone-slash"></i>
     </div>
-    <h3 style="margin-bottom:8px;" id="leaveModalTitle">مغادرة الغرفة</h3>
-    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:24px;" id="leaveModalDesc">
-      هل أنت متأكد أنك تريد مغادرة الغرفة؟
-    </p>
+    <h3 style="margin-bottom:8px;">مغادرة الغرفة</h3>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:24px;">هل أنت متأكد أنك تريد مغادرة الغرفة؟</p>
     <div style="display:flex;gap:10px;">
-      <button onclick="leaveRoom()" style="flex:1;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--danger),#f97316);color:white;font-weight:600;cursor:pointer;font-size:0.95rem;">
-        <i class="fas fa-phone-slash"></i>
-        <span id="leaveConfirmBtn">نعم، مغادرة</span>
+      <button onclick="leaveRoom()" style="flex:1;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--danger),#f97316);color:white;font-weight:600;cursor:pointer;">
+        <i class="fas fa-phone-slash"></i> نعم، مغادرة
       </button>
-      <button onclick="closeLeaveModal()" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-weight:600;cursor:pointer;font-size:0.95rem;">
-        <i class="fas fa-arrow-left"></i>
-        <span id="leaveCancelBtn">إلغاء</span>
+      <button onclick="closeLeaveModal()" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-weight:600;cursor:pointer;">
+        إلغاء
       </button>
     </div>
   </div>
@@ -776,112 +731,58 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 const SERVER_URL = 'https://translationcall-server.onrender.com';
 
 // ============================================
-// UI Languages
+// UI Translations
 // ============================================
 const uiTexts = {
   ar:{
-    statusConnecting:'جاري الاتصال...',
-    statusConnected:'متصل',
-    statusDisconnected:'غير متصل',
-    heroBadge:'مدعوم بالذكاء الاصطناعي',
-    heroTitle1:'محادثة حية',
-    heroTitle2:'بلا حواجز اللغة',
+    statusConnecting:'جاري الاتصال...',statusConnected:'متصل',statusDisconnected:'غير متصل',
+    heroBadge:'مدعوم بـ Gemini AI',heroTitle1:'محادثة حية',heroTitle2:'بلا حواجز اللغة',
     heroDesc:'تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥',
     feat1:'تعرف على الصوت',feat2:'ترجمة فورية',feat3:'نطق تلقائي',
-    feat4:'مساعد AI',feat5:'غرف خاصة',feat6:'سجل المحادثة',
+    feat4:'مساعد AI',feat5:'تعلم اللغات',feat6:'غرف خاصة',
     createTitle:'إنشاء محادثة',createDesc:'أنشئ غرفة وادعُ شريكك',
     joinTitle:'الانضمام لمحادثة',joinDesc:'أدخل رمز الغرفة للانضمام',
     labelName:'اسمك',labelLang:'لغتك',labelPartnerLang:'لغة شريكك',
     labelCode:'رمز الغرفة',labelPass:'كلمة المرور',
     privateLabel:'غرفة خاصة',
     btnCreate:'إنشاء غرفة',btnJoin:'انضم الآن',btnCheck:'تحقق من الغرفة',
-    waitingTitle:'في انتظار الشريك...',
-    waitingDesc:'شارك رمز الغرفة أو الرابط مع شريكك',
+    waitingTitle:'في انتظار الشريك...',waitingDesc:'شارك رمز الغرفة أو الرابط',
     inviteLinkLabel:'انسخ رابط الدعوة المباشر',
-    micLabelWaiting:'في انتظار الشريك...',
-    micLabelReady:'اضغط للتحدث',
-    micLabelListening:'🎤 يستمع إليك...',
-    resultsTitle:'النتائج',
-    originalLabel:'ما قلته',translatedLabel:'ترجمتك المرسلة',
-    partnerResultLabel:'ما قاله شريكك (مترجماً إليك)',
-    transcriptTitle:'سجل المحادثة',aiTitle:'مساعد AI',
-    leaveLabel:'مغادرة',
-    muteBtnLabel:'ميكروفون',micBtnLabel:'تحدث',speakerBtnLabel:'صوت',
-    speakingText:'شريكك يتحدث...',
-    leaveModalTitle:'مغادرة الغرفة',
-    leaveModalDesc:'هل أنت متأكد أنك تريد مغادرة الغرفة؟',
-    leaveConfirmBtn:'نعم، مغادرة',leaveCancelBtn:'إلغاء',
-    aiWelcome:'مرحباً! 👋 أنا مساعدك الذكي.<br>يمكنني مساعدتك في الترجمة والنصائح الثقافية!',
+    micLabelWaiting:'في انتظار الشريك...',micLabelReady:'اضغط للتحدث',micLabelListening:'🎤 يستمع...',
     dir:'rtl',lang:'ar'
   },
   en:{
-    statusConnecting:'Connecting...',
-    statusConnected:'Connected',
-    statusDisconnected:'Disconnected',
-    heroBadge:'Powered by AI',
-    heroTitle1:'Live Conversation',
-    heroTitle2:'No Language Barriers',
+    statusConnecting:'Connecting...',statusConnected:'Connected',statusDisconnected:'Disconnected',
+    heroBadge:'Powered by Gemini AI',heroTitle1:'Live Conversation',heroTitle2:'No Language Barriers',
     heroDesc:'Talk in your language with anyone in the world. AI translates instantly 🔥',
     feat1:'Voice Recognition',feat2:'Instant Translation',feat3:'Auto Speech',
-    feat4:'AI Assistant',feat5:'Private Rooms',feat6:'Chat History',
+    feat4:'AI Assistant',feat5:'Learn Languages',feat6:'Private Rooms',
     createTitle:'Create Conversation',createDesc:'Create a room and invite your partner',
     joinTitle:'Join Conversation',joinDesc:'Enter room code to join',
     labelName:'Your Name',labelLang:'Your Language',labelPartnerLang:"Partner's Language",
     labelCode:'Room Code',labelPass:'Password',
     privateLabel:'Private Room',
     btnCreate:'Create Room',btnJoin:'Join Now',btnCheck:'Check Room',
-    waitingTitle:'Waiting for partner...',
-    waitingDesc:'Share the room code or link with your partner',
+    waitingTitle:'Waiting for partner...',waitingDesc:'Share the room code or link',
     inviteLinkLabel:'Copy Direct Invite Link',
-    micLabelWaiting:'Waiting for partner...',
-    micLabelReady:'Press to speak',
-    micLabelListening:'🎤 Listening...',
-    resultsTitle:'Results',
-    originalLabel:'What you said',translatedLabel:'Your sent translation',
-    partnerResultLabel:"What your partner said (translated for you)",
-    transcriptTitle:'Chat History',aiTitle:'AI Assistant',
-    leaveLabel:'Leave',
-    muteBtnLabel:'Mic',micBtnLabel:'Speak',speakerBtnLabel:'Speaker',
-    speakingText:'Partner is speaking...',
-    leaveModalTitle:'Leave Room',
-    leaveModalDesc:'Are you sure you want to leave the room?',
-    leaveConfirmBtn:'Yes, Leave',leaveCancelBtn:'Cancel',
-    aiWelcome:"Hello! 👋 I'm your AI assistant.<br>I can help you with translations and cultural tips!",
+    micLabelWaiting:'Waiting for partner...',micLabelReady:'Press to speak',micLabelListening:'🎤 Listening...',
     dir:'ltr',lang:'en'
   },
   es:{
-    statusConnecting:'Conectando...',
-    statusConnected:'Conectado',
-    statusDisconnected:'Desconectado',
-    heroBadge:'Impulsado por IA',
-    heroTitle1:'Conversación en vivo',
-    heroTitle2:'Sin barreras de idioma',
+    statusConnecting:'Conectando...',statusConnected:'Conectado',statusDisconnected:'Desconectado',
+    heroBadge:'Impulsado por Gemini AI',heroTitle1:'Conversación en vivo',heroTitle2:'Sin barreras de idioma',
     heroDesc:'Habla en tu idioma con cualquier persona. La IA traduce al instante 🔥',
     feat1:'Reconocimiento de voz',feat2:'Traducción instantánea',feat3:'Voz automática',
-    feat4:'Asistente IA',feat5:'Salas privadas',feat6:'Historial',
+    feat4:'Asistente IA',feat5:'Aprender idiomas',feat6:'Salas privadas',
     createTitle:'Crear conversación',createDesc:'Crea una sala e invita a tu compañero',
-    joinTitle:'Unirse a conversación',joinDesc:'Ingresa el código de sala para unirte',
-    labelName:'Tu nombre',labelLang:'Tu idioma',labelPartnerLang:'Idioma de tu compañero',
+    joinTitle:'Unirse',joinDesc:'Ingresa el código de sala',
+    labelName:'Tu nombre',labelLang:'Tu idioma',labelPartnerLang:'Idioma del compañero',
     labelCode:'Código de sala',labelPass:'Contraseña',
     privateLabel:'Sala privada',
     btnCreate:'Crear sala',btnJoin:'Unirse ahora',btnCheck:'Verificar sala',
-    waitingTitle:'Esperando compañero...',
-    waitingDesc:'Comparte el código o el enlace con tu compañero',
+    waitingTitle:'Esperando compañero...',waitingDesc:'Comparte el código o enlace',
     inviteLinkLabel:'Copiar enlace de invitación',
-    micLabelWaiting:'Esperando compañero...',
-    micLabelReady:'Presiona para hablar',
-    micLabelListening:'🎤 Escuchando...',
-    resultsTitle:'Resultados',
-    originalLabel:'Lo que dijiste',translatedLabel:'Tu traducción enviada',
-    partnerResultLabel:'Lo que dijo tu compañero (traducido para ti)',
-    transcriptTitle:'Historial',aiTitle:'Asistente IA',
-    leaveLabel:'Salir',
-    muteBtnLabel:'Micrófono',micBtnLabel:'Hablar',speakerBtnLabel:'Altavoz',
-    speakingText:'Tu compañero está hablando...',
-    leaveModalTitle:'Salir de la sala',
-    leaveModalDesc:'¿Estás seguro de que quieres salir de la sala?',
-    leaveConfirmBtn:'Sí, salir',leaveCancelBtn:'Cancelar',
-    aiWelcome:"¡Hola! 👋 Soy tu asistente de IA.<br>¡Puedo ayudarte con traducciones y consejos culturales!",
+    micLabelWaiting:'Esperando compañero...',micLabelReady:'Presiona para hablar',micLabelListening:'🎤 Escuchando...',
     dir:'ltr',lang:'es'
   }
 };
@@ -891,67 +792,36 @@ let currentUILang = 'ar';
 function setUILang(lang, btn){
   currentUILang = lang;
   const t = uiTexts[lang];
-
-  // Update HTML dir
   document.documentElement.lang = t.lang;
   document.documentElement.dir = t.dir;
-
-  // Update buttons
   document.querySelectorAll('.lang-switch-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-
-  // Update texts
-  document.getElementById('statusText').innerText = t.statusConnecting;
-  document.getElementById('heroBadge').innerText = t.heroBadge;
-  document.getElementById('heroTitle1').innerText = t.heroTitle1;
-  document.getElementById('heroTitle2').innerText = t.heroTitle2;
-  document.getElementById('heroDesc').innerText = t.heroDesc;
-  document.getElementById('feat1').innerText = t.feat1;
-  document.getElementById('feat2').innerText = t.feat2;
-  document.getElementById('feat3').innerText = t.feat3;
-  document.getElementById('feat4').innerText = t.feat4;
-  document.getElementById('feat5').innerText = t.feat5;
-  document.getElementById('feat6').innerText = t.feat6;
-  document.getElementById('createTitle').innerText = t.createTitle;
-  document.getElementById('createDesc').innerText = t.createDesc;
-  document.getElementById('joinTitle').innerText = t.joinTitle;
-  document.getElementById('joinDesc').innerText = t.joinDesc;
+  const ids = {
+    heroBadge:'heroBadge',heroTitle1:'heroTitle1',heroTitle2:'heroTitle2',heroDesc:'heroDesc',
+    feat1:'feat1',feat2:'feat2',feat3:'feat3',feat4:'feat4',feat5:'feat5',feat6:'feat6',
+    createTitle:'createTitle',createDesc:'createDesc',joinTitle:'joinTitle',joinDesc:'joinDesc',
+    btnCreate:'btnCreate',btnJoin:'btnJoin',btnCheck:'btnCheck',
+    waitingTitle:'waitingTitle',waitingDesc:'waitingDesc',inviteLinkLabel:'inviteLinkLabel'
+  };
+  Object.entries(ids).forEach(([key,id])=>{
+    const el = document.getElementById(id);
+    if(el) el.innerText = t[key]||'';
+  });
   document.getElementById('labelName1').innerText = t.labelName;
-  document.getElementById('labelLang1').innerText = t.labelLang;
-  document.getElementById('labelPartnerLang').innerText = t.labelPartnerLang;
   document.getElementById('labelName2').innerText = t.labelName;
+  document.getElementById('labelLang1').innerText = t.labelLang;
   document.getElementById('labelLang2').innerText = t.labelLang;
+  document.getElementById('labelPartnerLang').innerText = t.labelPartnerLang;
   document.getElementById('labelCode').innerText = t.labelCode;
   document.getElementById('labelPass').innerText = t.labelPass;
   document.getElementById('labelJoinPass').innerText = t.labelPass;
   document.getElementById('privateLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.privateLabel}`;
-  document.getElementById('btnCreate').innerText = t.btnCreate;
-  document.getElementById('btnJoin').innerText = t.btnJoin;
-  document.getElementById('btnCheck').innerText = t.btnCheck;
-  document.getElementById('waitingTitle').innerText = t.waitingTitle;
-  document.getElementById('waitingDesc').innerText = t.waitingDesc;
-  document.getElementById('inviteLinkLabel').innerText = t.inviteLinkLabel;
-  document.getElementById('resultsTitle').innerText = t.resultsTitle;
-  document.getElementById('originalLabel').innerText = t.originalLabel;
-  document.getElementById('translatedLabel').innerText = t.translatedLabel;
-  document.getElementById('partnerResultLabel').innerText = t.partnerResultLabel;
-  document.getElementById('transcriptTitle').innerText = t.transcriptTitle;
-  document.getElementById('aiTitle').innerText = t.aiTitle;
-  document.getElementById('leaveLabel').innerText = t.leaveLabel;
-  document.getElementById('muteBtnLabel').innerText = t.muteBtnLabel;
-  document.getElementById('micBtnLabel').innerText = t.micBtnLabel;
-  document.getElementById('speakerBtnLabel').innerText = t.speakerBtnLabel;
-  document.getElementById('speakingText').innerText = t.speakingText;
-  document.getElementById('leaveModalTitle').innerText = t.leaveModalTitle;
-  document.getElementById('leaveModalDesc').innerText = t.leaveModalDesc;
-  document.getElementById('leaveConfirmBtn').innerText = t.leaveConfirmBtn;
-  document.getElementById('leaveCancelBtn').innerText = t.leaveCancelBtn;
-  document.getElementById('aiWelcome').innerHTML = t.aiWelcome;
   document.getElementById('micLabel').innerText = t.micLabelWaiting;
+  document.getElementById('statusText').innerText = t.statusConnecting;
 }
 
 // ============================================
-// Languages Config
+// Languages
 // ============================================
 const langs = {
   ar:{name:'العربية',flag:'🇸🇦',voice:'ar-SA'},
@@ -969,257 +839,143 @@ const langs = {
 // ============================================
 // State
 // ============================================
-let socket = null;
-let roomId = null;
-let myName = '';
-let myLang = 'ar';
-let targetLang = 'en';
-let partnerLang = 'en';
-let recognition = null;
-let isRecording = false;
-let isMuted = false;
-let isSpeakerOff = false;
-let isPrivate = false;
-let messages = [];
-let partnerInfo = null;
-let timerInterval = null;
-let audioActivated = false;
+let socket=null,roomId=null,myName='',myLang='ar',targetLang='en';
+let partnerLang='en',recognition=null,isRecording=false;
+let isMuted=false,isSpeakerOff=false,isPrivate=false;
+let messages=[],partnerInfo=null,timerInterval=null,audioActivated=false;
+let aiMode='general',isPracticeActive=false,practiceTargetLang='en';
+let aiVoiceRecognition=null,isAIVoiceRecording=false;
 
 // ============================================
-// Activate Audio (Mobile Fix)
+// Activate Audio
 // ============================================
 function activateAudio(){
   try{
-    const ctx = new(window.AudioContext||window.webkitAudioContext)();
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
     ctx.resume();
-    const buf = ctx.createBuffer(1,1,22050);
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    src.connect(ctx.destination);
-    src.start(0);
+    const buf=ctx.createBuffer(1,1,22050);
+    const src=ctx.createBufferSource();
+    src.buffer=buf;src.connect(ctx.destination);src.start(0);
     window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(' ');
-    utt.volume = 0;
-    window.speechSynthesis.speak(utt);
+    const utt=new SpeechSynthesisUtterance(' ');
+    utt.volume=0;window.speechSynthesis.speak(utt);
   }catch(e){}
-  audioActivated = true;
+  audioActivated=true;
   document.getElementById('audioActivateBtn').classList.remove('show');
   showNotification('تم تفعيل الصوت ✅','success');
 }
 
 // ============================================
-// Session Management
+// Session
 // ============================================
 function saveSession(){
   if(!roomId) return;
-  localStorage.setItem('tcSession', JSON.stringify({
-    roomId, myName, myLang, targetLang, timestamp: Date.now()
-  }));
+  localStorage.setItem('tcSession',JSON.stringify({roomId,myName,myLang,targetLang,timestamp:Date.now()}));
 }
-
 function loadSession(){
   try{
-    const raw = localStorage.getItem('tcSession');
+    const raw=localStorage.getItem('tcSession');
     if(!raw) return null;
-    const s = JSON.parse(raw);
-    if(Date.now() - s.timestamp > 3600000){
-      localStorage.removeItem('tcSession');
-      return null;
-    }
+    const s=JSON.parse(raw);
+    if(Date.now()-s.timestamp>3600000){localStorage.removeItem('tcSession');return null;}
     return s;
-  }catch(e){ return null; }
+  }catch(e){return null;}
 }
+function clearSession(){localStorage.removeItem('tcSession');}
 
-function clearSession(){
-  localStorage.removeItem('tcSession');
-}
-
-// ============================================
-// Restore Session
-// ============================================
 function tryRestoreSession(){
-  const s = loadSession();
+  const s=loadSession();
   if(!s) return;
-  myName = s.myName;
-  myLang = s.myLang;
-  targetLang = s.targetLang;
-  socket.emit('join-room',{
-    roomId: s.roomId, userName: myName,
-    language: myLang, password: ''
-  },(res)=>{
+  myName=s.myName;myLang=s.myLang;targetLang=s.targetLang;
+  socket.emit('join-room',{roomId:s.roomId,userName:myName,language:myLang,password:''},(res)=>{
     if(res.success){
-      roomId = res.roomId;
-      if(res.partner){
-        partnerInfo = res.partner;
-        partnerLang = res.partner.language;
-        targetLang = partnerLang;
-      }
+      roomId=res.roomId;
+      if(res.partner){partnerInfo=res.partner;partnerLang=res.partner.language;targetLang=partnerLang;}
       enterRoom(false);
-      if(res.partner){
-        updatePartnerUI(res.partner);
-        hideWaiting();
-        enableMic();
-        startTimer();
-      }
+      if(res.partner){updatePartnerUI(res.partner);hideWaiting();enableMic();startTimer();}
       showNotification('تم استعادة جلستك ✅','success');
-    } else {
-      clearSession();
-    }
+    } else {clearSession();}
   });
 }
 
 // ============================================
-// Socket Init
+// Socket
 // ============================================
 function initSocket(){
-  socket = io(SERVER_URL,{
-    transports:['websocket','polling'],
-    reconnection:true,
-    reconnectionAttempts:10,
-    reconnectionDelay:1000
-  });
+  socket=io(SERVER_URL,{transports:['websocket','polling'],reconnection:true,reconnectionAttempts:10,reconnectionDelay:1000});
 
   socket.on('connect',()=>{
     setStatus(true);
     if(!roomId) tryRestoreSession();
   });
-
   socket.on('disconnect',()=>{
     setStatus(false);
-    showNotification('انقطع الاتصال، جاري إعادة الاتصال...','error');
+    showNotification('انقطع الاتصال...','error');
   });
-
   socket.on('partner-joined',(data)=>{
-    partnerInfo = data;
-    partnerLang = data.language;
-    updatePartnerUI(data);
-    hideWaiting();
-    enableMic();
-    startTimer();
-    if(/Android|iPhone|iPad/i.test(navigator.userAgent) && !audioActivated){
-      document.getElementById('audioActivateBtn').classList.add('show');
-    }
+    partnerInfo=data;partnerLang=data.language;
+    updatePartnerUI(data);hideWaiting();enableMic();startTimer();
+    if(!audioActivated) document.getElementById('audioActivateBtn').classList.add('show');
     showNotification(`${data.name} انضم! 🎉`,'success');
   });
-
   socket.on('partner-left',(data)=>{
-    partnerInfo = null;
-    resetPartnerUI();
-    showWaiting();
-    disableMic();
-    stopTimer();
-    showNotification(`${data.name} غادر المحادثة`,'error');
+    partnerInfo=null;resetPartnerUI();showWaiting();disableMic();stopTimer();
+    showNotification(`${data.name} غادر`,'error');
   });
-
-  // ✅ الصوت يخرج للشريك فقط
   socket.on('new-message',(msg)=>{
-    if(msg.senderId !== socket.id){
-      addMessage(msg, false);
-      document.getElementById('partnerTranslatedText').innerText = msg.translatedText;
-      if(!isSpeakerOff){
-        speakText(msg.translatedText, myLang);
-      }
+    if(msg.senderId!==socket.id){
+      addMessage(msg,false);
+      document.getElementById('partnerTranslatedText').innerText=msg.translatedText;
+      if(!isSpeakerOff) speakText(msg.translatedText,myLang);
     }
   });
-
   socket.on('partner-speaking',(data)=>{
-    const el = document.getElementById('partnerParticipant');
-    const badge = document.getElementById('speakingBadge');
-    if(data.speaking){
-      el.classList.add('speaking');
-      badge.classList.add('show');
-    } else {
-      el.classList.remove('speaking');
-      badge.classList.remove('show');
-    }
+    document.getElementById('partnerParticipant').classList.toggle('speaking',data.speaking);
+    document.getElementById('speakingBadge').classList.toggle('show',data.speaking);
   });
-
-  // Admin events
-  socket.on('blocked',()=>{
-    alert('تم حظرك من الموقع');
-    window.location.href = '/';
-  });
-
-  socket.on('maintenance',()=>{
-    alert('الموقع في وضع الصيانة حالياً. حاول لاحقاً.');
-    window.location.href = '/';
-  });
-
-  socket.on('room-deleted',()=>{
-    showNotification('تم حذف الغرفة من قبل المسؤول','error');
-    setTimeout(()=>leaveRoom(), 2000);
-  });
-
+  socket.on('blocked',()=>{alert('تم حظرك');window.location.href='/';});
+  socket.on('maintenance',()=>{alert('الموقع في وضع الصيانة');window.location.href='/';});
+  socket.on('room-deleted',()=>{showNotification('تم حذف الغرفة','error');setTimeout(()=>leaveRoom(),2000);});
   socket.on('admin-warning',(data)=>{
-    const banner = document.getElementById('adminWarningBanner');
-    document.getElementById('adminWarningText').innerText = `⚠️ تحذير من المسؤول: ${data.message}`;
-    banner.classList.add('show');
-    setTimeout(()=>banner.classList.remove('show'), 8000);
+    document.getElementById('adminWarningText').innerText=`⚠️ تحذير: ${data.message}`;
+    document.getElementById('adminWarningBanner').classList.add('show');
+    setTimeout(()=>document.getElementById('adminWarningBanner').classList.remove('show'),8000);
   });
 }
 
-// ============================================
-// Status
-// ============================================
 function setStatus(connected){
-  const dot = document.getElementById('statusDot');
-  const txt = document.getElementById('statusText');
-  const t = uiTexts[currentUILang];
-  if(connected){
-    dot.classList.add('connected');
-    txt.innerText = t.statusConnected;
-  } else {
-    dot.classList.remove('connected');
-    txt.innerText = t.statusDisconnected;
-  }
+  const t=uiTexts[currentUILang];
+  document.getElementById('statusDot').classList.toggle('connected',connected);
+  document.getElementById('statusText').innerText=connected?t.statusConnected:t.statusDisconnected;
 }
 
 // ============================================
 // Timer
 // ============================================
 function startTimer(){
-  const start = Date.now();
-  timerInterval = setInterval(()=>{
-    const e = Math.floor((Date.now()-start)/1000);
-    const m = Math.floor(e/60).toString().padStart(2,'0');
-    const s = (e%60).toString().padStart(2,'0');
-    document.getElementById('callTimer').innerText = `${m}:${s}`;
+  const start=Date.now();
+  timerInterval=setInterval(()=>{
+    const e=Math.floor((Date.now()-start)/1000);
+    document.getElementById('callTimer').innerText=
+      `${Math.floor(e/60).toString().padStart(2,'0')}:${(e%60).toString().padStart(2,'0')}`;
   },1000);
 }
-function stopTimer(){
-  clearInterval(timerInterval);
-  document.getElementById('callTimer').innerText = '00:00';
-}
+function stopTimer(){clearInterval(timerInterval);document.getElementById('callTimer').innerText='00:00';}
 
-// ============================================
-// Toggle Private
-// ============================================
 function togglePrivate(){
-  isPrivate = !isPrivate;
+  isPrivate=!isPrivate;
   document.getElementById('privateToggle').classList.toggle('on',isPrivate);
-  document.getElementById('passwordGroup').style.display = isPrivate?'flex':'none';
+  document.getElementById('passwordGroup').style.display=isPrivate?'flex':'none';
 }
 
-// ============================================
-// Check Room Privacy
-// ============================================
 async function checkRoomPrivacy(){
-  const code = document.getElementById('joinCode').value.trim().toUpperCase();
-  if(!code||code.length!==6){
-    showNotification('أدخل رمز الغرفة أولاً','error');
-    return;
-  }
+  const code=document.getElementById('joinCode').value.trim().toUpperCase();
+  if(!code||code.length!==6){showNotification('أدخل رمز الغرفة أولاً','error');return;}
   try{
-    const res = await fetch(`${SERVER_URL}/room/${code}`);
-    const data = await res.json();
-    if(!data.exists){
-      showNotification('الغرفة غير موجودة ❌','error');
-      return;
-    }
-    if(data.isFull){
-      showNotification('الغرفة ممتلئة ❌','error');
-      return;
-    }
+    const res=await fetch(`${SERVER_URL}/room/${code}`);
+    const data=await res.json();
+    if(!data.exists){showNotification('الغرفة غير موجودة ❌','error');return;}
+    if(data.isFull){showNotification('الغرفة ممتلئة ❌','error');return;}
     if(data.isPrivate){
       document.getElementById('joinPasswordGroup').style.display='flex';
       showNotification('غرفة خاصة - أدخل كلمة المرور 🔒','info');
@@ -1227,425 +983,237 @@ async function checkRoomPrivacy(){
       document.getElementById('joinPasswordGroup').style.display='none';
       showNotification('الغرفة متاحة ✅','success');
     }
-  }catch(e){
-    showNotification('تعذر التحقق','error');
-  }
+  }catch(e){showNotification('تعذر التحقق','error');}
 }
 
-// ============================================
-// Create Room
-// ============================================
 function createRoom(){
-  const name = document.getElementById('createName').value.trim();
-  const lang = document.getElementById('createLang').value;
-  const tLang = document.getElementById('createTargetLang').value;
-  const pass = document.getElementById('createPassword').value;
-
-  if(!name){ showNotification('يرجى إدخال اسمك','error'); return; }
-  if(lang===tLang){ showNotification('اختر لغتين مختلفتين','error'); return; }
-
-  myName=name; myLang=lang; targetLang=tLang;
-
-  socket.emit('create-room',{
-    userName:name, language:lang,
-    isPrivate, password:isPrivate?pass:null
-  },(res)=>{
-    if(res.success){
-      roomId=res.roomId;
-      saveSession();
-      enterRoom(true);
-    } else {
-      showNotification(res.error||'حدث خطأ','error');
-    }
+  const name=document.getElementById('createName').value.trim();
+  const lang=document.getElementById('createLang').value;
+  const tLang=document.getElementById('createTargetLang').value;
+  const pass=document.getElementById('createPassword').value;
+  if(!name){showNotification('يرجى إدخال اسمك','error');return;}
+  if(lang===tLang){showNotification('اختر لغتين مختلفتين','error');return;}
+  myName=name;myLang=lang;targetLang=tLang;
+  socket.emit('create-room',{userName:name,language:lang,isPrivate,password:isPrivate?pass:null},(res)=>{
+    if(res.success){roomId=res.roomId;saveSession();enterRoom(true);}
+    else showNotification(res.error||'حدث خطأ','error');
   });
 }
 
-// ============================================
-// Join Room
-// ============================================
 function joinRoom(){
-  const name = document.getElementById('joinName').value.trim();
-  const lang = document.getElementById('joinLang').value;
-  const code = document.getElementById('joinCode').value.trim().toUpperCase();
-  const pass = document.getElementById('joinPassword').value;
-
-  if(!name||!code){ showNotification('يرجى إدخال الاسم والرمز','error'); return; }
-  if(code.length!==6){ showNotification('الرمز يجب أن يكون 6 أحرف','error'); return; }
-
-  myName=name; myLang=lang;
-
-  socket.emit('join-room',{
-    roomId:code, userName:name, language:lang, password:pass
-  },(res)=>{
+  const name=document.getElementById('joinName').value.trim();
+  const lang=document.getElementById('joinLang').value;
+  const code=document.getElementById('joinCode').value.trim().toUpperCase();
+  const pass=document.getElementById('joinPassword').value;
+  if(!name||!code){showNotification('يرجى إدخال الاسم والرمز','error');return;}
+  if(code.length!==6){showNotification('الرمز يجب أن يكون 6 أحرف','error');return;}
+  myName=name;myLang=lang;
+  socket.emit('join-room',{roomId:code,userName:name,language:lang,password:pass},(res)=>{
     if(res.success){
       roomId=res.roomId;
-      if(res.partner){
-        partnerInfo=res.partner;
-        partnerLang=res.partner.language;
-        targetLang=partnerLang;
-      }
-      saveSession();
-      enterRoom(false);
-      if(res.partner){
-        updatePartnerUI(res.partner);
-        hideWaiting();
-        enableMic();
-        startTimer();
-        if(/Android|iPhone|iPad/i.test(navigator.userAgent)&&!audioActivated){
-          document.getElementById('audioActivateBtn').classList.add('show');
-        }
-      }
-      if(res.messages&&res.messages.length>0){
-        res.messages.forEach(msg=>addMessage(msg,msg.senderId===socket.id));
-      }
-    } else {
-      showNotification(res.error||'حدث خطأ','error');
-    }
+      if(res.partner){partnerInfo=res.partner;partnerLang=res.partner.language;targetLang=partnerLang;}
+      saveSession();enterRoom(false);
+      if(res.partner){updatePartnerUI(res.partner);hideWaiting();enableMic();startTimer();if(!audioActivated)document.getElementById('audioActivateBtn').classList.add('show');}
+      if(res.messages) res.messages.forEach(msg=>addMessage(msg,msg.senderId===socket.id));
+    } else showNotification(res.error||'حدث خطأ','error');
   });
 }
 
-// ============================================
-// Enter Room
-// ============================================
 function enterRoom(isHost){
-  document.getElementById('displayRoomId').innerText = roomId;
-  document.getElementById('waitingRoomId').innerText = roomId;
-  document.getElementById('meName').innerText = myName;
-  document.getElementById('meAvatar').innerText = myName.charAt(0).toUpperCase();
-  document.getElementById('meLang').innerText = `${langs[myLang]?.flag} ${langs[myLang]?.name}`;
-  document.getElementById('meStatus').innerText = isHost?'مضيف':'مشارك';
+  document.getElementById('displayRoomId').innerText=roomId;
+  document.getElementById('waitingRoomId').innerText=roomId;
+  document.getElementById('meName').innerText=myName;
+  document.getElementById('meAvatar').innerText=myName.charAt(0).toUpperCase();
+  document.getElementById('meLang').innerText=`${langs[myLang]?.flag} ${langs[myLang]?.name}`;
+  document.getElementById('meStatus').innerText=isHost?'مضيف':'مشارك';
   document.getElementById('landing').classList.remove('active');
   document.getElementById('room-page').classList.add('active');
   showWaiting();
 }
 
-// ============================================
-// Partner UI
-// ============================================
 function updatePartnerUI(data){
-  document.getElementById('partnerName').innerText = data.name;
-  document.getElementById('partnerAvatar').innerHTML = data.name.charAt(0).toUpperCase();
-  document.getElementById('partnerAvatar').className = 'p-avatar partner-av';
-  document.getElementById('partnerLang').innerText = `${langs[data.language]?.flag||'🌐'} ${langs[data.language]?.name||data.language}`;
-  document.getElementById('partnerStatus').innerText = 'متصل';
-  document.getElementById('partnerStatus').className = 'p-status online';
+  document.getElementById('partnerName').innerText=data.name;
+  document.getElementById('partnerAvatar').innerHTML=data.name.charAt(0).toUpperCase();
+  document.getElementById('partnerAvatar').className='p-avatar partner-av';
+  document.getElementById('partnerLang').innerText=`${langs[data.language]?.flag||'🌐'} ${langs[data.language]?.name||data.language}`;
+  document.getElementById('partnerStatus').innerText='متصل';
+  document.getElementById('partnerStatus').className='p-status online';
 }
 
 function resetPartnerUI(){
-  document.getElementById('partnerName').innerText = 'في انتظار الشريك...';
-  document.getElementById('partnerAvatar').innerHTML = '<i class="fas fa-user"></i>';
-  document.getElementById('partnerAvatar').className = 'p-avatar waiting-av';
-  document.getElementById('partnerLang').innerText = '---';
-  document.getElementById('partnerStatus').innerText = 'منتظر';
-  document.getElementById('partnerStatus').className = 'p-status waiting';
+  document.getElementById('partnerName').innerText='في انتظار الشريك...';
+  document.getElementById('partnerAvatar').innerHTML='<i class="fas fa-user"></i>';
+  document.getElementById('partnerAvatar').className='p-avatar waiting-av';
+  document.getElementById('partnerLang').innerText='---';
+  document.getElementById('partnerStatus').innerText='منتظر';
+  document.getElementById('partnerStatus').className='p-status waiting';
 }
 
-function showWaiting(){ document.getElementById('waitingOverlay').style.display='flex'; }
-function hideWaiting(){ document.getElementById('waitingOverlay').style.display='none'; }
+function showWaiting(){document.getElementById('waitingOverlay').style.display='flex';}
+function hideWaiting(){document.getElementById('waitingOverlay').style.display='none';}
 
-// ============================================
-// Enable/Disable Mic
-// ============================================
 function enableMic(){
-  const t = uiTexts[currentUILang];
-  document.getElementById('micBtnMain').disabled = false;
-  document.getElementById('micBtnControls').disabled = false;
-  document.getElementById('micLabel').innerText = t.micLabelReady;
+  document.getElementById('micBtnMain').disabled=false;
+  document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelReady;
 }
-
 function disableMic(){
-  const t = uiTexts[currentUILang];
-  document.getElementById('micBtnMain').disabled = true;
-  document.getElementById('micBtnControls').disabled = true;
-  document.getElementById('micLabel').innerText = t.micLabelWaiting;
+  document.getElementById('micBtnMain').disabled=true;
+  document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelWaiting;
   if(isRecording) stopRecording();
 }
 
 // ============================================
-// ✅ Toggle Recording (Fixed)
+// Recording
 // ============================================
-function toggleRecording(){
-  if(isRecording){ stopRecording(); }
-  else { startRecording(); }
-}
+function toggleRecording(){if(isRecording)stopRecording();else startRecording();}
 
-// ============================================
-// ✅ Start Recording (Fixed & Continuous)
-// ============================================
 function startRecording(){
-  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){ showNotification('استخدم Chrome أو Edge','error'); return; }
-  if(isMuted){ showNotification('الميكروفون مكتوم 🔇','error'); return; }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showNotification('استخدم Chrome أو Edge','error');return;}
+  if(isMuted){showNotification('الميكروفون مكتوم 🔇','error');return;}
 
-  const t = uiTexts[currentUILang];
+  recognition=new SR();
+  recognition.lang=langs[myLang]?.voice||'ar-SA';
+  recognition.continuous=false;recognition.interimResults=false;
 
-  recognition = new SR();
-  recognition.lang = langs[myLang]?.voice||'ar-SA';
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  recognition.onstart = ()=>{
-    isRecording = true;
-    // Update both mic buttons
+  recognition.onstart=()=>{
+    isRecording=true;
     setMicRecording(true);
     document.getElementById('visualizer').classList.add('active');
     document.getElementById('micRing').classList.add('active');
-    document.getElementById('micLabel').innerText = t.micLabelListening;
+    document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelListening;
     document.getElementById('meParticipant').classList.add('speaking');
-    socket.emit('speaking',{roomId, speaking:true});
+    socket.emit('speaking',{roomId,speaking:true});
   };
 
-  recognition.onresult = async(event)=>{
-    const text = event.results[0][0].transcript;
+  recognition.onresult=async(event)=>{
+    const text=event.results[0][0].transcript;
     if(text.trim()){
-      document.getElementById('originalText').innerText = text;
-      document.getElementById('originalBox')?.classList.add('has-content');
+      document.getElementById('originalText').innerText=text;
       await translateAndSend(text);
     }
   };
 
-  recognition.onerror = (event)=>{
-    if(event.error==='not-allowed'){
-      showNotification('يرجى السماح باستخدام الميكروفون','error');
-      stopRecording();
-    } else if(event.error==='no-speech'){
-      // Continue listening
-    }
+  recognition.onerror=(event)=>{
+    if(event.error==='not-allowed'){showNotification('يرجى السماح بالميكروفون','error');stopRecording();}
   };
 
-  // ✅ مستمر تلقائياً
-  recognition.onend = ()=>{
+  recognition.onend=()=>{
     document.getElementById('meParticipant').classList.remove('speaking');
-    socket.emit('speaking',{roomId, speaking:false});
+    socket.emit('speaking',{roomId,speaking:false});
     if(isRecording){
-      setTimeout(()=>{
-        if(isRecording){
-          try{ recognition.start(); }
-          catch(e){ stopRecording(); }
-        }
-      },200);
+      setTimeout(()=>{if(isRecording)try{recognition.start();}catch(e){stopRecording();}},200);
     } else {
       setMicRecording(false);
       document.getElementById('visualizer').classList.remove('active');
       document.getElementById('micRing').classList.remove('active');
-      const t2 = uiTexts[currentUILang];
-      document.getElementById('micLabel').innerText = t2.micLabelReady;
+      document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelReady;
     }
   };
 
-  try{ recognition.start(); }
-  catch(e){
-    console.error('Recognition start error:',e);
-    stopRecording();
-  }
+  try{recognition.start();}catch(e){stopRecording();}
 }
 
-// ✅ Update both mic buttons UI
 function setMicRecording(recording){
-  const mainBtn = document.getElementById('micBtnMain');
-  const ctrlBtn = document.getElementById('micBtnControls');
-  const mainIcon = document.getElementById('micBtnIcon');
-  const ctrlIcon = document.getElementById('micBtnControlsIcon');
-
-  if(recording){
-    mainBtn.classList.add('recording');
-    ctrlBtn.classList.add('recording');
-    mainIcon.className = 'fas fa-stop';
-    ctrlIcon.className = 'fas fa-stop';
-  } else {
-    mainBtn.classList.remove('recording');
-    ctrlBtn.classList.remove('recording');
-    mainIcon.className = 'fas fa-microphone';
-    ctrlIcon.className = 'fas fa-microphone';
-  }
+  const btn=document.getElementById('micBtnMain');
+  const icon=document.getElementById('micBtnIcon');
+  btn.classList.toggle('recording',recording);
+  icon.className=recording?'fas fa-stop':'fas fa-microphone';
 }
 
-// ============================================
-// Stop Recording
-// ============================================
 function stopRecording(){
-  isRecording = false;
-  if(recognition){ try{ recognition.stop(); }catch(e){} }
+  isRecording=false;
+  if(recognition)try{recognition.stop();}catch(e){}
   setMicRecording(false);
   document.getElementById('visualizer').classList.remove('active');
   document.getElementById('micRing').classList.remove('active');
   document.getElementById('meParticipant').classList.remove('speaking');
-  const t = uiTexts[currentUILang];
-  document.getElementById('micLabel').innerText = t.micLabelReady;
-  if(socket) socket.emit('speaking',{roomId, speaking:false});
+  document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelReady;
+  if(socket) socket.emit('speaking',{roomId,speaking:false});
 }
 
-// ============================================
-// Translate & Send
-// ============================================
 async function translateAndSend(text){
-  const tLang = partnerInfo ? partnerInfo.language : targetLang;
+  const tLang=partnerInfo?partnerInfo.language:targetLang;
   try{
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${myLang}&tl=${tLang}&dt=t&q=${encodeURIComponent(text)}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    let translated = '';
-    if(data&&data[0]){
-      data[0].forEach(item=>{ if(item&&item[0]) translated+=item[0]; });
-    }
-    document.getElementById('translatedText').innerText = translated;
-
-    // ✅ أرسل للشريك - هو يسمع، أنا لا أسمع
-    socket.emit('voice-message',{
-      roomId,
-      originalText:text,
-      translatedText:translated,
-      senderName:myName,
-      senderLanguage:myLang,
-      targetLanguage:tLang
-    });
-
-    addMessage({
-      senderId:socket.id,
-      senderName:myName,
-      originalText:text,
-      translatedText:translated,
-      senderLanguage:myLang,
-      targetLanguage:tLang,
-      timestamp:new Date()
-    }, true);
-
+    const url=`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${myLang}&tl=${tLang}&dt=t&q=${encodeURIComponent(text)}`;
+    const res=await fetch(url);
+    const data=await res.json();
+    let translated='';
+    if(data&&data[0]) data[0].forEach(item=>{if(item&&item[0])translated+=item[0];});
+    document.getElementById('translatedText').innerText=translated;
+    socket.emit('voice-message',{roomId,originalText:text,translatedText:translated,senderName:myName,senderLanguage:myLang,targetLanguage:tLang});
+    addMessage({senderId:socket.id,senderName:myName,originalText:text,translatedText:translated,senderLanguage:myLang,targetLanguage:tLang,timestamp:new Date()},true);
   }catch(err){
     console.error(err);
     showNotification('خطأ في الترجمة','error');
   }
 }
 
-// ============================================
-// ✅ Speak Text (Fixed for Mobile)
-// ============================================
-function speakText(text, lang){
+function speakText(text,lang){
   if(!text||isSpeakerOff) return;
-
-  // ✅ Fix for mobile: need user interaction first
-  if(!audioActivated){
-  document.getElementById('audioActivateBtn').classList.add('show');
-  return;
-}
-
+  if(!audioActivated){document.getElementById('audioActivateBtn').classList.add('show');return;}
   window.speechSynthesis.cancel();
-  const voiceLang = langs[lang]?.voice||'en-US';
-
+  const voiceLang=langs[lang]?.voice||'en-US';
   function doSpeak(voices){
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = voiceLang;
-    utt.rate = 0.88;
-    utt.pitch = 1;
-    utt.volume = 1;
-
-    const voice = voices.find(v=>v.lang===voiceLang)
-      ||voices.find(v=>v.lang.startsWith(lang))
-      ||voices.find(v=>v.lang.toLowerCase().startsWith(lang.toLowerCase()));
-
-    if(voice) utt.voice = voice;
-
-    // ✅ Fix for Chrome mobile TTS cutoff
-    utt.onstart = ()=>{
-      // Keep speech synthesis alive on mobile
-      const keepAlive = setInterval(()=>{
-        if(window.speechSynthesis.speaking){
-          window.speechSynthesis.resume();
-        } else {
-          clearInterval(keepAlive);
-        }
-      }, 5000);
+    const utt=new SpeechSynthesisUtterance(text);
+    utt.lang=voiceLang;utt.rate=0.88;utt.pitch=1;utt.volume=1;
+    const voice=voices.find(v=>v.lang===voiceLang)||voices.find(v=>v.lang.startsWith(lang));
+    if(voice) utt.voice=voice;
+    utt.onstart=()=>{
+      const keepAlive=setInterval(()=>{
+        if(window.speechSynthesis.speaking)window.speechSynthesis.resume();
+        else clearInterval(keepAlive);
+      },5000);
     };
-
-    utt.onerror = e=>console.error('TTS:',e);
+    utt.onerror=e=>console.error('TTS:',e);
     window.speechSynthesis.speak(utt);
   }
-
-  const voices = window.speechSynthesis.getVoices();
-  if(voices.length>0){ doSpeak(voices); }
+  const voices=window.speechSynthesis.getVoices();
+  if(voices.length>0)doSpeak(voices);
   else{
-    window.speechSynthesis.onvoiceschanged = ()=>{
-      doSpeak(window.speechSynthesis.getVoices());
-    };
+    window.speechSynthesis.onvoiceschanged=()=>doSpeak(window.speechSynthesis.getVoices());
     setTimeout(()=>doSpeak(window.speechSynthesis.getVoices()),500);
   }
 }
 
-// ============================================
-// Add Message
-// ============================================
-function addMessage(msg, isOwn){
-  const container = document.getElementById('messages');
-  const empty = container.querySelector('.empty-msgs');
+function addMessage(msg,isOwn){
+  const container=document.getElementById('messages');
+  const empty=container.querySelector('.empty-msgs');
   if(empty) empty.remove();
-
-  const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA',{
-    hour:'2-digit',minute:'2-digit'
-  });
-
-  const div = document.createElement('div');
-  div.className = `msg ${isOwn?'':'partner'}`;
-  div.innerHTML = `
+  const time=new Date(msg.timestamp).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  const div=document.createElement('div');
+  div.className=`msg ${isOwn?'':'partner'}`;
+  div.innerHTML=`
     <div class="msg-header">
       <span class="msg-sender">${msg.senderName}</span>
       <span class="msg-time">${time}</span>
     </div>
-    <div class="msg-original">
-      ${langs[msg.senderLanguage]?.flag||'🌐'} ${msg.originalText}
-    </div>
-    <div class="msg-translated">
-      ${langs[msg.targetLanguage]?.flag||'🌐'} ${msg.translatedText}
-    </div>
+    <div class="msg-original">${langs[msg.senderLanguage]?.flag||'🌐'} ${msg.originalText}</div>
+    <div class="msg-translated">${langs[msg.targetLanguage]?.flag||'🌐'} ${msg.translatedText}</div>
   `;
   container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  container.scrollTop=container.scrollHeight;
   messages.push(msg);
 }
 
-// ============================================
-// Controls
-// ============================================
 function toggleMute(){
-  isMuted = !isMuted;
-  const icon = document.getElementById('muteIcon');
-  const btn = document.getElementById('muteBtn');
-  if(isMuted){
-    icon.className = 'fas fa-microphone-slash';
-    btn.classList.add('off');
-    if(isRecording) stopRecording();
-    showNotification('تم كتم الميكروفون 🔇','info');
-  } else {
-    icon.className = 'fas fa-microphone';
-    btn.classList.remove('off');
-    showNotification('تم تفعيل الميكروفون 🎤','info');
-  }
+  isMuted=!isMuted;
+  document.getElementById('muteIcon').className=isMuted?'fas fa-microphone-slash':'fas fa-microphone';
+  document.getElementById('muteBtn').classList.toggle('off',isMuted);
+  if(isMuted&&isRecording) stopRecording();
+  showNotification(isMuted?'تم كتم الميكروفون 🔇':'تم تفعيل الميكروفون 🎤','info');
 }
 
 function toggleSpeaker(){
-  isSpeakerOff = !isSpeakerOff;
-  const icon = document.getElementById('speakerIcon');
-  const btn = document.getElementById('speakerBtn');
-  if(isSpeakerOff){
-    icon.className = 'fas fa-volume-xmark';
-    btn.classList.add('off');
-    window.speechSynthesis.cancel();
-    showNotification('تم إيقاف الصوت 🔈','info');
-  } else {
-    icon.className = 'fas fa-volume-high';
-    btn.classList.remove('off');
-    showNotification('تم تفعيل الصوت 🔊','info');
-  }
+  isSpeakerOff=!isSpeakerOff;
+  document.getElementById('speakerIcon').className=isSpeakerOff?'fas fa-volume-xmark':'fas fa-volume-high';
+  document.getElementById('speakerBtn').classList.toggle('off',isSpeakerOff);
+  if(isSpeakerOff) window.speechSynthesis.cancel();
+  showNotification(isSpeakerOff?'تم إيقاف الصوت 🔈':'تم تفعيل الصوت 🔊','info');
 }
 
-// ============================================
-// ✅ Confirm Leave Modal
-// ============================================
-function confirmLeave(){
-  document.getElementById('leaveModal').style.display = 'flex';
-}
-
-function closeLeaveModal(){
-  document.getElementById('leaveModal').style.display = 'none';
-}
+function confirmLeave(){document.getElementById('leaveModal').style.display='flex';}
+function closeLeaveModal(){document.getElementById('leaveModal').style.display='none';}
 
 function leaveRoom(){
   closeLeaveModal();
@@ -1654,54 +1222,39 @@ function leaveRoom(){
   stopTimer();
   clearSession();
   if(socket&&roomId) socket.emit('leave-room',{roomId});
-  roomId=null; partnerInfo=null; messages=[];
-  document.getElementById('messages').innerHTML =
-    '<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد<br>ابدأ بالتحدث</div>';
+  socket.emit('ai-clear-context');
+  roomId=null;partnerInfo=null;messages=[];
+  document.getElementById('messages').innerHTML='<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div>';
   document.getElementById('room-page').classList.remove('active');
   document.getElementById('landing').classList.add('active');
 }
 
-// ============================================
-// Copy Functions
-// ============================================
 function copyRoomCode(){
   if(!roomId) return;
-  navigator.clipboard.writeText(roomId)
-    .then(()=>showNotification('تم نسخ الرمز 📋','success'))
-    .catch(()=>showNotification(`الرمز: ${roomId}`,'info'));
+  navigator.clipboard.writeText(roomId).then(()=>showNotification('تم نسخ الرمز 📋','success'));
 }
 
 function copyInviteLink(){
-  const base = window.location.href.split('?')[0];
-  const link = `${base}?join=${roomId}`;
-  navigator.clipboard.writeText(link)
-    .then(()=>showNotification('تم نسخ رابط الدعوة 🔗','success'))
-    .catch(()=>showNotification('تعذر النسخ','error'));
+  const link=`${window.location.href.split('?')[0]}?join=${roomId}`;
+  navigator.clipboard.writeText(link).then(()=>showNotification('تم نسخ رابط الدعوة 🔗','success'));
 }
 
 function copyResult(id){
-  const text = document.getElementById(id).innerText;
+  const text=document.getElementById(id).innerText;
   if(!text||text.includes('سيظهر')) return;
-  navigator.clipboard.writeText(text)
-    .then(()=>showNotification('تم النسخ ✅','success'));
+  navigator.clipboard.writeText(text).then(()=>showNotification('تم النسخ ✅','success'));
 }
 
-// ============================================
-// Download History
-// ============================================
 function downloadHistory(){
-  if(messages.length===0){ showNotification('لا يوجد سجل!','error'); return; }
-  let content = '===== TranslationCall Pro =====\n\n';
+  if(messages.length===0){showNotification('لا يوجد سجل!','error');return;}
+  let content='===== TranslationCall Pro =====\n\n';
   messages.forEach(msg=>{
-    const time = new Date(msg.timestamp).toLocaleTimeString('ar-SA');
-    content += `[${time}] ${msg.senderName}:\n`;
-    content += `  ${langs[msg.senderLanguage]?.flag} ${msg.originalText}\n`;
-    content += `  ${langs[msg.targetLanguage]?.flag} ${msg.translatedText}\n\n`;
+    const time=new Date(msg.timestamp).toLocaleTimeString('ar-SA');
+    content+=`[${time}] ${msg.senderName}:\n  ${langs[msg.senderLanguage]?.flag} ${msg.originalText}\n  ${langs[msg.targetLanguage]?.flag} ${msg.translatedText}\n\n`;
   });
-  const blob = new Blob([content],{type:'text/plain;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `TranslationCall_${roomId}_${Date.now()}.txt`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));
+  a.download=`TranslationCall_${roomId}_${Date.now()}.txt`;
   a.click();
   showNotification('تم التحميل ✅','success');
 }
@@ -1709,105 +1262,211 @@ function downloadHistory(){
 function clearMessages(){
   if(!confirm('مسح السجل؟')) return;
   messages=[];
-  document.getElementById('messages').innerHTML =
-    '<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد<br>ابدأ بالتحدث</div>';
+  document.getElementById('messages').innerHTML='<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div>';
 }
 
 // ============================================
-// AI Assistant
+// ✅ AI Assistant with Gemini
 // ============================================
+let aiIsTyping = false;
+
+function setAIMode(mode, btn){
+  aiMode = mode;
+  document.querySelectorAll('.ai-mode-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  const practiceSetup = document.getElementById('practiceSetup');
+  const suggestions = document.getElementById('aiSuggestions');
+
+  if(mode==='language-teacher'){
+    practiceSetup.classList.remove('hidden');
+    suggestions.style.display='none';
+    if(!isPracticeActive){
+      addAIMessage('bot',`🎓 وضع مدرّس اللغة\n\nاختر اللغة التي تريد تعلمها وابدأ جلسة التعلم!\nسأتحدث معك بها وأصحح أخطاءك 😊`);
+    }
+  } else if(mode==='translator'){
+    practiceSetup.classList.add('hidden');
+    suggestions.style.display='flex';
+    addAIMessage('bot',`🌐 وضع المترجم الذكي\n\nأنا هنا لمساعدتك في:\n• ترجمة أي جملة بدقة عالية\n• شرح الفروق الدقيقة بين التعابير\n• نصائح ثقافية متعمقة\n\nاكتب أو قل ما تريد ترجمته! 🚀`);
+  } else {
+    practiceSetup.classList.add('hidden');
+    suggestions.style.display='flex';
+    addAIMessage('bot',`🤖 وضع المساعد العام\n\nيمكنني مساعدتك في أي شيء:\n• ترجمة الجمل\n• نصائح ثقافية\n• تعلم تعابير جديدة\n• الإجابة على أسئلتك\n\nاسألني أي شيء! 😊`);
+  }
+}
+
+function startPractice(){
+  practiceTargetLang = document.getElementById('practiceTargetLang').value;
+  isPracticeActive = true;
+  document.getElementById('practiceSetup').classList.add('hidden');
+  document.getElementById('practiceBanner').classList.add('show');
+  document.getElementById('practiceBannerText').innerText =
+    `🎓 تعلم ${langs[practiceTargetLang]?.name} - تحدث وسيصحح AI أخطاءك`;
+  document.getElementById('aiInput').placeholder = `تحدث أو اكتب بـ${langs[practiceTargetLang]?.name}...`;
+
+  // Clear context and start fresh
+  socket.emit('ai-clear-context');
+
+  addAIMessage('bot',
+    `🎓 ممتاز! بدأت جلسة تعلم ${langs[practiceTargetLang]?.name}!\n\n` +
+    `سأتحدث معك بـ${langs[practiceTargetLang]?.name} وسأصحح أخطاءك بلطف.\n\n` +
+    `ابدأ بتقديم نفسك! مثلاً:\n"My name is [اسمك] and I want to learn [اللغة]"\n\n` +
+    `هيا نبدأ! 🚀`
+  );
+}
+
+function stopPractice(){
+  isPracticeActive=false;
+  document.getElementById('practiceBanner').classList.remove('show');
+  document.getElementById('practiceSetup').classList.remove('hidden');
+  document.getElementById('aiInput').placeholder='اسأل Gemini AI...';
+  socket.emit('ai-clear-context');
+  addAIMessage('bot','تم إيقاف جلسة التعلم. يمكنك بدء جلسة جديدة في أي وقت! 😊');
+}
+
 async function sendAI(){
-  const input = document.getElementById('aiInput');
-  const text = input.value.trim();
+  if(aiIsTyping) return;
+  const input=document.getElementById('aiInput');
+  const text=input.value.trim();
   if(!text) return;
   input.value='';
+  await processAIMessage(text);
+}
+
+async function sendAISuggestion(text){
+  if(aiIsTyping) return;
+  await processAIMessage(text);
+}
+
+async function processAIMessage(text){
+  aiIsTyping=true;
+  document.getElementById('aiSendBtn').disabled=true;
   addAIMessage('user',text);
   document.getElementById('aiTyping').classList.add('show');
   document.getElementById('aiMessages').scrollTop=99999;
-  await new Promise(r=>setTimeout(r,600+Math.random()*600));
-  document.getElementById('aiTyping').classList.remove('show');
-  const res = await processAI(text);
-  addAIMessage('bot',res.main);
-  if(res.tip) setTimeout(()=>addAIMessage('tip',res.tip),300);
-  document.getElementById('aiMessages').scrollTop=99999;
+
+  const context = isPracticeActive ? { targetLang: practiceTargetLang } : null;
+
+  socket.emit('ai-chat',{
+    message: text,
+    language: myLang,
+    mode: isPracticeActive ? 'language-teacher' : aiMode,
+    context
+  },(res)=>{
+    document.getElementById('aiTyping').classList.remove('show');
+    aiIsTyping=false;
+    document.getElementById('aiSendBtn').disabled=false;
+
+    if(res.success){
+      addAIMessage('bot', res.response);
+
+      // Add feedback for language teacher mode
+      if(res.feedback){
+        setTimeout(()=>{
+          addAIMessage('feedback', res.feedback);
+        },500);
+      }
+
+      // Speak AI response
+      if(!isSpeakerOff && audioActivated){
+        const speakLang = isPracticeActive ? practiceTargetLang : myLang;
+        setTimeout(()=>speakText(res.response.split('\n')[0], speakLang), 300);
+      }
+    } else {
+      addAIMessage('error', res.error||'حدث خطأ في الاتصال بـ Gemini AI');
+    }
+
+    document.getElementById('aiMessages').scrollTop=99999;
+  });
 }
 
-async function processAI(text){
-  const lower = text.toLowerCase();
-  if(/مرحبا|اهلا|hello|hi|hola|سلام/.test(lower)){
-    return{main:'أهلاً! 😊 يمكنني ترجمة الجمل وإعطاء نصائح ثقافية وشرح التعابير.',tip:null};
-  }
-  if(/ترجم|translate|traducir/.test(lower)){
-    const phrase = text.replace(/ترجم لي:|ترجم:|translate:|traducir:/gi,'').trim();
-    if(phrase){
-      try{
-        const tLang = myLang==='ar'?'en':'ar';
-        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${myLang}&tl=${tLang}&dt=t&q=${encodeURIComponent(phrase)}`);
-        const data = await res.json();
-        return{main:`ترجمة "${phrase}":\n${langs[tLang]?.flag} ${data[0][0][0]}`,tip:'💡 استخدم زر المايكروفون للترجمة الصوتية!'};
-      }catch(e){return{main:'خطأ في الترجمة',tip:null};}
-    }
-  }
-  if(/نصيح|ثقاف|cultural|tip/.test(lower)){
-    if(/إسبان|spanish|español/.test(lower)) return{main:'🇪🇸 في الثقافة الإسبانية، المصافحة والتقبيل على الخد تحية شائعة.',tip:null};
-    if(/إنجليز|english/.test(lower)) return{main:'🇺🇸 في الثقافة الأمريكية، الوقت ثمين والمباشرة علامة احترام.',tip:null};
-    if(/عرب|arabic/.test(lower)) return{main:'🇸🇦 في الثقافة العربية، الترحيب بالضيوف أمر مقدس.',tip:null};
-    return{main:'🌍 تعلم بعض الكلمات بلغة شريكك يقرب القلوب!',tip:null};
-  }
-  if(/كيف أقول|how to say/.test(lower)){
-    const phrase = text.replace(/كيف أقول|how to say|بالإسبانية|بالعربية|بالإنجليزية/gi,'').trim();
-    if(phrase){
-      try{
-        const tLang = myLang==='ar'?'en':'ar';
-        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tLang}&dt=t&q=${encodeURIComponent(phrase)}`);
-        const data = await res.json();
-        return{main:`"${phrase}" بـ${langs[tLang]?.name}:\n${langs[tLang]?.flag} ${data[0][0][0]}`,tip:null};
-      }catch(e){return{main:'خطأ',tip:null};}
-    }
-  }
-  try{
-    const tLang = myLang==='ar'?'en':'ar';
-    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tLang}&dt=t&q=${encodeURIComponent(text)}`);
-    const data = await res.json();
-    return{main:`ترجمة:\n${langs[tLang]?.flag} ${data[0][0][0]}`,tip:'💡 هل تريد نصائح ثقافية؟ اسألني!'};
-  }catch(e){
-    return{main:'يمكنني مساعدتك في الترجمة والنصائح الثقافية!',tip:null};
-  }
+// ============================================
+// AI Voice Input
+// ============================================
+function toggleAIVoice(){
+  if(isAIVoiceRecording){stopAIVoice();}
+  else{startAIVoice();}
+}
+
+function startAIVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showNotification('استخدم Chrome','error');return;}
+
+  const voiceLang = isPracticeActive ? langs[practiceTargetLang]?.voice : langs[myLang]?.voice||'ar-SA';
+
+  aiVoiceRecognition=new SR();
+  aiVoiceRecognition.lang=voiceLang;
+  aiVoiceRecognition.continuous=false;
+  aiVoiceRecognition.interimResults=false;
+
+  aiVoiceRecognition.onstart=()=>{
+    isAIVoiceRecording=true;
+    document.getElementById('aiVoiceBtn').classList.add('recording');
+    document.getElementById('aiVoiceIcon').className='fas fa-stop';
+    showNotification('🎤 تحدث للمساعد...','info');
+  };
+
+  aiVoiceRecognition.onresult=(event)=>{
+    const text=event.results[0][0].transcript;
+    document.getElementById('aiInput').value=text;
+    stopAIVoice();
+    if(text.trim()) processAIMessage(text);
+  };
+
+  aiVoiceRecognition.onend=()=>stopAIVoice();
+  aiVoiceRecognition.onerror=()=>stopAIVoice();
+
+  try{aiVoiceRecognition.start();}catch(e){stopAIVoice();}
+}
+
+function stopAIVoice(){
+  isAIVoiceRecording=false;
+  if(aiVoiceRecognition)try{aiVoiceRecognition.stop();}catch(e){}
+  document.getElementById('aiVoiceBtn').classList.remove('recording');
+  document.getElementById('aiVoiceIcon').className='fas fa-microphone';
 }
 
 function addAIMessage(type,text){
-  const container = document.getElementById('aiMessages');
-  const div = document.createElement('div');
-  div.className = `ai-bubble ${type}`;
-  div.innerHTML = text.replace(/\n/g,'<br>');
+  const container=document.getElementById('aiMessages');
+  const div=document.createElement('div');
+  div.className=`ai-bubble ${type}`;
+  div.innerHTML=text.replace(/\n/g,'<br>');
   container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  container.scrollTop=container.scrollHeight;
 }
 
 function clearAI(){
-  const t = uiTexts[currentUILang];
-  document.getElementById('aiMessages').innerHTML =
-    `<div class="ai-bubble bot" id="aiWelcome">${t.aiWelcome}</div>`;
+  socket.emit('ai-clear-context');
+  isPracticeActive=false;
+  document.getElementById('practiceBanner').classList.remove('show');
+  document.getElementById('practiceSetup').classList.remove('hidden');
+  document.getElementById('aiInput').placeholder='اسأل Gemini AI...';
+  document.getElementById('aiMessages').innerHTML=`
+    <div class="ai-bubble bot" id="aiWelcome">
+      مرحباً! 👋 أنا <strong>Gemini AI</strong> مساعدك الذكي.<br><br>
+      يمكنني:<br>
+      🌐 <strong>ترجمة</strong> أي جملة بدقة عالية<br>
+      🎓 <strong>تعليمك لغة</strong> وتصحيح أخطاءك<br>
+      💡 <strong>نصائح ثقافية</strong> متقدمة<br>
+      💬 <strong>محادثة ذكية</strong> بأي لغة<br><br>
+      اختر وضعاً من الأعلى وابدأ! 😊
+    </div>`;
 }
 
 // ============================================
 // Notification
 // ============================================
 function showNotification(msg,type='info'){
-  const el = document.getElementById('notification');
-  el.innerText=msg;
-  el.className=`notification show ${type}`;
+  const el=document.getElementById('notification');
+  el.innerText=msg;el.className=`notification show ${type}`;
   setTimeout(()=>el.classList.remove('show'),3500);
 }
 
-// ============================================
-// Auto Join from URL
-// ============================================
 function checkAutoJoin(){
-  const params = new URLSearchParams(window.location.search);
-  const joinCode = params.get('join');
+  const params=new URLSearchParams(window.location.search);
+  const joinCode=params.get('join');
   if(joinCode){
-    document.getElementById('joinCode').value = joinCode.toUpperCase();
+    document.getElementById('joinCode').value=joinCode.toUpperCase();
     showNotification(`رمز الغرفة: ${joinCode} - أدخل اسمك وانضم!`,'info');
   }
 }
@@ -1815,24 +1474,13 @@ function checkAutoJoin(){
 // ============================================
 // Init
 // ============================================
-window.onload = ()=>{
-  // أضف هذا أولاً
-  document.addEventListener('click', () => {
-    if(!audioActivated) activateAudio();
-  }, { once:true });
-
-  // Load voices
+window.onload=()=>{
+  document.addEventListener('click',()=>{if(!audioActivated)activateAudio();},{once:true});
   window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
-
-  // Init socket
+  window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
   initSocket();
-
-  // Check URL
   checkAutoJoin();
-
-  // Set default UI language
-  setUILang('ar', document.querySelector('.lang-switch-btn.active'));
+  setUILang('ar',document.querySelector('.lang-switch-btn.active'));
 };
 </script>
 </body>
