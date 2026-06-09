@@ -8,25 +8,18 @@
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --primary:#6366f1;--secondary:#10b981;--danger:#ef4444;
-  --warning:#f59e0b;--bg:#0f172a;--bg-card:#1e293b;
-  --bg-elevated:#334155;--text:#f8fafc;--text-secondary:#94a3b8;
-  --text-muted:#64748b;--border:rgba(255,255,255,0.06);
-  --radius:16px;--radius-sm:10px;--shadow:0 8px 32px rgba(0,0,0,0.4);
-}
+:root{--primary:#6366f1;--secondary:#10b981;--danger:#ef4444;--warning:#f59e0b;--bg:#0f172a;--bg-card:#1e293b;--bg-elevated:#334155;--text:#f8fafc;--text-secondary:#94a3b8;--text-muted:#64748b;--border:rgba(255,255,255,0.06);--radius:16px;--radius-sm:10px;--shadow:0 8px 32px rgba(0,0,0,0.4);}
 body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 .bg-effects{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
 .bg-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.2;}
 .blob1{width:700px;height:700px;background:var(--primary);top:-300px;right:-300px;animation:blob 20s ease-in-out infinite;}
 .blob2{width:600px;height:600px;background:var(--secondary);bottom:-200px;left:-200px;animation:blob 25s ease-in-out infinite reverse;}
-.blob3{width:400px;height:400px;background:var(--warning);top:50%;left:50%;animation:blob 15s ease-in-out infinite 5s;}
 @keyframes blob{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-30px) scale(1.1);}66%{transform:translate(-20px,20px) scale(0.9);};}
 .page{display:none;min-height:100vh;flex-direction:column;}
 .page.active{display:flex;}
 header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:15px 30px;display:flex;justify-content:space-between;align-items:center;}
 .logo{display:flex;align-items:center;gap:12px;cursor:pointer;}
-.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:white;box-shadow:0 4px 15px rgba(99,102,241,0.4);}
+.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:white;}
 .logo-name{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .logo-pro{font-size:0.6rem;color:var(--secondary);letter-spacing:3px;display:block;margin-top:-3px;}
 .header-right{display:flex;align-items:center;gap:12px;}
@@ -47,18 +40,16 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .btn-lg{padding:16px 32px;font-size:1.05rem;}
 .btn-sm{padding:8px 16px;font-size:0.82rem;}
 .btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--border);}
-.btn-ghost:hover{background:rgba(255,255,255,0.1);}
 .input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.95rem;transition:all 0.3s;}
-.input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.15);}
+.input:focus{outline:none;border-color:var(--primary);}
 .input::placeholder{color:var(--text-muted);}
 .input-code{text-align:center;font-size:1.8rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;}
 .input-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .input-group label{font-size:0.82rem;color:var(--text-secondary);font-weight:500;}
 .toggle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.toggle-label{font-size:0.9rem;color:var(--text-secondary);}
 .toggle{width:48px;height:26px;background:rgba(255,255,255,0.1);border-radius:13px;position:relative;cursor:pointer;transition:all 0.3s;}
 .toggle.on{background:var(--primary);}
-.toggle-thumb{width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:3px;left:3px;transition:all 0.3s;box-shadow:0 2px 4px rgba(0,0,0,0.3);}
+.toggle-thumb{width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:3px;left:3px;transition:all 0.3s;}
 .toggle.on .toggle-thumb{left:25px;}
 .hero{text-align:center;padding:60px 20px 40px;}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:20px;color:#a5b4fc;font-size:0.82rem;margin-bottom:25px;}
@@ -78,166 +69,43 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .icon-join{background:linear-gradient(135deg,var(--secondary),#14b8a6);}
 .action-header h3{font-size:1.1rem;font-weight:700;margin-bottom:3px;}
 .action-header p{font-size:0.82rem;color:var(--text-muted);}
-.lang-select{width:100%;padding:11px 14px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.92rem;cursor:pointer;transition:all 0.3s;margin-bottom:16px;appearance:none;}
-.lang-select:focus{outline:none;border-color:var(--primary);}
+.lang-select{width:100%;padding:11px 14px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.92rem;cursor:pointer;margin-bottom:16px;appearance:none;}
 .lang-select option{background:#1e293b;}
 .room-layout{display:grid;grid-template-columns:1fr 400px;gap:20px;padding:20px;max-width:1300px;margin:0 auto;}
 @media(max-width:1000px){.room-layout{grid-template-columns:1fr;}}
-.room-code-display{display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(0,0,0,0.2);border-radius:10px;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);}
-.room-code-display:hover{background:rgba(0,0,0,0.35);}
+.room-code-display{display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(0,0,0,0.2);border-radius:10px;cursor:pointer;border:1px solid var(--border);}
 .room-code-display strong{font-size:1.15rem;letter-spacing:0.15em;color:var(--primary);}
-
-/* ============================================
-   VIDEO STYLES
-   ============================================ */
-.video-section{
-  position:relative;
-  background:rgba(30,41,59,0.85);
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-  overflow:hidden;
-  margin-bottom:15px;
-}
-.remote-video-container{
-  width:100%;
-  aspect-ratio:16/9;
-  background:#000;
-  position:relative;
-  min-height:200px;
-}
-#remoteVideo{
-  width:100%;height:100%;
-  object-fit:cover;
-  display:block;
-}
-.remote-placeholder{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:15px;color:var(--text-muted);
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-}
-.remote-placeholder .big-avatar{
-  width:80px;height:80px;border-radius:50%;
-  background:linear-gradient(135deg,var(--secondary),#14b8a6);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;font-weight:700;color:white;
-}
-.remote-placeholder span{font-size:0.9rem;}
-
-/* Local Video (Floating & Draggable) */
-.local-video-wrapper{
-  position:absolute;
-  bottom:15px;
-  right:15px;
-  width:160px;
-  aspect-ratio:16/9;
-  background:#0f172a;
-  border-radius:10px;
-  overflow:hidden;
-  border:2px solid var(--primary);
-  box-shadow:0 4px 20px rgba(0,0,0,0.6);
-  cursor:grab;
-  z-index:10;
-  transition:border-color 0.3s;
-  user-select:none;
-}
+.video-section{position:relative;background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-bottom:15px;}
+.remote-video-container{width:100%;aspect-ratio:16/9;background:#000;position:relative;min-height:200px;}
+#remoteVideo{width:100%;height:100%;object-fit:cover;display:block;}
+.remote-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;color:var(--text-muted);background:linear-gradient(135deg,#0f172a,#1e293b);}
+.remote-placeholder .big-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--secondary),#14b8a6);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white;}
+.local-video-wrapper{position:absolute;bottom:15px;right:15px;width:160px;aspect-ratio:16/9;background:#0f172a;border-radius:10px;overflow:hidden;border:2px solid var(--primary);box-shadow:0 4px 20px rgba(0,0,0,0.6);cursor:grab;z-index:10;}
 .local-video-wrapper:active{cursor:grabbing;}
 .local-video-wrapper.camera-off{border-color:var(--danger);}
-[dir="ltr"] .local-video-wrapper{right:auto;left:15px;}
-
 #localVideo{width:100%;height:100%;object-fit:cover;display:block;}
-
-.local-placeholder{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  background:#0f172a;color:var(--text-muted);font-size:1.5rem;
-}
-
-/* Video Controls Overlay */
-.video-controls-overlay{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:15px;
-  background:linear-gradient(transparent,rgba(0,0,0,0.7));
-  display:flex;align-items:center;gap:10px;
-  opacity:0;transition:opacity 0.3s;
-}
+.local-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0f172a;color:var(--text-muted);font-size:1.5rem;}
+.video-controls-overlay{position:absolute;bottom:0;left:0;right:0;padding:15px;background:linear-gradient(transparent,rgba(0,0,0,0.7));display:flex;align-items:center;gap:10px;opacity:0;transition:opacity 0.3s;}
 .video-section:hover .video-controls-overlay{opacity:1;}
-
-.video-ctrl-btn{
-  width:36px;height:36px;border-radius:50%;border:none;
-  background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);
-  color:white;cursor:pointer;font-size:0.85rem;
-  display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s;
-}
+.video-ctrl-btn{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:white;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
 .video-ctrl-btn:hover{background:rgba(255,255,255,0.25);transform:scale(1.1);}
 .video-ctrl-btn.off{background:rgba(239,68,68,0.5);}
-
-/* Expand button */
-.expand-btn{
-  margin-right:auto;
-  width:36px;height:36px;border-radius:8px;border:none;
-  background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);
-  color:white;cursor:pointer;font-size:0.85rem;
-  display:flex;align-items:center;justify-content:center;
-}
-.expand-btn:hover{background:rgba(255,255,255,0.25);}
-
-/* Fullscreen Video Modal */
-.video-modal{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.95);z-index:999;
-  align-items:center;justify-content:center;
-  flex-direction:column;gap:15px;
-}
+.expand-btn{margin-right:auto;width:36px;height:36px;border-radius:8px;border:none;background:rgba(255,255,255,0.15);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.video-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:15px;}
 .video-modal.show{display:flex;}
-.video-modal video{
-  max-width:90vw;max-height:80vh;
-  border-radius:15px;object-fit:contain;
-}
-.video-modal-close{
-  position:absolute;top:20px;right:20px;
-  width:44px;height:44px;border-radius:50%;
-  border:none;background:rgba(255,255,255,0.1);
-  color:white;font-size:1.2rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-}
-
-/* Participant Info Overlay */
-.partner-info-overlay{
-  position:absolute;top:10px;right:10px;
-  display:flex;align-items:center;gap:8px;
-  padding:6px 12px;
-  background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);
-  border-radius:20px;font-size:0.8rem;color:white;
-}
-.partner-info-overlay .p-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--secondary);
-  box-shadow:0 0 6px var(--secondary);
-}
-
-/* Call Quality Indicator */
-.quality-indicator{
-  position:absolute;top:10px;left:10px;
-  padding:4px 10px;border-radius:10px;
-  background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);
-  font-size:0.72rem;color:var(--secondary);
-  display:flex;align-items:center;gap:5px;
-}
-
-/* ============================================
-   PARTICIPANTS ROW
-   ============================================ */
-.participants-row{display:flex;align-items:center;gap:15px;background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);padding:15px;border:1px solid var(--border);margin-bottom:15px;}
+.video-modal video{max-width:90vw;max-height:80vh;border-radius:15px;object-fit:contain;}
+.video-modal-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);color:white;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.partner-info-overlay{position:absolute;top:10px;right:10px;display:none;align-items:center;gap:8px;padding:6px 12px;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);border-radius:20px;font-size:0.8rem;color:white;}
+.partner-info-overlay .p-dot{width:8px;height:8px;border-radius:50%;background:var(--secondary);box-shadow:0 0 6px var(--secondary);}
+.quality-indicator{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:10px;background:rgba(0,0,0,0.6);font-size:0.72rem;color:var(--secondary);display:none;align-items:center;gap:5px;}
+.participants-row{display:flex;align-items:center;gap:15px;background:rgba(30,41,59,0.85);border-radius:var(--radius);padding:15px;border:1px solid var(--border);margin-bottom:15px;}
 .participant{flex:1;display:flex;align-items:center;gap:10px;padding:10px;background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);border:2px solid transparent;transition:all 0.3s;}
 .participant.me{border-color:var(--primary);}
 .participant.partner-p{border-color:var(--secondary);}
-.participant.speaking{animation:speaking-glow 1s infinite;}
-@keyframes speaking-glow{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.4);}50%{box-shadow:0 0 15px 3px rgba(99,102,241,0.4);};}
-.participant.partner-p.speaking{animation:speaking-glow-green 1s infinite;}
-@keyframes speaking-glow-green{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.4);}50%{box-shadow:0 0 15px 3px rgba(16,185,129,0.4);};}
+.participant.speaking{animation:sg 1s infinite;}
+@keyframes sg{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.4);}50%{box-shadow:0 0 15px 3px rgba(99,102,241,0.4);};}
+.participant.partner-p.speaking{animation:sgg 1s infinite;}
+@keyframes sgg{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.4);}50%{box-shadow:0 0 15px 3px rgba(16,185,129,0.4);};}
 .p-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:white;flex-shrink:0;}
 .p-avatar.me-av{background:linear-gradient(135deg,var(--primary),#8b5cf6);}
 .p-avatar.partner-av{background:linear-gradient(135deg,var(--secondary),#14b8a6);}
@@ -250,9 +118,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .p-status.online{background:rgba(16,185,129,0.15);color:#34d399;}
 .p-status.waiting{background:rgba(100,116,139,0.15);color:var(--text-muted);}
 .connection-arrow{font-size:1.2rem;color:var(--text-muted);flex-shrink:0;}
-
-/* Controls */
-.controls-bar{display:flex;justify-content:center;align-items:center;gap:12px;padding:15px;background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);}
+.controls-bar{display:flex;justify-content:center;align-items:center;gap:12px;padding:15px;background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid var(--border);}
 .ctrl-group{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .ctrl-btn{width:50px;height:50px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:var(--text);font-size:1.1rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;}
 .ctrl-btn:hover{background:rgba(255,255,255,0.15);transform:scale(1.1);}
@@ -260,104 +126,20 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .ctrl-btn-label{font-size:0.62rem;color:var(--text-muted);}
 .leave-btn{display:flex;align-items:center;gap:8px;padding:12px 22px;border-radius:25px;border:1px solid rgba(239,68,68,0.2);background:rgba(239,68,68,0.12);color:var(--danger);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.3s;}
 .leave-btn:hover{background:var(--danger);color:white;}
-
-/* Results */
-.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.result-box{background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);padding:15px;border:1px solid transparent;transition:all 0.3s;min-height:80px;}
-.result-box h5{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.result-box.original h5{color:var(--primary);}
-.result-box.translated h5{color:var(--secondary);}
-.result-box p{font-size:0.9rem;line-height:1.6;color:var(--text);}
-.result-box.translated p{color:#34d399;}
-.result-actions{display:flex;gap:6px;margin-top:8px;}
-.mini-btn{padding:4px 10px;border-radius:6px;font-size:0.72rem;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-muted);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px;}
-.mini-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);}
-.partner-result{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:var(--radius-sm);padding:12px;}
-.partner-result h5{font-size:0.72rem;color:var(--secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.partner-result p{color:#34d399;font-size:0.9rem;line-height:1.6;}
-
-/* Right Panel */
-.right-panel{display:flex;flex-direction:column;gap:15px;}
-.transcript-panel{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;max-height:280px;}
-.panel-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);flex-shrink:0;}
-.panel-head h4{font-size:0.82rem;display:flex;align-items:center;gap:7px;}
-.panel-head-actions{display:flex;gap:6px;}
-.panel-head-actions button{width:28px;height:28px;border-radius:7px;border:none;background:rgba(255,255,255,0.05);color:var(--text-muted);cursor:pointer;font-size:0.8rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
-.panel-head-actions button:hover{background:rgba(255,255,255,0.1);color:var(--text);}
-.messages{flex:1;overflow-y:auto;padding:10px;}
-.msg{background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;margin-bottom:8px;border-right:3px solid var(--primary);animation:msg-in 0.3s ease;}
-.msg.partner{border-right-color:var(--secondary);}
-@keyframes msg-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);};}
-.msg-header{display:flex;justify-content:space-between;margin-bottom:5px;}
-.msg-sender{font-size:0.75rem;font-weight:600;color:var(--primary);}
-.msg.partner .msg-sender{color:var(--secondary);}
-.msg-time{font-size:0.68rem;color:var(--text-muted);}
-.msg-original{font-size:0.85rem;color:var(--text);margin-bottom:4px;}
-.msg-translated{font-size:0.82rem;color:#34d399;font-style:italic;}
-.empty-msgs{text-align:center;padding:25px;color:var(--text-muted);font-size:0.85rem;}
-
-/* AI Panel */
-.ai-panel{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);border:1px solid rgba(99,102,241,0.2);overflow:hidden;display:flex;flex-direction:column;max-height:500px;}
-.ai-modes{display:flex;gap:0;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.15);flex-shrink:0;}
-.ai-mode-btn{flex:1;padding:10px 8px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.72rem;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:4px;border-bottom:2px solid transparent;}
-.ai-mode-btn:hover{color:var(--text);}
-.ai-mode-btn.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(99,102,241,0.05);}
-.ai-mode-btn i{font-size:0.95rem;}
-.practice-setup{padding:12px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);flex-shrink:0;}
-.practice-setup.hidden{display:none;}
-.practice-lang-select{width:100%;padding:8px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.82rem;margin-bottom:8px;appearance:none;}
-.practice-btn{width:100%;padding:9px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.practice-btn:hover{transform:scale(1.02);}
-.practice-banner{display:none;padding:8px 12px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border-bottom:1px solid rgba(99,102,241,0.2);font-size:0.78rem;color:#a5b4fc;flex-shrink:0;align-items:center;gap:8px;}
-.practice-banner.show{display:flex;}
-.ai-msgs{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;}
-.ai-bubble{max-width:88%;padding:9px 13px;border-radius:12px;font-size:0.85rem;line-height:1.6;}
-.ai-bubble.user{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;align-self:flex-end;border-radius:12px 12px 3px 12px;}
-.ai-bubble.bot{background:rgba(255,255,255,0.06);color:var(--text);border-radius:12px 12px 12px 3px;border:1px solid var(--border);}
-.ai-bubble.feedback{background:rgba(16,185,129,0.08);color:var(--text);border:1px solid rgba(16,185,129,0.2);border-radius:12px;font-size:0.8rem;white-space:pre-line;}
-.ai-bubble.tip{background:rgba(245,158,11,0.1);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);font-size:0.8rem;}
-.ai-bubble.error{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
-.ai-typing{display:none;align-items:center;gap:4px;padding:9px 13px;background:rgba(255,255,255,0.06);border-radius:12px;width:fit-content;}
-.ai-typing.show{display:flex;}
-.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:typing 1.4s infinite;}
-.ai-typing span:nth-child(2){animation-delay:0.2s;}
-.ai-typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes typing{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);};}
-.ai-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:8px 10px 0;flex-shrink:0;}
-.ai-suggestion{padding:4px 10px;border-radius:15px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);color:#a5b4fc;font-size:0.72rem;cursor:pointer;transition:all 0.2s;}
-.ai-suggestion:hover{background:rgba(99,102,241,0.2);}
-.ai-input-area{padding:10px;border-top:1px solid var(--border);display:flex;gap:6px;flex-shrink:0;align-items:center;}
-.ai-input{flex:1;padding:9px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.85rem;}
-.ai-input:focus{outline:none;border-color:var(--primary);}
-.ai-send-btn{width:36px;height:36px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:0.9rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.ai-send-btn:hover{transform:scale(1.08);}
-.ai-send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
-.ai-voice-btn{width:36px;height:36px;border-radius:9px;border:none;background:rgba(255,255,255,0.08);color:var(--text-secondary);font-size:0.9rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.ai-voice-btn:hover{background:rgba(255,255,255,0.15);color:var(--text);}
-.ai-voice-btn.recording{background:var(--danger);color:white;animation:rec-pulse 1s infinite;}
-
-/* Waiting */
-.waiting-overlay{position:absolute;inset:0;background:rgba(15,23,42,0.9);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:20;border-radius:var(--radius);}
-.waiting-spinner{width:60px;height:60px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--primary);animation:spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);};}
-.invite-box{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.2s;font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;}
-.invite-box:hover{background:rgba(99,102,241,0.15);}
-
-/* Mic */
 .mic-section{display:flex;flex-direction:column;align-items:center;gap:12px;padding:15px 0;}
 .mic-ring{position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center;}
 .mic-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--primary);opacity:0;transition:all 0.3s;}
-.mic-ring.active::before{opacity:1;animation:ring-pulse 1.5s infinite;}
-@keyframes ring-pulse{0%{transform:scale(1);opacity:1;}100%{transform:scale(1.3);opacity:0;};}
+.mic-ring.active::before{opacity:1;animation:rp 1.5s infinite;}
+@keyframes rp{0%{transform:scale(1);opacity:1;}100%{transform:scale(1.3);opacity:0;};}
 .mic-btn-main{width:80px;height:80px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1.8rem;cursor:pointer;transition:all 0.3s;box-shadow:0 8px 25px rgba(99,102,241,0.4);display:flex;align-items:center;justify-content:center;}
 .mic-btn-main:hover:not(:disabled){transform:scale(1.08);}
-.mic-btn-main.recording{background:linear-gradient(135deg,var(--danger),#f97316);box-shadow:0 8px 25px rgba(239,68,68,0.5);animation:rec-pulse 1.2s infinite;}
-@keyframes rec-pulse{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);};}
+.mic-btn-main.recording{background:linear-gradient(135deg,var(--danger),#f97316);box-shadow:0 8px 25px rgba(239,68,68,0.5);animation:rcp 1.2s infinite;}
+@keyframes rcp{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);};}
 .mic-btn-main:disabled{background:var(--bg-elevated);box-shadow:none;cursor:not-allowed;opacity:0.5;}
 .mic-label{font-size:0.85rem;color:var(--text-secondary);}
 .visualizer{display:flex;align-items:center;gap:4px;height:35px;opacity:0;transition:opacity 0.3s;}
 .visualizer.active{opacity:1;}
-.vbar{width:4px;border-radius:2px;background:linear-gradient(var(--primary),var(--secondary));animation:vwave 0.5s ease-in-out infinite;}
+.vbar{width:4px;border-radius:2px;background:linear-gradient(var(--primary),var(--secondary));animation:vw 0.5s ease-in-out infinite;}
 .vbar:nth-child(1){height:8px;animation-delay:0s;}
 .vbar:nth-child(2){height:12px;animation-delay:0.1s;}
 .vbar:nth-child(3){height:8px;animation-delay:0.2s;}
@@ -365,29 +147,93 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .vbar:nth-child(5){height:8px;animation-delay:0.4s;}
 .vbar:nth-child(6){height:12px;animation-delay:0.3s;}
 .vbar:nth-child(7){height:8px;animation-delay:0.2s;}
-@keyframes vwave{0%,100%{transform:scaleY(1);}50%{transform:scaleY(3);};}
+@keyframes vw{0%,100%{transform:scaleY(1);}50%{transform:scaleY(3);};}
 .speaking-badge{display:none;align-items:center;gap:7px;padding:5px 12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:15px;color:#34d399;font-size:0.8rem;}
 .speaking-badge.show{display:flex;}
-.timer{font-size:1.1rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;}
-
-/* Notifications */
-.audio-activate-btn{display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);padding:14px 28px;background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;border:none;border-radius:25px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 8px 25px rgba(16,185,129,0.5);z-index:999;animation:bounce 1s infinite;}
+.card{background:rgba(30,41,59,0.85);border-radius:var(--radius);padding:20px;border:1px solid var(--border);}
+.card-title{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.result-box{background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);padding:15px;min-height:80px;}
+.result-box h5{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.result-box.original h5{color:var(--primary);}
+.result-box.translated h5{color:var(--secondary);}
+.result-box p{font-size:0.9rem;line-height:1.6;color:var(--text);}
+.result-box.translated p{color:#34d399;}
+.result-actions{display:flex;gap:6px;margin-top:8px;}
+.mini-btn{padding:4px 10px;border-radius:6px;font-size:0.72rem;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:4px;}
+.mini-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.partner-result{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:var(--radius-sm);padding:12px;}
+.partner-result h5{font-size:0.72rem;color:var(--secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.partner-result p{color:#34d399;font-size:0.9rem;line-height:1.6;}
+.right-panel{display:flex;flex-direction:column;gap:15px;}
+.transcript-panel{background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;max-height:280px;}
+.panel-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);flex-shrink:0;}
+.panel-head h4{font-size:0.82rem;display:flex;align-items:center;gap:7px;}
+.panel-head-actions{display:flex;gap:6px;}
+.panel-head-actions button{width:28px;height:28px;border-radius:7px;border:none;background:rgba(255,255,255,0.05);color:var(--text-muted);cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center;}
+.panel-head-actions button:hover{background:rgba(255,255,255,0.1);color:var(--text);}
+.messages{flex:1;overflow-y:auto;padding:10px;}
+.msg{background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;margin-bottom:8px;border-right:3px solid var(--primary);animation:mi 0.3s ease;}
+.msg.partner{border-right-color:var(--secondary);}
+@keyframes mi{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);};}
+.msg-header{display:flex;justify-content:space-between;margin-bottom:5px;}
+.msg-sender{font-size:0.75rem;font-weight:600;color:var(--primary);}
+.msg.partner .msg-sender{color:var(--secondary);}
+.msg-time{font-size:0.68rem;color:var(--text-muted);}
+.msg-original{font-size:0.85rem;color:var(--text);margin-bottom:4px;}
+.msg-translated{font-size:0.82rem;color:#34d399;font-style:italic;}
+.empty-msgs{text-align:center;padding:25px;color:var(--text-muted);font-size:0.85rem;}
+.ai-panel{background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid rgba(99,102,241,0.2);overflow:hidden;display:flex;flex-direction:column;max-height:500px;}
+.ai-modes{display:flex;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.15);flex-shrink:0;}
+.ai-mode-btn{flex:1;padding:10px 8px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:flex;flex-direction:column;align-items:center;gap:4px;border-bottom:2px solid transparent;}
+.ai-mode-btn.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(99,102,241,0.05);}
+.ai-mode-btn i{font-size:0.95rem;}
+.practice-setup{padding:12px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);flex-shrink:0;}
+.practice-setup.hidden{display:none;}
+.practice-lang-select{width:100%;padding:8px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.82rem;margin-bottom:8px;appearance:none;}
+.practice-btn{width:100%;padding:9px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+.practice-banner{display:none;padding:8px 12px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border-bottom:1px solid rgba(99,102,241,0.2);font-size:0.78rem;color:#a5b4fc;flex-shrink:0;align-items:center;gap:8px;}
+.practice-banner.show{display:flex;}
+.ai-msgs{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;}
+.ai-bubble{max-width:88%;padding:9px 13px;border-radius:12px;font-size:0.85rem;line-height:1.6;}
+.ai-bubble.user{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;align-self:flex-end;border-radius:12px 12px 3px 12px;}
+.ai-bubble.bot{background:rgba(255,255,255,0.06);color:var(--text);border-radius:12px 12px 12px 3px;border:1px solid var(--border);}
+.ai-bubble.feedback{background:rgba(16,185,129,0.08);color:var(--text);border:1px solid rgba(16,185,129,0.2);border-radius:12px;font-size:0.8rem;white-space:pre-line;}
+.ai-bubble.error{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
+.ai-typing{display:none;align-items:center;gap:4px;padding:9px 13px;background:rgba(255,255,255,0.06);border-radius:12px;width:fit-content;}
+.ai-typing.show{display:flex;}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:tp 1.4s infinite;}
+.ai-typing span:nth-child(2){animation-delay:0.2s;}
+.ai-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes tp{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);};}
+.ai-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:8px 10px 0;flex-shrink:0;}
+.ai-suggestion{padding:4px 10px;border-radius:15px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);color:#a5b4fc;font-size:0.72rem;cursor:pointer;}
+.ai-suggestion:hover{background:rgba(99,102,241,0.2);}
+.ai-input-area{padding:10px;border-top:1px solid var(--border);display:flex;gap:6px;flex-shrink:0;align-items:center;}
+.ai-input{flex:1;padding:9px 12px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.85rem;}
+.ai-input:focus{outline:none;border-color:var(--primary);}
+.ai-send-btn{width:36px;height:36px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-send-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.ai-voice-btn{width:36px;height:36px;border-radius:9px;border:none;background:rgba(255,255,255,0.08);color:var(--text-secondary);font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-voice-btn.recording{background:var(--danger);color:white;animation:rcp 1s infinite;}
+.waiting-overlay{position:absolute;inset:0;background:rgba(15,23,42,0.9);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:20;border-radius:var(--radius);}
+.waiting-spinner{width:60px;height:60px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--primary);animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);};}
+.invite-box{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:0.8rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;}
+.invite-box:hover{background:rgba(99,102,241,0.15);}
+.audio-activate-btn{display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);padding:14px 28px;background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;border:none;border-radius:25px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 8px 25px rgba(16,185,129,0.5);z-index:999;animation:bnc 1s infinite;}
 .audio-activate-btn.show{display:flex;align-items:center;gap:8px;}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);};}
+@keyframes bnc{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);};}
 .admin-warning-banner{display:none;position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:14px 24px;background:rgba(239,68,68,0.95);color:white;border-radius:14px;font-weight:600;z-index:999;max-width:90vw;text-align:center;}
 .admin-warning-banner.show{display:flex;align-items:center;gap:10px;}
 .notification{position:fixed;top:90px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:25px;font-size:0.88rem;font-weight:600;z-index:1000;display:none;max-width:90vw;text-align:center;}
-.notification.show{display:block;animation:notif-in 0.3s ease;}
+.notification.show{display:block;animation:ni 0.3s ease;}
 .notification.success{background:rgba(16,185,129,0.95);color:white;}
 .notification.error{background:rgba(239,68,68,0.95);color:white;}
 .notification.info{background:rgba(99,102,241,0.95);color:white;}
 .notification.warning{background:rgba(245,158,11,0.95);color:white;}
-@keyframes notif-in{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
-
-/* Card */
-.card{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);}
-.card-title{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-
+@keyframes ni{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
+.timer{font-size:1.1rem;font-weight:700;color:var(--primary);letter-spacing:0.1em;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.1);}
 ::-webkit-scrollbar-thumb{background:rgba(99,102,241,0.4);border-radius:3px;}
@@ -395,69 +241,36 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 </style>
 </head>
 <body>
-
-<div class="bg-effects">
-  <div class="bg-blob blob1"></div>
-  <div class="bg-blob blob2"></div>
-  <div class="bg-blob blob3"></div>
-</div>
-
+<div class="bg-effects"><div class="bg-blob blob1"></div><div class="bg-blob blob2"></div></div>
 <div class="notification" id="notification"></div>
-<div class="admin-warning-banner" id="adminWarningBanner">
-  <i class="fas fa-triangle-exclamation"></i>
-  <span id="adminWarningText"></span>
-  <button onclick="document.getElementById('adminWarningBanner').classList.remove('show')" style="background:none;border:none;color:white;cursor:pointer;margin-right:auto;"><i class="fas fa-xmark"></i></button>
-</div>
-<button class="audio-activate-btn" id="audioActivateBtn" onclick="activateAudio()">
-  <i class="fas fa-volume-high"></i> اضغط لتفعيل الصوت
-</button>
-
-<!-- Video Fullscreen Modal -->
-<div class="video-modal" id="videoModal">
-  <button class="video-modal-close" onclick="closeVideoModal()"><i class="fas fa-xmark"></i></button>
-  <video id="modalVideo" autoplay playsinline></video>
-  <div style="color:var(--text-secondary);font-size:0.85rem;" id="modalVideoLabel"></div>
-</div>
-
-<!-- Leave Modal -->
+<div class="admin-warning-banner" id="adminWarningBanner"><i class="fas fa-triangle-exclamation"></i><span id="adminWarningText"></span><button onclick="document.getElementById('adminWarningBanner').classList.remove('show')" style="background:none;border:none;color:white;cursor:pointer;margin-right:auto;"><i class="fas fa-xmark"></i></button></div>
+<button class="audio-activate-btn" id="audioActivateBtn" onclick="activateAudio()"><i class="fas fa-volume-high"></i> اضغط لتفعيل الصوت</button>
+<div class="video-modal" id="videoModal"><button class="video-modal-close" onclick="closeVideoModal()"><i class="fas fa-xmark"></i></button><video id="modalVideo" autoplay playsinline></video><div style="color:var(--text-secondary);font-size:0.85rem;" id="modalVideoLabel"></div></div>
 <div id="leaveModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);z-index:500;align-items:center;justify-content:center;">
   <div style="background:var(--bg-card);border-radius:20px;padding:30px;width:100%;max-width:380px;border:1px solid var(--border);text-align:center;margin:20px;">
-    <div style="width:64px;height:64px;background:rgba(239,68,68,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem;color:var(--danger);">
-      <i class="fas fa-phone-slash"></i>
-    </div>
+    <div style="width:64px;height:64px;background:rgba(239,68,68,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem;color:var(--danger);"><i class="fas fa-phone-slash"></i></div>
     <h3 style="margin-bottom:8px;">مغادرة الغرفة</h3>
     <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:24px;">هل أنت متأكد أنك تريد مغادرة الغرفة؟</p>
     <div style="display:flex;gap:10px;">
-      <button onclick="leaveRoom()" style="flex:1;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--danger),#f97316);color:white;font-weight:600;cursor:pointer;font-size:0.95rem;">
-        <i class="fas fa-phone-slash"></i> نعم، مغادرة
-      </button>
-      <button onclick="closeLeaveModal()" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-weight:600;cursor:pointer;font-size:0.95rem;">
-        إلغاء
-      </button>
+      <button onclick="leaveRoom()" style="flex:1;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--danger),#f97316);color:white;font-weight:600;cursor:pointer;">نعم، مغادرة</button>
+      <button onclick="closeLeaveModal()" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-weight:600;cursor:pointer;">إلغاء</button>
     </div>
   </div>
 </div>
 
-<!-- ==================== LANDING ==================== -->
+<!-- LANDING -->
 <div class="page active" id="landing">
   <header>
-    <div class="logo">
-      <div class="logo-icon"><i class="fas fa-language"></i></div>
-      <div><div class="logo-name">TranslationCall</div><span class="logo-pro">PRO</span></div>
-    </div>
+    <div class="logo"><div class="logo-icon"><i class="fas fa-language"></i></div><div><div class="logo-name">TranslationCall</div><span class="logo-pro">PRO</span></div></div>
     <div class="header-right">
       <div class="lang-switcher">
         <button class="lang-switch-btn active" onclick="setUILang('ar',this)">ع</button>
         <button class="lang-switch-btn" onclick="setUILang('en',this)">EN</button>
         <button class="lang-switch-btn" onclick="setUILang('es',this)">ES</button>
       </div>
-      <div class="status-badge">
-        <div class="status-dot" id="statusDot"></div>
-        <span id="statusText">جاري الاتصال...</span>
-      </div>
+      <div class="status-badge"><div class="status-dot" id="statusDot"></div><span id="statusText">جاري الاتصال...</span></div>
     </div>
   </header>
-
   <div style="position:relative;z-index:1;flex:1;">
     <div class="hero">
       <div class="hero-badge"><i class="fas fa-sparkles"></i><span id="heroBadge">مدعوم بـ Gemini AI</span></div>
@@ -472,376 +285,127 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
         <div class="feat-tag"><i class="fas fa-lock"></i><span id="feat6">غرف خاصة</span></div>
       </div>
     </div>
-
     <div class="action-section">
       <div class="action-card">
-        <div class="action-header">
-          <div class="action-icon icon-create"><i class="fas fa-plus"></i></div>
-          <div><h3 id="createTitle">إنشاء محادثة</h3><p id="createDesc">أنشئ غرفة وادعُ شريكك</p></div>
-        </div>
-        <div class="input-group">
-          <label id="labelName1">اسمك</label>
-          <input type="text" class="input" id="createName" placeholder="أدخل اسمك...">
-        </div>
-        <div class="input-group">
-          <label id="labelLang1">لغتك</label>
-          <select class="lang-select" id="createLang">
-            <option value="ar">🇸🇦 العربية</option>
-            <option value="en">🇺🇸 English</option>
-            <option value="es">🇪🇸 Español</option>
-            <option value="fr">🇫🇷 Français</option>
-            <option value="de">🇩🇪 Deutsch</option>
-            <option value="tr">🇹🇷 Türkçe</option>
-            <option value="zh">🇨🇳 中文</option>
-            <option value="ja">🇯🇵 日本語</option>
-            <option value="ru">🇷🇺 Русский</option>
-            <option value="pt">🇧🇷 Português</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label id="labelPartnerLang">لغة شريكك</label>
-          <select class="lang-select" id="createTargetLang">
-            <option value="en">🇺🇸 English</option>
-            <option value="ar">🇸🇦 العربية</option>
-            <option value="es">🇪🇸 Español</option>
-            <option value="fr">🇫🇷 Français</option>
-            <option value="de">🇩🇪 Deutsch</option>
-            <option value="tr">🇹🇷 Türkçe</option>
-            <option value="zh">🇨🇳 中文</option>
-            <option value="ja">🇯🇵 日本語</option>
-            <option value="ru">🇷🇺 Русский</option>
-            <option value="pt">🇧🇷 Português</option>
-          </select>
-        </div>
-        <div class="toggle-row">
-          <span class="toggle-label" id="privateLabel"><i class="fas fa-lock"></i> غرفة خاصة</span>
-          <div class="toggle" id="privateToggle" onclick="togglePrivate()"><div class="toggle-thumb"></div></div>
-        </div>
-        <div class="input-group" id="passwordGroup" style="display:none;">
-          <label id="labelPass">كلمة المرور</label>
-          <input type="password" class="input" id="createPassword" placeholder="أدخل كلمة المرور...">
-        </div>
-        <button class="btn btn-primary btn-full btn-lg" onclick="createRoom()">
-          <i class="fas fa-plus"></i><span id="btnCreate">إنشاء غرفة</span>
-        </button>
+        <div class="action-header"><div class="action-icon icon-create"><i class="fas fa-plus"></i></div><div><h3 id="createTitle">إنشاء محادثة</h3><p id="createDesc">أنشئ غرفة وادعُ شريكك</p></div></div>
+        <div class="input-group"><label id="labelName1">اسمك</label><input type="text" class="input" id="createName" placeholder="أدخل اسمك..."></div>
+        <div class="input-group"><label id="labelLang1">لغتك</label><select class="lang-select" id="createLang"><option value="ar">🇸🇦 العربية</option><option value="en">🇺🇸 English</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="tr">🇹🇷 Türkçe</option><option value="zh">🇨🇳 中文</option><option value="ja">🇯🇵 日本語</option><option value="ru">🇷🇺 Русский</option><option value="pt">🇧🇷 Português</option></select></div>
+        <div class="input-group"><label id="labelPartnerLang">لغة شريكك</label><select class="lang-select" id="createTargetLang"><option value="en">🇺🇸 English</option><option value="ar">🇸🇦 العربية</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="tr">🇹🇷 Türkçe</option><option value="zh">🇨🇳 中文</option><option value="ja">🇯🇵 日本語</option><option value="ru">🇷🇺 Русский</option><option value="pt">🇧🇷 Português</option></select></div>
+        <div class="toggle-row"><span class="toggle-label" id="privateLabel"><i class="fas fa-lock"></i> غرفة خاصة</span><div class="toggle" id="privateToggle" onclick="togglePrivate()"><div class="toggle-thumb"></div></div></div>
+        <div class="input-group" id="passwordGroup" style="display:none;"><label id="labelPass">كلمة المرور</label><input type="password" class="input" id="createPassword" placeholder="أدخل كلمة المرور..."></div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="createRoom()"><i class="fas fa-plus"></i><span id="btnCreate">إنشاء غرفة</span></button>
       </div>
-
       <div class="action-card">
-        <div class="action-header">
-          <div class="action-icon icon-join"><i class="fas fa-arrow-right-to-bracket"></i></div>
-          <div><h3 id="joinTitle">الانضمام لمحادثة</h3><p id="joinDesc">أدخل رمز الغرفة للانضمام</p></div>
-        </div>
-        <div class="input-group">
-          <label id="labelName2">اسمك</label>
-          <input type="text" class="input" id="joinName" placeholder="أدخل اسمك...">
-        </div>
-        <div class="input-group">
-          <label id="labelLang2">لغتك</label>
-          <select class="lang-select" id="joinLang">
-            <option value="en">🇺🇸 English</option>
-            <option value="ar">🇸🇦 العربية</option>
-            <option value="es">🇪🇸 Español</option>
-            <option value="fr">🇫🇷 Français</option>
-            <option value="de">🇩🇪 Deutsch</option>
-            <option value="tr">🇹🇷 Türkçe</option>
-            <option value="zh">🇨🇳 中文</option>
-            <option value="ja">🇯🇵 日本語</option>
-            <option value="ru">🇷🇺 Русский</option>
-            <option value="pt">🇧🇷 Português</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label id="labelCode">رمز الغرفة</label>
-          <input type="text" class="input input-code" id="joinCode" placeholder="ABC123" maxlength="6" oninput="this.value=this.value.toUpperCase()">
-        </div>
-        <div class="input-group" id="joinPasswordGroup" style="display:none;">
-          <label id="labelJoinPass">كلمة المرور</label>
-          <input type="password" class="input" id="joinPassword" placeholder="كلمة مرور الغرفة">
-        </div>
-        <button class="btn btn-ghost btn-sm btn-full" onclick="checkRoomPrivacy()" style="margin-bottom:12px;">
-          <i class="fas fa-magnifying-glass"></i><span id="btnCheck">تحقق من الغرفة</span>
-        </button>
-        <button class="btn btn-secondary btn-full btn-lg" onclick="joinRoom()">
-          <i class="fas fa-arrow-right-to-bracket"></i><span id="btnJoin">انضم الآن</span>
-        </button>
+        <div class="action-header"><div class="action-icon icon-join"><i class="fas fa-arrow-right-to-bracket"></i></div><div><h3 id="joinTitle">الانضمام لمحادثة</h3><p id="joinDesc">أدخل رمز الغرفة للانضمام</p></div></div>
+        <div class="input-group"><label id="labelName2">اسمك</label><input type="text" class="input" id="joinName" placeholder="أدخل اسمك..."></div>
+        <div class="input-group"><label id="labelLang2">لغتك</label><select class="lang-select" id="joinLang"><option value="en">🇺🇸 English</option><option value="ar">🇸🇦 العربية</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="tr">🇹🇷 Türkçe</option><option value="zh">🇨🇳 中文</option><option value="ja">🇯🇵 日本語</option><option value="ru">🇷🇺 Русский</option><option value="pt">🇧🇷 Português</option></select></div>
+        <div class="input-group"><label id="labelCode">رمز الغرفة</label><input type="text" class="input input-code" id="joinCode" placeholder="ABC123" maxlength="6" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="input-group" id="joinPasswordGroup" style="display:none;"><label id="labelJoinPass">كلمة المرور</label><input type="password" class="input" id="joinPassword" placeholder="كلمة مرور الغرفة"></div>
+        <button class="btn btn-ghost btn-sm btn-full" onclick="checkRoomPrivacy()" style="margin-bottom:12px;"><i class="fas fa-magnifying-glass"></i><span id="btnCheck">تحقق من الغرفة</span></button>
+        <button class="btn btn-secondary btn-full btn-lg" onclick="joinRoom()"><i class="fas fa-arrow-right-to-bracket"></i><span id="btnJoin">انضم الآن</span></button>
       </div>
     </div>
   </div>
-  <footer>TranslationCall Pro © 2024 | صنع بـ ❤️</footer>
+  <footer>TranslationCall Pro © 2024</footer>
 </div>
 
-<!-- ==================== ROOM PAGE ==================== -->
+<!-- ROOM PAGE -->
 <div class="page" id="room-page">
   <header>
-    <div class="logo">
-      <div class="logo-icon"><i class="fas fa-language"></i></div>
-      <div><div class="logo-name">TranslationCall</div><span class="logo-pro">PRO</span></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:15px;">
-      <div class="timer" id="callTimer">00:00</div>
-      <div class="room-code-display" onclick="copyRoomCode()">
-        <i class="fas fa-hashtag" style="color:var(--primary);"></i>
-        <strong id="displayRoomId">------</strong>
-        <i class="fas fa-copy" style="color:var(--text-muted);font-size:0.85rem;"></i>
-      </div>
-    </div>
-    <div class="status-badge">
-      <div class="status-dot connected"></div>
-      <span>متصل</span>
-    </div>
+    <div class="logo"><div class="logo-icon"><i class="fas fa-language"></i></div><div><div class="logo-name">TranslationCall</div><span class="logo-pro">PRO</span></div></div>
+    <div style="display:flex;align-items:center;gap:15px;"><div class="timer" id="callTimer">00:00</div><div class="room-code-display" onclick="copyRoomCode()"><i class="fas fa-hashtag" style="color:var(--primary);"></i><strong id="displayRoomId">------</strong><i class="fas fa-copy" style="color:var(--text-muted);font-size:0.85rem;"></i></div></div>
+    <div class="status-badge"><div class="status-dot connected"></div><span>متصل</span></div>
   </header>
-
   <div style="position:relative;z-index:1;flex:1;">
     <div class="room-layout">
-
-      <!-- Left Column -->
       <div style="display:flex;flex-direction:column;gap:15px;">
-
-        <!-- Participants -->
         <div class="participants-row">
-          <div class="participant me" id="meParticipant">
-            <div class="p-avatar me-av" id="meAvatar">أ</div>
-            <div class="p-info">
-              <div class="p-name" id="meName">أنت</div>
-              <div class="p-lang" id="meLang">---</div>
-            </div>
-            <div class="p-status host" id="meStatus">مضيف</div>
-          </div>
+          <div class="participant me" id="meParticipant"><div class="p-avatar me-av" id="meAvatar">أ</div><div class="p-info"><div class="p-name" id="meName">أنت</div><div class="p-lang" id="meLang">---</div></div><div class="p-status host" id="meStatus">مضيف</div></div>
           <div class="connection-arrow"><i class="fas fa-arrows-left-right"></i></div>
-          <div class="participant partner-p" id="partnerParticipant">
-            <div class="p-avatar waiting-av" id="partnerAvatar"><i class="fas fa-user"></i></div>
-            <div class="p-info">
-              <div class="p-name" id="partnerName">في انتظار الشريك...</div>
-              <div class="p-lang" id="partnerLang">---</div>
-            </div>
-            <div class="p-status waiting" id="partnerStatus">منتظر</div>
-          </div>
+          <div class="participant partner-p" id="partnerParticipant"><div class="p-avatar waiting-av" id="partnerAvatar"><i class="fas fa-user"></i></div><div class="p-info"><div class="p-name" id="partnerName">في انتظار الشريك...</div><div class="p-lang" id="partnerLang">---</div></div><div class="p-status waiting" id="partnerStatus">منتظر</div></div>
         </div>
-
-        <!-- ✅ VIDEO SECTION -->
         <div class="video-section" id="videoSection">
-          <!-- Waiting Overlay -->
           <div class="waiting-overlay" id="waitingOverlay">
             <div class="waiting-spinner"></div>
-            <div style="text-align:center;">
-              <div style="font-size:1rem;font-weight:600;margin-bottom:8px;">في انتظار الشريك...</div>
-              <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:15px;">شارك رمز الغرفة أو الرابط مع شريكك</div>
-            </div>
+            <div style="text-align:center;"><div style="font-size:1rem;font-weight:600;margin-bottom:8px;">في انتظار الشريك...</div><div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:15px;">شارك رمز الغرفة أو الرابط</div></div>
             <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;">
-              <div class="room-code-display" onclick="copyRoomCode()" style="justify-content:center;">
-                <i class="fas fa-hashtag" style="color:var(--primary);"></i>
-                <strong id="waitingRoomId" style="font-size:1.5rem;letter-spacing:0.2em;color:var(--primary);">------</strong>
-                <i class="fas fa-copy"></i>
-              </div>
-              <div class="invite-box" onclick="copyInviteLink()">
-                <i class="fas fa-link"></i><span>انسخ رابط الدعوة المباشر</span>
-              </div>
+              <div class="room-code-display" onclick="copyRoomCode()" style="justify-content:center;"><i class="fas fa-hashtag" style="color:var(--primary);"></i><strong id="waitingRoomId" style="font-size:1.5rem;letter-spacing:0.2em;color:var(--primary);">------</strong><i class="fas fa-copy"></i></div>
+              <div class="invite-box" onclick="copyInviteLink()"><i class="fas fa-link"></i><span>انسخ رابط الدعوة</span></div>
             </div>
           </div>
-
-          <!-- Remote Video -->
           <div class="remote-video-container">
             <video id="remoteVideo" autoplay playsinline></video>
-            <div class="remote-placeholder" id="remotePlaceholder">
-              <div class="big-avatar" id="remoteAvatar">؟</div>
-              <span id="remotePlaceholderText">في انتظار الشريك...</span>
-            </div>
-            <!-- Partner Info Overlay -->
-            <div class="partner-info-overlay" id="partnerInfoOverlay" style="display:none;">
-              <div class="p-dot"></div>
-              <span id="overlayPartnerName">---</span>
-              <span style="opacity:0.6;" id="overlayPartnerLang">---</span>
-            </div>
-            <!-- Quality -->
-            <div class="quality-indicator" id="qualityIndicator" style="display:none;">
-              <i class="fas fa-signal"></i> <span>جودة ممتازة</span>
-            </div>
+            <div class="remote-placeholder" id="remotePlaceholder"><div class="big-avatar" id="remoteAvatar">؟</div><span id="remotePlaceholderText">في انتظار الشريك...</span></div>
+            <div class="partner-info-overlay" id="partnerInfoOverlay"><div class="p-dot"></div><span id="overlayPartnerName">---</span><span style="opacity:0.6;" id="overlayPartnerLang">---</span></div>
+            <div class="quality-indicator" id="qualityIndicator"><i class="fas fa-signal"></i><span>جودة ممتازة</span></div>
           </div>
-
-          <!-- Local Video (Draggable) -->
           <div class="local-video-wrapper" id="localVideoWrapper">
             <video id="localVideo" autoplay playsinline muted></video>
-            <div class="local-placeholder" id="localPlaceholder">
-              <i class="fas fa-video-slash"></i>
-            </div>
+            <div class="local-placeholder" id="localPlaceholder"><i class="fas fa-video-slash"></i></div>
           </div>
-
-          <!-- Video Controls Overlay -->
           <div class="video-controls-overlay">
-            <button class="video-ctrl-btn" id="videoCamBtn" onclick="toggleCamera()" title="الكاميرا">
-              <i class="fas fa-video" id="videoCamIcon"></i>
-            </button>
-            <button class="video-ctrl-btn" onclick="expandVideo('remote')" title="تكبير">
-              <i class="fas fa-expand"></i>
-            </button>
-            <button class="video-ctrl-btn" onclick="expandVideo('local')" title="عرض الكاميرا المحلية">
-              <i class="fas fa-user"></i>
-            </button>
-            <button class="expand-btn" onclick="expandVideo('remote')" title="ملء الشاشة">
-              <i class="fas fa-maximize"></i>
-            </button>
+            <button class="video-ctrl-btn" id="videoCamBtn" onclick="toggleCamera()"><i class="fas fa-video" id="videoCamIcon"></i></button>
+            <button class="video-ctrl-btn" onclick="expandVideo('remote')"><i class="fas fa-expand"></i></button>
+            <button class="expand-btn" onclick="expandVideo('remote')"><i class="fas fa-maximize"></i></button>
           </div>
         </div>
-
-        <!-- Mic + Translation Card -->
         <div class="card" style="position:relative;">
           <div class="mic-section">
-            <div class="mic-ring" id="micRing">
-              <button class="mic-btn-main" id="micBtnMain" onclick="toggleRecording()" disabled>
-                <i class="fas fa-microphone" id="micBtnIcon"></i>
-              </button>
-            </div>
+            <div class="mic-ring" id="micRing"><button class="mic-btn-main" id="micBtnMain" onclick="toggleRecording()" disabled><i class="fas fa-microphone" id="micBtnIcon"></i></button></div>
             <div class="mic-label" id="micLabel">في انتظار الشريك...</div>
-            <div class="visualizer" id="visualizer">
-              <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
-              <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
-              <div class="vbar"></div>
-            </div>
-            <div class="speaking-badge" id="speakingBadge">
-              <i class="fas fa-volume-high"></i><span>شريكك يتحدث...</span>
-            </div>
+            <div class="visualizer" id="visualizer"><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div><div class="vbar"></div></div>
+            <div class="speaking-badge" id="speakingBadge"><i class="fas fa-volume-high"></i><span>شريكك يتحدث...</span></div>
           </div>
-
           <div class="card-title"><i class="fas fa-align-left"></i><span>النتائج</span></div>
           <div class="results-grid">
-            <div class="result-box original">
-              <h5><i class="fas fa-microphone"></i><span>ما قلته</span></h5>
-              <p id="originalText">سيظهر هنا كلامك...</p>
-              <div class="result-actions">
-                <button class="mini-btn" onclick="copyResult('originalText')"><i class="fas fa-copy"></i> نسخ</button>
-              </div>
-            </div>
-            <div class="result-box translated">
-              <h5><i class="fas fa-globe"></i><span>ترجمتك</span></h5>
-              <p id="translatedText">سيظهر هنا النص المترجم...</p>
-              <div class="result-actions">
-                <button class="mini-btn" onclick="copyResult('translatedText')"><i class="fas fa-copy"></i> نسخ</button>
-              </div>
-            </div>
+            <div class="result-box original"><h5><i class="fas fa-microphone"></i><span>ما قلته</span></h5><p id="originalText">سيظهر هنا كلامك...</p><div class="result-actions"><button class="mini-btn" onclick="copyResult('originalText')"><i class="fas fa-copy"></i> نسخ</button></div></div>
+            <div class="result-box translated"><h5><i class="fas fa-globe"></i><span>ترجمتك</span></h5><p id="translatedText">سيظهر هنا الترجمة...</p><div class="result-actions"><button class="mini-btn" onclick="copyResult('translatedText')"><i class="fas fa-copy"></i> نسخ</button></div></div>
           </div>
-          <div class="partner-result">
-            <h5><i class="fas fa-headphones"></i><span>ما قاله شريكك (مترجماً إليك)</span></h5>
-            <p id="partnerTranslatedText">سيظهر هنا كلام شريكك مترجماً...</p>
-          </div>
+          <div class="partner-result"><h5><i class="fas fa-headphones"></i><span>ما قاله شريكك (مترجماً إليك)</span></h5><p id="partnerTranslatedText">سيظهر هنا كلام شريكك مترجماً...</p></div>
         </div>
-
-        <!-- Controls Bar -->
         <div class="controls-bar">
-          <div class="ctrl-group">
-            <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()"><i class="fas fa-microphone" id="muteIcon"></i></button>
-            <span class="ctrl-btn-label">ميكروفون</span>
-          </div>
-          <div class="ctrl-group">
-            <button class="ctrl-btn" id="cameraBtn" onclick="toggleCamera()"><i class="fas fa-video" id="cameraIcon"></i></button>
-            <span class="ctrl-btn-label">كاميرا</span>
-          </div>
-          <div class="ctrl-group">
-            <button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()"><i class="fas fa-volume-high" id="speakerIcon"></i></button>
-            <span class="ctrl-btn-label">صوت</span>
-          </div>
-          <div class="ctrl-group">
-            <button class="ctrl-btn" onclick="expandVideo('remote')"><i class="fas fa-maximize"></i></button>
-            <span class="ctrl-btn-label">تكبير</span>
-          </div>
+          <div class="ctrl-group"><button class="ctrl-btn" id="muteBtn" onclick="toggleMute()"><i class="fas fa-microphone" id="muteIcon"></i></button><span class="ctrl-btn-label">ميكروفون</span></div>
+          <div class="ctrl-group"><button class="ctrl-btn" id="cameraBtn" onclick="toggleCamera()"><i class="fas fa-video" id="cameraIcon"></i></button><span class="ctrl-btn-label">كاميرا</span></div>
+          <div class="ctrl-group"><button class="ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()"><i class="fas fa-volume-high" id="speakerIcon"></i></button><span class="ctrl-btn-label">صوت</span></div>
           <div style="flex:1;"></div>
-          <button class="leave-btn" onclick="confirmLeave()">
-            <i class="fas fa-phone-slash"></i><span>مغادرة</span>
-          </button>
+          <button class="leave-btn" onclick="confirmLeave()"><i class="fas fa-phone-slash"></i><span>مغادرة</span></button>
         </div>
-
       </div>
-
-      <!-- Right Panel -->
       <div class="right-panel">
-
-        <!-- Transcript -->
         <div class="transcript-panel">
-          <div class="panel-head">
-            <h4><i class="fas fa-comments"></i> سجل المحادثة</h4>
-            <div class="panel-head-actions">
-              <button onclick="downloadHistory()" title="تحميل"><i class="fas fa-download"></i></button>
-              <button onclick="clearMessages()" title="مسح"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>
-          <div class="messages" id="messages">
-            <div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div>
-          </div>
+          <div class="panel-head"><h4><i class="fas fa-comments"></i> سجل المحادثة</h4><div class="panel-head-actions"><button onclick="downloadHistory()"><i class="fas fa-download"></i></button><button onclick="clearMessages()"><i class="fas fa-trash"></i></button></div></div>
+          <div class="messages" id="messages"><div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div></div>
         </div>
-
-        <!-- AI Panel -->
         <div class="ai-panel">
-          <div class="panel-head">
-            <h4><i class="fas fa-robot"></i> Gemini AI</h4>
-            <div class="panel-head-actions">
-              <button onclick="clearAI()" title="مسح"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>
+          <div class="panel-head"><h4><i class="fas fa-robot"></i> Gemini AI</h4><div class="panel-head-actions"><button onclick="clearAI()"><i class="fas fa-trash"></i></button></div></div>
           <div class="ai-modes">
-            <button class="ai-mode-btn active" onclick="setAIMode('general',this)">
-              <i class="fas fa-robot"></i><span>مساعد</span>
-            </button>
-            <button class="ai-mode-btn" onclick="setAIMode('translator',this)">
-              <i class="fas fa-language"></i><span>مترجم</span>
-            </button>
-            <button class="ai-mode-btn" onclick="setAIMode('language-teacher',this)">
-              <i class="fas fa-graduation-cap"></i><span>مدرّس</span>
-            </button>
+            <button class="ai-mode-btn active" onclick="setAIMode('general',this)"><i class="fas fa-robot"></i><span>مساعد</span></button>
+            <button class="ai-mode-btn" onclick="setAIMode('translator',this)"><i class="fas fa-language"></i><span>مترجم</span></button>
+            <button class="ai-mode-btn" onclick="setAIMode('language-teacher',this)"><i class="fas fa-graduation-cap"></i><span>مدرّس</span></button>
           </div>
           <div class="practice-setup hidden" id="practiceSetup">
             <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;"><i class="fas fa-graduation-cap"></i> اختر اللغة التي تريد تعلمها:</div>
-            <select class="practice-lang-select" id="practiceTargetLang">
-              <option value="en">🇺🇸 English</option>
-              <option value="es">🇪🇸 Español</option>
-              <option value="fr">🇫🇷 Français</option>
-              <option value="de">🇩🇪 Deutsch</option>
-              <option value="ar">🇸🇦 العربية</option>
-              <option value="tr">🇹🇷 Türkçe</option>
-              <option value="zh">🇨🇳 中文</option>
-              <option value="ja">🇯🇵 日本語</option>
-              <option value="ru">🇷🇺 Русский</option>
-              <option value="pt">🇧🇷 Português</option>
-            </select>
-            <button class="practice-btn" onclick="startPractice()">
-              <i class="fas fa-play"></i> ابدأ جلسة التعلم
-            </button>
+            <select class="practice-lang-select" id="practiceTargetLang"><option value="en">🇺🇸 English</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="ar">🇸🇦 العربية</option><option value="tr">🇹🇷 Türkçe</option></select>
+            <button class="practice-btn" onclick="startPractice()"><i class="fas fa-play"></i> ابدأ جلسة التعلم</button>
           </div>
-          <div class="practice-banner" id="practiceBanner">
-            <i class="fas fa-graduation-cap"></i>
-            <span id="practiceBannerText">وضع التعلم نشط</span>
-            <button onclick="stopPractice()" style="margin-right:auto;background:none;border:none;color:#a5b4fc;cursor:pointer;font-size:0.78rem;">إيقاف <i class="fas fa-xmark"></i></button>
-          </div>
+          <div class="practice-banner" id="practiceBanner"><i class="fas fa-graduation-cap"></i><span id="practiceBannerText">وضع التعلم نشط</span><button onclick="stopPractice()" style="margin-right:auto;background:none;border:none;color:#a5b4fc;cursor:pointer;font-size:0.78rem;">إيقاف <i class="fas fa-xmark"></i></button></div>
           <div class="ai-suggestions" id="aiSuggestions">
             <button class="ai-suggestion" onclick="sendAISuggestion('ترجم لي: مرحبا كيف حالك')">ترجم جملة</button>
             <button class="ai-suggestion" onclick="sendAISuggestion('أعطني نصيحة ثقافية')">نصيحة ثقافية</button>
             <button class="ai-suggestion" onclick="sendAISuggestion('كيف أقول شكراً بالإسبانية')">تعابير مهمة</button>
           </div>
-          <div class="ai-msgs" id="aiMessages">
-            <div class="ai-bubble bot">
-              مرحباً! 👋 أنا <strong>Gemini AI</strong> مساعدك الذكي.<br><br>
-              🌐 <strong>ترجمة</strong> دقيقة لأي جملة<br>
-              🎓 <strong>تعليم اللغات</strong> مع تصحيح الأخطاء<br>
-              💡 <strong>نصائح ثقافية</strong> متقدمة<br>
-              💬 <strong>محادثة ذكية</strong> بأي لغة<br><br>
-              اختر وضعاً وابدأ! 😊
-            </div>
-          </div>
+          <div class="ai-msgs" id="aiMessages"><div class="ai-bubble bot">مرحباً! 👋 أنا <strong>Gemini AI</strong>.<br>🌐 ترجمة دقيقة<br>🎓 تعليم اللغات<br>💡 نصائح ثقافية<br>اختر وضعاً وابدأ! 😊</div></div>
           <div class="ai-typing" id="aiTyping"><span></span><span></span><span></span></div>
           <div class="ai-input-area">
-            <button class="ai-voice-btn" id="aiVoiceBtn" onclick="toggleAIVoice()">
-              <i class="fas fa-microphone" id="aiVoiceIcon"></i>
-            </button>
+            <button class="ai-voice-btn" id="aiVoiceBtn" onclick="toggleAIVoice()"><i class="fas fa-microphone" id="aiVoiceIcon"></i></button>
             <input type="text" class="ai-input" id="aiInput" placeholder="اسأل Gemini AI..." onkeypress="if(event.key==='Enter')sendAI()">
-            <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()">
-              <i class="fas fa-paper-plane"></i>
-            </button>
+            <button class="ai-send-btn" id="aiSendBtn" onclick="sendAI()"><i class="fas fa-paper-plane"></i></button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
-
 <script>
 // ============================================
 // CONFIG
@@ -852,21 +416,71 @@ const SERVER_URL = 'https://translationcall-server.onrender.com';
 // UI Translations
 // ============================================
 const uiTexts = {
-  ar:{statusConnecting:'جاري الاتصال...',statusConnected:'متصل',statusDisconnected:'غير متصل',heroBadge:'مدعوم بـ Gemini AI',heroTitle1:'محادثة حية',heroTitle2:'بلا حواجز اللغة',heroDesc:'تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥',feat1:'مكالمة فيديو',feat2:'ترجمة فورية',feat3:'نطق تلقائي',feat4:'Gemini AI',feat5:'تعلم اللغات',feat6:'غرف خاصة',createTitle:'إنشاء محادثة',createDesc:'أنشئ غرفة وادعُ شريكك',joinTitle:'الانضمام لمحادثة',joinDesc:'أدخل رمز الغرفة للانضمام',labelName:'اسمك',labelLang:'لغتك',labelPartnerLang:'لغة شريكك',labelCode:'رمز الغرفة',labelPass:'كلمة المرور',privateLabel:'غرفة خاصة',btnCreate:'إنشاء غرفة',btnJoin:'انضم الآن',btnCheck:'تحقق من الغرفة',micLabelWaiting:'في انتظار الشريك...',micLabelReady:'اضغط للتحدث',micLabelListening:'🎤 يستمع...',dir:'rtl',lang:'ar'},
-  en:{statusConnecting:'Connecting...',statusConnected:'Connected',statusDisconnected:'Disconnected',heroBadge:'Powered by Gemini AI',heroTitle1:'Live Conversation',heroTitle2:'No Language Barriers',heroDesc:'Talk in your language with anyone in the world. AI translates instantly 🔥',feat1:'Video Call',feat2:'Instant Translation',feat3:'Auto Speech',feat4:'Gemini AI',feat5:'Learn Languages',feat6:'Private Rooms',createTitle:'Create Conversation',createDesc:'Create a room and invite your partner',joinTitle:'Join Conversation',joinDesc:'Enter room code to join',labelName:'Your Name',labelLang:'Your Language',labelPartnerLang:"Partner's Language",labelCode:'Room Code',labelPass:'Password',privateLabel:'Private Room',btnCreate:'Create Room',btnJoin:'Join Now',btnCheck:'Check Room',micLabelWaiting:'Waiting for partner...',micLabelReady:'Press to speak',micLabelListening:'🎤 Listening...',dir:'ltr',lang:'en'},
-  es:{statusConnecting:'Conectando...',statusConnected:'Conectado',statusDisconnected:'Desconectado',heroBadge:'Impulsado por Gemini AI',heroTitle1:'Conversación en vivo',heroTitle2:'Sin barreras de idioma',heroDesc:'Habla en tu idioma con cualquier persona. La IA traduce al instante 🔥',feat1:'Videollamada',feat2:'Traducción instantánea',feat3:'Voz automática',feat4:'Gemini AI',feat5:'Aprender idiomas',feat6:'Salas privadas',createTitle:'Crear conversación',createDesc:'Crea una sala e invita a tu compañero',joinTitle:'Unirse',joinDesc:'Ingresa el código de sala',labelName:'Tu nombre',labelLang:'Tu idioma',labelPartnerLang:'Idioma del compañero',labelCode:'Código de sala',labelPass:'Contraseña',privateLabel:'Sala privada',btnCreate:'Crear sala',btnJoin:'Unirse ahora',btnCheck:'Verificar sala',micLabelWaiting:'Esperando...',micLabelReady:'Presiona para hablar',micLabelListening:'🎤 Escuchando...',dir:'ltr',lang:'es'}
+  ar:{
+    statusConnecting:'جاري الاتصال...',statusConnected:'متصل',statusDisconnected:'غير متصل',
+    heroBadge:'مدعوم بـ Gemini AI',heroTitle1:'محادثة حية',heroTitle2:'بلا حواجز اللغة',
+    heroDesc:'تحدث بلغتك مع أي شخص في العالم والذكاء الاصطناعي يترجم كلامك فورياً 🔥',
+    feat1:'مكالمة فيديو',feat2:'ترجمة فورية',feat3:'نطق تلقائي',
+    feat4:'Gemini AI',feat5:'تعلم اللغات',feat6:'غرف خاصة',
+    createTitle:'إنشاء محادثة',createDesc:'أنشئ غرفة وادعُ شريكك',
+    joinTitle:'الانضمام لمحادثة',joinDesc:'أدخل رمز الغرفة للانضمام',
+    labelName:'اسمك',labelLang:'لغتك',labelPartnerLang:'لغة شريكك',
+    labelCode:'رمز الغرفة',labelPass:'كلمة المرور',privateLabel:'غرفة خاصة',
+    btnCreate:'إنشاء غرفة',btnJoin:'انضم الآن',btnCheck:'تحقق من الغرفة',
+    micLabelWaiting:'في انتظار الشريك...',micLabelReady:'اضغط للتحدث',micLabelListening:'🎤 يستمع...',
+    dir:'rtl',lang:'ar'
+  },
+  en:{
+    statusConnecting:'Connecting...',statusConnected:'Connected',statusDisconnected:'Disconnected',
+    heroBadge:'Powered by Gemini AI',heroTitle1:'Live Conversation',heroTitle2:'No Language Barriers',
+    heroDesc:'Talk in your language with anyone in the world. AI translates instantly 🔥',
+    feat1:'Video Call',feat2:'Instant Translation',feat3:'Auto Speech',
+    feat4:'Gemini AI',feat5:'Learn Languages',feat6:'Private Rooms',
+    createTitle:'Create Conversation',createDesc:'Create a room and invite your partner',
+    joinTitle:'Join Conversation',joinDesc:'Enter room code to join',
+    labelName:'Your Name',labelLang:'Your Language',labelPartnerLang:"Partner's Language",
+    labelCode:'Room Code',labelPass:'Password',privateLabel:'Private Room',
+    btnCreate:'Create Room',btnJoin:'Join Now',btnCheck:'Check Room',
+    micLabelWaiting:'Waiting for partner...',micLabelReady:'Press to speak',micLabelListening:'🎤 Listening...',
+    dir:'ltr',lang:'en'
+  },
+  es:{
+    statusConnecting:'Conectando...',statusConnected:'Conectado',statusDisconnected:'Desconectado',
+    heroBadge:'Impulsado por Gemini AI',heroTitle1:'Conversación en vivo',heroTitle2:'Sin barreras de idioma',
+    heroDesc:'Habla en tu idioma con cualquier persona. La IA traduce al instante 🔥',
+    feat1:'Videollamada',feat2:'Traducción instantánea',feat3:'Voz automática',
+    feat4:'Gemini AI',feat5:'Aprender idiomas',feat6:'Salas privadas',
+    createTitle:'Crear conversación',createDesc:'Crea una sala e invita a tu compañero',
+    joinTitle:'Unirse',joinDesc:'Ingresa el código de sala',
+    labelName:'Tu nombre',labelLang:'Tu idioma',labelPartnerLang:'Idioma del compañero',
+    labelCode:'Código de sala',labelPass:'Contraseña',privateLabel:'Sala privada',
+    btnCreate:'Crear sala',btnJoin:'Unirse ahora',btnCheck:'Verificar sala',
+    micLabelWaiting:'Esperando...',micLabelReady:'Presiona para hablar',micLabelListening:'🎤 Escuchando...',
+    dir:'ltr',lang:'es'
+  }
 };
 
-let currentUILang='ar';
-function setUILang(lang,btn){
-  currentUILang=lang;
-  const t=uiTexts[lang];
-  document.documentElement.lang=t.lang;
-  document.documentElement.dir=t.dir;
+let currentUILang = 'ar';
+
+function setUILang(lang, btn){
+  currentUILang = lang;
+  const t = uiTexts[lang];
+  document.documentElement.lang = t.lang;
+  document.documentElement.dir = t.dir;
   document.querySelectorAll('.lang-switch-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  const map={heroBadge:'heroBadge',heroTitle1:'heroTitle1',heroTitle2:'heroTitle2',heroDesc:'heroDesc',feat1:'feat1',feat2:'feat2',feat3:'feat3',feat4:'feat4',feat5:'feat5',feat6:'feat6',createTitle:'createTitle',createDesc:'createDesc',joinTitle:'joinTitle',joinDesc:'joinDesc',btnCreate:'btnCreate',btnJoin:'btnJoin',btnCheck:'btnCheck'};
-  Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.innerText=t[key]||'';});
+  const map = {
+    heroBadge:'heroBadge',heroTitle1:'heroTitle1',heroTitle2:'heroTitle2',
+    heroDesc:'heroDesc',feat1:'feat1',feat2:'feat2',feat3:'feat3',
+    feat4:'feat4',feat5:'feat5',feat6:'feat6',
+    createTitle:'createTitle',createDesc:'createDesc',
+    joinTitle:'joinTitle',joinDesc:'joinDesc',
+    btnCreate:'btnCreate',btnJoin:'btnJoin',btnCheck:'btnCheck'
+  };
+  Object.entries(map).forEach(([key,id])=>{
+    const el=document.getElementById(id);
+    if(el) el.innerText=t[key]||'';
+  });
   ['labelName1','labelName2'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerText=t.labelName;});
   ['labelLang1','labelLang2'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerText=t.labelLang;});
   document.getElementById('labelPartnerLang').innerText=t.labelPartnerLang;
@@ -881,7 +495,18 @@ function setUILang(lang,btn){
 // ============================================
 // Languages
 // ============================================
-const langs={ar:{name:'العربية',flag:'🇸🇦',voice:'ar-SA'},en:{name:'English',flag:'🇺🇸',voice:'en-US'},es:{name:'Español',flag:'🇪🇸',voice:'es-ES'},fr:{name:'Français',flag:'🇫🇷',voice:'fr-FR'},de:{name:'Deutsch',flag:'🇩🇪',voice:'de-DE'},tr:{name:'Türkçe',flag:'🇹🇷',voice:'tr-TR'},zh:{name:'中文',flag:'🇨🇳',voice:'zh-CN'},ja:{name:'日本語',flag:'🇯🇵',voice:'ja-JP'},ru:{name:'Русский',flag:'🇷🇺',voice:'ru-RU'},pt:{name:'Português',flag:'🇧🇷',voice:'pt-BR'}};
+const langs = {
+  ar:{name:'العربية',flag:'🇸🇦',voice:'ar-SA'},
+  en:{name:'English',flag:'🇺🇸',voice:'en-US'},
+  es:{name:'Español',flag:'🇪🇸',voice:'es-ES'},
+  fr:{name:'Français',flag:'🇫🇷',voice:'fr-FR'},
+  de:{name:'Deutsch',flag:'🇩🇪',voice:'de-DE'},
+  tr:{name:'Türkçe',flag:'🇹🇷',voice:'tr-TR'},
+  zh:{name:'中文',flag:'🇨🇳',voice:'zh-CN'},
+  ja:{name:'日本語',flag:'🇯🇵',voice:'ja-JP'},
+  ru:{name:'Русский',flag:'🇷🇺',voice:'ru-RU'},
+  pt:{name:'Português',flag:'🇧🇷',voice:'pt-BR'}
+};
 
 // ============================================
 // State
@@ -894,10 +519,9 @@ let aiMode='general',isPracticeActive=false,practiceTargetLang='en';
 let aiVoiceRecognition=null,isAIVoiceRecording=false,aiIsTyping=false;
 
 // ============================================
-// WebRTC State
+// WebRTC - Video Only
 // ============================================
-let localStream=null,peerConnection=null;
-let isCameraOn=true,isVideoCallActive=false;
+let localStream=null,peerConnection=null,isCameraOn=true;
 const RTC_CONFIG={
   iceServers:[
     {urls:'stun:stun.l.google.com:19302'},
@@ -915,7 +539,8 @@ function activateAudio(){
     ctx.resume();
     window.speechSynthesis.cancel();
     const utt=new SpeechSynthesisUtterance(' ');
-    utt.volume=0;window.speechSynthesis.speak(utt);
+    utt.volume=0;
+    window.speechSynthesis.speak(utt);
   }catch(e){}
   audioActivated=true;
   document.getElementById('audioActivateBtn').classList.remove('show');
@@ -923,75 +548,147 @@ function activateAudio(){
 }
 
 // ============================================
-// Session
+// Session Management
 // ============================================
-function saveSession(){if(!roomId)return;localStorage.setItem('tcSession',JSON.stringify({roomId,myName,myLang,targetLang,timestamp:Date.now()}));}
-function loadSession(){try{const raw=localStorage.getItem('tcSession');if(!raw)return null;const s=JSON.parse(raw);if(Date.now()-s.timestamp>3600000){localStorage.removeItem('tcSession');return null;}return s;}catch(e){return null;}}
+function saveSession(){
+  if(!roomId) return;
+  localStorage.setItem('tcSession',JSON.stringify({
+    roomId,myName,myLang,targetLang,timestamp:Date.now()
+  }));
+}
+function loadSession(){
+  try{
+    const raw=localStorage.getItem('tcSession');
+    if(!raw) return null;
+    const s=JSON.parse(raw);
+    if(Date.now()-s.timestamp>3600000){localStorage.removeItem('tcSession');return null;}
+    return s;
+  }catch(e){return null;}
+}
 function clearSession(){localStorage.removeItem('tcSession');}
+
 function tryRestoreSession(){
-  const s=loadSession();if(!s)return;
+  const s=loadSession();
+  if(!s) return;
   myName=s.myName;myLang=s.myLang;targetLang=s.targetLang;
   socket.emit('join-room',{roomId:s.roomId,userName:myName,language:myLang,password:''},(res)=>{
     if(res.success){
       roomId=res.roomId;
       if(res.partner){partnerInfo=res.partner;partnerLang=res.partner.language;targetLang=partnerLang;}
       enterRoom(false);
-      if(res.partner){updatePartnerUI(res.partner);hideWaiting();enableMic();startTimer();initVideoCall();}
+      if(res.partner){
+        updatePartnerUI(res.partner);
+        hideWaiting();
+        enableMic();
+        startTimer();
+        initVideoCall();
+      }
       showNotification('تم استعادة جلستك ✅','success');
     }else{clearSession();}
   });
 }
 
 // ============================================
-// Socket
+// Socket Init
 // ============================================
 function initSocket(){
-  socket=io(SERVER_URL,{transports:['websocket','polling'],reconnection:true,reconnectionAttempts:10,reconnectionDelay:1000});
-  socket.on('connect',()=>{setStatus(true);if(!roomId)tryRestoreSession();});
-  socket.on('disconnect',()=>{setStatus(false);showNotification('انقطع الاتصال...','error');});
+  socket=io(SERVER_URL,{
+    transports:['websocket','polling'],
+    reconnection:true,
+    reconnectionAttempts:10,
+    reconnectionDelay:1000
+  });
+
+  socket.on('connect',()=>{
+    setStatus(true);
+    if(!roomId) tryRestoreSession();
+  });
+
+  socket.on('disconnect',()=>{
+    setStatus(false);
+    showNotification('انقطع الاتصال...','error');
+  });
+
   socket.on('partner-joined',(data)=>{
-    partnerInfo=data;partnerLang=data.language;
-    updatePartnerUI(data);hideWaiting();enableMic();startTimer();
-    if(!audioActivated)document.getElementById('audioActivateBtn').classList.add('show');
+    partnerInfo=data;
+    partnerLang=data.language;
+    updatePartnerUI(data);
+    hideWaiting();
+    enableMic();
+    startTimer();
+    if(!audioActivated) document.getElementById('audioActivateBtn').classList.add('show');
     showNotification(`${data.name} انضم! 🎉`,'success');
-    // Start video call when partner joins
+    // Start video call
     setTimeout(()=>initVideoCall(),500);
   });
+
   socket.on('partner-left',(data)=>{
-    partnerInfo=null;resetPartnerUI();showWaiting();disableMic();stopTimer();
-    // Stop video call
+    partnerInfo=null;
+    resetPartnerUI();
+    showWaiting();
+    disableMic();
+    stopTimer();
     stopVideoCall();
     showNotification(`${data.name} غادر`,'error');
   });
+
+  // ✅ الصوت المترجم يخرج عند الشريك
   socket.on('new-message',(msg)=>{
     if(msg.senderId!==socket.id){
       addMessage(msg,false);
       document.getElementById('partnerTranslatedText').innerText=msg.translatedText;
       if(!isSpeakerOff){
-  if(!audioActivated) audioActivated=true;
-  setTimeout(()=>speakText(msg.translatedText,myLang),300);
-}
+        // تفعيل الصوت تلقائياً
+        if(!audioActivated) audioActivated=true;
+        setTimeout(()=>speakText(msg.translatedText,myLang),300);
+      }
     }
   });
+
   socket.on('partner-speaking',(data)=>{
     document.getElementById('partnerParticipant').classList.toggle('speaking',data.speaking);
     document.getElementById('speakingBadge').classList.toggle('show',data.speaking);
   });
+
   // WebRTC Signaling
-  socket.on('rtc-offer',handleRTCOffer);
-  socket.on('rtc-answer',handleRTCAnswer);
-  socket.on('rtc-ice',handleRTCIce);
+  socket.on('rtc-offer',async(data)=>{
+    try{
+      if(!peerConnection) await setupPeerConnection();
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+      const answer=await peerConnection.createAnswer();
+      await peerConnection.setLocalDescription(answer);
+      socket.emit('rtc-answer',{roomId,answer});
+    }catch(e){console.error('Handle offer error:',e);}
+  });
+
+  socket.on('rtc-answer',async(data)=>{
+    try{
+      if(peerConnection && peerConnection.signalingState!=='stable'){
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+      }
+    }catch(e){console.error('Handle answer error:',e);}
+  });
+
+  socket.on('rtc-ice',async(data)=>{
+    try{
+      if(peerConnection && data.candidate){
+        await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+      }
+    }catch(e){console.error('ICE error:',e);}
+  });
+
   socket.on('partner-camera-toggle',(data)=>{
-    const remotePlaceholder=document.getElementById('remotePlaceholder');
     const remoteVideo=document.getElementById('remoteVideo');
+    const remotePlaceholder=document.getElementById('remotePlaceholder');
     if(data.enabled){
-      remotePlaceholder.style.display='none';
       remoteVideo.style.display='block';
+      remotePlaceholder.style.display='none';
     }else{
-      remotePlaceholder.style.display='flex';
       remoteVideo.style.display='none';
+      remotePlaceholder.style.display='flex';
     }
   });
+
   socket.on('blocked',()=>{alert('تم حظرك');window.location.href='/';});
   socket.on('maintenance',()=>{alert('الموقع في وضع الصيانة');window.location.href='/';});
   socket.on('room-deleted',()=>{showNotification('تم حذف الغرفة','error');setTimeout(()=>leaveRoom(),2000);});
@@ -1009,168 +706,79 @@ function setStatus(connected){
 }
 
 // ============================================
-// ✅ WebRTC Video Call
+// ✅ WebRTC - فيديو فقط بدون صوت
 // ============================================
+async function setupPeerConnection(){
+  peerConnection=new RTCPeerConnection(RTC_CONFIG);
+
+  // أضف فيديو فقط إذا كان متاحاً
+  if(localStream){
+    localStream.getVideoTracks().forEach(track=>{
+      peerConnection.addTrack(track,localStream);
+    });
+  }
+
+  // استقبال فيديو الشريك
+  peerConnection.ontrack=(event)=>{
+    const remoteVideo=document.getElementById('remoteVideo');
+    if(event.streams && event.streams[0]){
+      remoteVideo.srcObject=event.streams[0];
+    }
+    remoteVideo.style.display='block';
+    document.getElementById('remotePlaceholder').style.display='none';
+    document.getElementById('partnerInfoOverlay').style.display='flex';
+    document.getElementById('qualityIndicator').style.display='flex';
+  };
+
+  // ICE candidates
+  peerConnection.onicecandidate=(event)=>{
+    if(event.candidate && socket && roomId){
+      socket.emit('rtc-ice',{roomId,candidate:event.candidate});
+    }
+  };
+
+  peerConnection.oniceconnectionstatechange=()=>{
+    console.log('ICE state:',peerConnection.iceConnectionState);
+    if(peerConnection.iceConnectionState==='connected'){
+      showNotification('✅ تم الاتصال بالفيديو','success');
+    }
+  };
+
+  return peerConnection;
+}
+
 async function initVideoCall(){
   try{
+    // ✅ فيديو فقط - الصوت عبر نظام الترجمة
     localStream=await navigator.mediaDevices.getUserMedia({
       video:true,
       audio:false
     });
+
     const localVideo=document.getElementById('localVideo');
     localVideo.srcObject=localStream;
     document.getElementById('localPlaceholder').style.display='none';
-    isVideoCallActive=true;
-    peerConnection=new RTCPeerConnection(RTC_CONFIG);
-    localStream.getVideoTracks().forEach(track=>{
-      peerConnection.addTrack(track,localStream);
-    });
-    peerConnection.ontrack=(event)=>{
-      const remoteVideo=document.getElementById('remoteVideo');
-      remoteVideo.srcObject=event.streams[0];
-      remoteVideo.style.display='block';
-      document.getElementById('remotePlaceholder').style.display='none';
-      document.getElementById('partnerInfoOverlay').style.display='flex';
-      document.getElementById('qualityIndicator').style.display='flex';
-    };
-    peerConnection.onicecandidate=(event)=>{
-      if(event.candidate&&socket&&roomId){
-        socket.emit('rtc-ice',{roomId,candidate:event.candidate});
-      }
-    };
-    peerConnection.oniceconnectionstatechange=()=>{
-      if(peerConnection.iceConnectionState==='connected'){
-        showNotification('✅ تم الاتصال بالفيديو','success');
-      }
-    };
+
+    await setupPeerConnection();
+
+    // إذا كان الشريك موجوداً، أرسل offer
     if(partnerInfo){
-      await createAndSendOffer();
-    }
-  }catch(error){
-    console.error('Video init error:',error);
-    if(error.name==='NotAllowedError'){
-      showNotification('يرجى السماح بالوصول للكاميرا','error');
-    }else if(error.name==='NotFoundError'){
-      showNotification('لا توجد كاميرا متاحة','warning');
-    }
-  }
-}
-  try{
-    // Get user media
-    localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
-    const localVideo=document.getElementById('localVideo');
-    localVideo.srcObject=localStream;
-    document.getElementById('localPlaceholder').style.display='none';
-    isVideoCallActive=true;
-
-    // Create peer connection
-    peerConnection=new RTCPeerConnection(RTC_CONFIG);
-
-    // Add local tracks
-    localStream.getTracks().forEach(track=>{
-      peerConnection.addTrack(track,localStream);
-    });
-
-    // Handle remote stream
-    peerConnection.ontrack=(event)=>{
-      const remoteVideo=document.getElementById('remoteVideo');
-      remoteVideo.srcObject=event.streams[0];
-      remoteVideo.style.display='block';
-      document.getElementById('remotePlaceholder').style.display='none';
-      document.getElementById('partnerInfoOverlay').style.display='flex';
-      document.getElementById('qualityIndicator').style.display='flex';
-    };
-
-    // ICE candidates
-    peerConnection.onicecandidate=(event)=>{
-      if(event.candidate&&socket&&roomId){
-        socket.emit('rtc-ice',{roomId,candidate:event.candidate});
-      }
-    };
-
-    peerConnection.oniceconnectionstatechange=()=>{
-      console.log('ICE state:',peerConnection.iceConnectionState);
-      if(peerConnection.iceConnectionState==='connected'){
-        showNotification('✅ تم الاتصال بالفيديو','success');
-      }
-    };
-
-    // If we are the host, create and send offer
-    if(partnerInfo){
-      await createAndSendOffer();
+      const offer=await peerConnection.createOffer({
+        offerToReceiveVideo:true,
+        offerToReceiveAudio:false
+      });
+      await peerConnection.setLocalDescription(offer);
+      socket.emit('rtc-offer',{roomId,offer});
     }
 
   }catch(error){
-    console.error('Video init error:',error);
+    console.error('Video error:',error);
     if(error.name==='NotAllowedError'){
-      showNotification('يرجى السماح بالوصول للكاميرا والميكروفون','error');
+      showNotification('يرجى السماح بالكاميرا للفيديو','warning');
     }else if(error.name==='NotFoundError'){
-      showNotification('لم يتم العثور على كاميرا. سيتم الاتصال بالصوت فقط','warning');
-      // Try audio only
-      try{
-        localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
-        isVideoCallActive=true;
-        peerConnection=new RTCPeerConnection(RTC_CONFIG);
-        localStream.getTracks().forEach(track=>peerConnection.addTrack(track,localStream));
-        peerConnection.ontrack=(e)=>{const v=document.getElementById('remoteVideo');v.srcObject=e.streams[0];};
-        peerConnection.onicecandidate=(e)=>{if(e.candidate&&socket&&roomId)socket.emit('rtc-ice',{roomId,candidate:e.candidate});};
-        if(partnerInfo)await createAndSendOffer();
-      }catch(e){console.error('Audio only failed:',e);}
+      showNotification('لا توجد كاميرا - سيعمل بالصوت فقط','warning');
     }
   }
-}
-
-async function createAndSendOffer(){
-  try{
-    const offer=await peerConnection.createOffer({offerToReceiveAudio:true,offerToReceiveVideo:true});
-    await peerConnection.setLocalDescription(offer);
-    socket.emit('rtc-offer',{roomId,offer});
-  }catch(e){console.error('Offer error:',e);}
-}
-
-async function handleRTCOffer(data){
-  try{
-    if(!peerConnection){
-      // Initialize if not already done
-      peerConnection=new RTCPeerConnection(RTC_CONFIG);
-      if(localStream){
-        localStream.getTracks().forEach(track=>peerConnection.addTrack(track,localStream));
-      }
-      peerConnection.ontrack=(event)=>{
-        const remoteVideo=document.getElementById('remoteVideo');
-        remoteVideo.srcObject=event.streams[0];
-        remoteVideo.style.display='block';
-        document.getElementById('remotePlaceholder').style.display='none';
-        document.getElementById('partnerInfoOverlay').style.display='flex';
-        document.getElementById('qualityIndicator').style.display='flex';
-      };
-      peerConnection.onicecandidate=(event)=>{
-        if(event.candidate&&socket&&roomId){
-          socket.emit('rtc-ice',{roomId,candidate:event.candidate});
-        }
-      };
-    }
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
-    const answer=await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
-    socket.emit('rtc-answer',{roomId,answer});
-  }catch(e){console.error('Handle offer error:',e);}
-}
-
-async function handleRTCAnswer(data){
-  try{
-    if(peerConnection&&peerConnection.signalingState!=='stable'){
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-    }
-  }catch(e){console.error('Handle answer error:',e);}
-}
-
-async function handleRTCIce(data){
-  try{
-    if(peerConnection&&data.candidate){
-      await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-    }
-  }catch(e){console.error('ICE error:',e);}
 }
 
 function stopVideoCall(){
@@ -1189,50 +797,46 @@ function stopVideoCall(){
   document.getElementById('partnerInfoOverlay').style.display='none';
   document.getElementById('qualityIndicator').style.display='none';
   document.getElementById('localPlaceholder').style.display='flex';
-  isVideoCallActive=false;
 }
 
-// Toggle Camera
 function toggleCamera(){
-  if(!localStream) return;
+  if(!localStream){showNotification('الكاميرا غير متاحة','error');return;}
   const videoTrack=localStream.getVideoTracks()[0];
   if(!videoTrack) return;
   isCameraOn=!isCameraOn;
   videoTrack.enabled=isCameraOn;
 
-  // Update UI
-  const icon=document.getElementById('cameraIcon');
-  const camBtn=document.getElementById('cameraBtn');
+  const cameraIcon=document.getElementById('cameraIcon');
+  const cameraBtn=document.getElementById('cameraBtn');
   const videoCamIcon=document.getElementById('videoCamIcon');
   const videoCamBtn=document.getElementById('videoCamBtn');
   const localPlaceholder=document.getElementById('localPlaceholder');
   const localVideoWrapper=document.getElementById('localVideoWrapper');
 
   if(isCameraOn){
-    icon.className='fas fa-video';
-    camBtn.classList.remove('off');
+    cameraIcon.className='fas fa-video';
+    cameraBtn.classList.remove('off');
     videoCamIcon.className='fas fa-video';
     videoCamBtn.classList.remove('off');
     localPlaceholder.style.display='none';
     localVideoWrapper.classList.remove('camera-off');
   }else{
-    icon.className='fas fa-video-slash';
-    camBtn.classList.add('off');
+    cameraIcon.className='fas fa-video-slash';
+    cameraBtn.classList.add('off');
     videoCamIcon.className='fas fa-video-slash';
     videoCamBtn.classList.add('off');
     localPlaceholder.style.display='flex';
     localVideoWrapper.classList.add('camera-off');
   }
 
-  // Notify partner
-  if(socket&&roomId){
+  if(socket && roomId){
     socket.emit('partner-camera-toggle',{roomId,enabled:isCameraOn});
   }
   showNotification(isCameraOn?'تم تشغيل الكاميرا 📷':'تم إيقاف الكاميرا 📷','info');
 }
 
 // ============================================
-// Expand/Fullscreen Video
+// Expand Video
 // ============================================
 function expandVideo(type){
   const modal=document.getElementById('videoModal');
@@ -1240,33 +844,30 @@ function expandVideo(type){
   const label=document.getElementById('modalVideoLabel');
 
   if(type==='remote'){
-    const remoteVideo=document.getElementById('remoteVideo');
-    if(remoteVideo.srcObject){
-      modalVideo.srcObject=remoteVideo.srcObject;
-      label.innerText=partnerInfo?`${partnerInfo.name} - ${langs[partnerLang]?.name}`:'الشريك';
+    const rv=document.getElementById('remoteVideo');
+    if(rv.srcObject){
+      modalVideo.srcObject=rv.srcObject;
+      label.innerText=partnerInfo?`${partnerInfo.name}`:'الشريك';
     }else{
       showNotification('لا يوجد فيديو للشريك بعد','error');
       return;
     }
   }else{
-    const localVideo=document.getElementById('localVideo');
-    if(localVideo.srcObject){
-      modalVideo.srcObject=localVideo.srcObject;
-      label.innerText=`${myName} - أنت`;
+    const lv=document.getElementById('localVideo');
+    if(lv.srcObject){
+      modalVideo.srcObject=lv.srcObject;
+      label.innerText=myName;
     }else{
-      showNotification('الكاميرا المحلية غير متاحة','error');
+      showNotification('الكاميرا غير متاحة','error');
       return;
     }
   }
-
   modal.classList.add('show');
 }
 
 function closeVideoModal(){
-  const modal=document.getElementById('videoModal');
-  const modalVideo=document.getElementById('modalVideo');
-  modal.classList.remove('show');
-  modalVideo.srcObject=null;
+  document.getElementById('videoModal').classList.remove('show');
+  document.getElementById('modalVideo').srcObject=null;
 }
 
 // ============================================
@@ -1299,29 +900,25 @@ function initDraggable(){
   },{passive:false});
 
   document.addEventListener('mousemove',(e)=>{
-    if(!isDragging)return;
+    if(!isDragging) return;
     const dx=e.clientX-startX;
     const dy=e.clientY-startY;
     const parent=el.parentElement.getBoundingClientRect();
-    const maxLeft=parent.width-el.offsetWidth-5;
-    const maxBottom=parent.height-el.offsetHeight-5;
-    let newLeft=Math.max(5,Math.min(startLeft+dx,maxLeft));
-    let newBottom=Math.max(5,Math.min(startBottom-dy,maxBottom));
+    let newLeft=Math.max(5,Math.min(startLeft+dx,parent.width-el.offsetWidth-5));
+    let newBottom=Math.max(5,Math.min(startBottom-dy,parent.height-el.offsetHeight-5));
     el.style.left=newLeft+'px';
     el.style.right='auto';
     el.style.bottom=newBottom+'px';
   });
 
   document.addEventListener('touchmove',(e)=>{
-    if(!isDragging)return;
+    if(!isDragging) return;
     const touch=e.touches[0];
     const dx=touch.clientX-startX;
     const dy=touch.clientY-startY;
     const parent=el.parentElement.getBoundingClientRect();
-    const maxLeft=parent.width-el.offsetWidth-5;
-    const maxBottom=parent.height-el.offsetHeight-5;
-    let newLeft=Math.max(5,Math.min(startLeft+dx,maxLeft));
-    let newBottom=Math.max(5,Math.min(startBottom-dy,maxBottom));
+    let newLeft=Math.max(5,Math.min(startLeft+dx,parent.width-el.offsetWidth-5));
+    let newBottom=Math.max(5,Math.min(startBottom-dy,parent.height-el.offsetHeight-5));
     el.style.left=newLeft+'px';
     el.style.right='auto';
     el.style.bottom=newBottom+'px';
@@ -1332,13 +929,6 @@ function initDraggable(){
   document.addEventListener('touchend',()=>{isDragging=false;});
 }
 
-// Add RTC socket events to server.js (needed)
-function setupRTCSocketEvents(){
-  if(socket){
-    // These are handled in initSocket above
-  }
-}
-
 // ============================================
 // Timer
 // ============================================
@@ -1346,11 +936,15 @@ function startTimer(){
   const start=Date.now();
   timerInterval=setInterval(()=>{
     const e=Math.floor((Date.now()-start)/1000);
-    document.getElementById('callTimer').innerText=`${Math.floor(e/60).toString().padStart(2,'0')}:${(e%60).toString().padStart(2,'0')}`;
+    document.getElementById('callTimer').innerText=
+      `${Math.floor(e/60).toString().padStart(2,'0')}:${(e%60).toString().padStart(2,'0')}`;
   },1000);
 }
 function stopTimer(){clearInterval(timerInterval);document.getElementById('callTimer').innerText='00:00';}
 
+// ============================================
+// Room Functions
+// ============================================
 function togglePrivate(){
   isPrivate=!isPrivate;
   document.getElementById('privateToggle').classList.toggle('on',isPrivate);
@@ -1365,8 +959,13 @@ async function checkRoomPrivacy(){
     const data=await res.json();
     if(!data.exists){showNotification('الغرفة غير موجودة ❌','error');return;}
     if(data.isFull){showNotification('الغرفة ممتلئة ❌','error');return;}
-    if(data.isPrivate){document.getElementById('joinPasswordGroup').style.display='flex';showNotification('غرفة خاصة 🔒','info');}
-    else{document.getElementById('joinPasswordGroup').style.display='none';showNotification('الغرفة متاحة ✅','success');}
+    if(data.isPrivate){
+      document.getElementById('joinPasswordGroup').style.display='flex';
+      showNotification('غرفة خاصة 🔒','info');
+    }else{
+      document.getElementById('joinPasswordGroup').style.display='none';
+      showNotification('الغرفة متاحة ✅','success');
+    }
   }catch(e){showNotification('تعذر التحقق','error');}
 }
 
@@ -1397,8 +996,12 @@ function joinRoom(){
       roomId=res.roomId;
       if(res.partner){partnerInfo=res.partner;partnerLang=res.partner.language;targetLang=partnerLang;}
       saveSession();enterRoom(false);
-      if(res.partner){updatePartnerUI(res.partner);hideWaiting();enableMic();startTimer();setTimeout(()=>initVideoCall(),500);}
-      if(res.messages)res.messages.forEach(msg=>addMessage(msg,msg.senderId===socket.id));
+      if(res.partner){
+        updatePartnerUI(res.partner);
+        hideWaiting();enableMic();startTimer();
+        setTimeout(()=>initVideoCall(),500);
+      }
+      if(res.messages) res.messages.forEach(msg=>addMessage(msg,msg.senderId===socket.id));
     }else showNotification(res.error||'حدث خطأ','error');
   });
 }
@@ -1413,8 +1016,8 @@ function enterRoom(isHost){
   document.getElementById('landing').classList.remove('active');
   document.getElementById('room-page').classList.add('active');
   showWaiting();
-  // Initialize video after entering room
-  setTimeout(()=>initVideoCall(),1000);
+  // ابدأ تهيئة الفيديو مباشرة
+  setTimeout(()=>initVideoCall(),800);
 }
 
 function updatePartnerUI(data){
@@ -1451,47 +1054,79 @@ function enableMic(){
 function disableMic(){
   document.getElementById('micBtnMain').disabled=true;
   document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelWaiting;
-  if(isRecording)stopRecording();
+  if(isRecording) stopRecording();
 }
 
 // ============================================
-// Recording
+// ✅ Recording - Speech to Text + Translation
 // ============================================
-function toggleRecording(){if(isRecording)stopRecording();else startRecording();}
+function toggleRecording(){
+  if(isRecording) stopRecording();
+  else startRecording();
+}
 
 function startRecording(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){showNotification('استخدم Chrome أو Edge','error');return;}
   if(isMuted){showNotification('الميكروفون مكتوم 🔇','error');return;}
+
   recognition=new SR();
   recognition.lang=langs[myLang]?.voice||'ar-SA';
-  recognition.continuous=false;recognition.interimResults=false;
+  recognition.continuous=false;
+  recognition.interimResults=false;
+
   recognition.onstart=()=>{
     isRecording=true;
-    setMicRecording(true);
+    setMicUI(true);
     document.getElementById('visualizer').classList.add('active');
     document.getElementById('micRing').classList.add('active');
     document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelListening;
     document.getElementById('meParticipant').classList.add('speaking');
     socket.emit('speaking',{roomId,speaking:true});
   };
+
   recognition.onresult=async(event)=>{
     const text=event.results[0][0].transcript;
-    if(text.trim()){document.getElementById('originalText').innerText=text;await translateAndSend(text);}
+    if(text.trim()){
+      document.getElementById('originalText').innerText=text;
+      await translateAndSend(text);
+    }
   };
+
   recognition.onerror=(event)=>{
-    if(event.error==='not-allowed'){showNotification('يرجى السماح بالميكروفون','error');stopRecording();}
+    if(event.error==='not-allowed'){
+      showNotification('يرجى السماح بالميكروفون','error');
+      stopRecording();
+    }
   };
+
   recognition.onend=()=>{
     document.getElementById('meParticipant').classList.remove('speaking');
     socket.emit('speaking',{roomId,speaking:false});
-    if(isRecording){setTimeout(()=>{if(isRecording)try{recognition.start();}catch(e){stopRecording();}},200);}
-    else{setMicRecording(false);document.getElementById('visualizer').classList.remove('active');document.getElementById('micRing').classList.remove('active');document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelReady;}
+    if(isRecording){
+      // استمر في الاستماع تلقائياً
+      setTimeout(()=>{
+        if(isRecording){
+          try{recognition.start();}
+          catch(e){stopRecording();}
+        }
+      },200);
+    }else{
+      setMicUI(false);
+      document.getElementById('visualizer').classList.remove('active');
+      document.getElementById('micRing').classList.remove('active');
+      document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelReady;
+    }
   };
-  try{recognition.start();}catch(e){stopRecording();}
+
+  try{recognition.start();}
+  catch(e){
+    console.error('Recognition error:',e);
+    stopRecording();
+  }
 }
 
-function setMicRecording(recording){
+function setMicUI(recording){
   const btn=document.getElementById('micBtnMain');
   const icon=document.getElementById('micBtnIcon');
   btn.classList.toggle('recording',recording);
@@ -1500,80 +1135,147 @@ function setMicRecording(recording){
 
 function stopRecording(){
   isRecording=false;
-  if(recognition)try{recognition.stop();}catch(e){}
-  setMicRecording(false);
+  if(recognition){try{recognition.stop();}catch(e){}}
+  setMicUI(false);
   document.getElementById('visualizer').classList.remove('active');
   document.getElementById('micRing').classList.remove('active');
   document.getElementById('meParticipant').classList.remove('speaking');
   document.getElementById('micLabel').innerText=uiTexts[currentUILang].micLabelReady;
-  if(socket)socket.emit('speaking',{roomId,speaking:false});
+  if(socket) socket.emit('speaking',{roomId,speaking:false});
 }
 
+// ============================================
+// ✅ Translate & Send
+// ============================================
 async function translateAndSend(text){
   const tLang=partnerInfo?partnerInfo.language:targetLang;
   try{
     const url=`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${myLang}&tl=${tLang}&dt=t&q=${encodeURIComponent(text)}`;
-    const res=await fetch(url);const data=await res.json();
+    const res=await fetch(url);
+    const data=await res.json();
     let translated='';
-    if(data&&data[0])data[0].forEach(item=>{if(item&&item[0])translated+=item[0];});
-    document.getElementById('translatedText').innerText=translated;
-    socket.emit('voice-message',{roomId,originalText:text,translatedText:translated,senderName:myName,senderLanguage:myLang,targetLanguage:tLang});
-    addMessage({senderId:socket.id,senderName:myName,originalText:text,translatedText:translated,senderLanguage:myLang,targetLanguage:tLang,timestamp:new Date()},true);
-  }catch(err){console.error(err);showNotification('خطأ في الترجمة','error');}
-}
+    if(data&&data[0]) data[0].forEach(item=>{if(item&&item[0])translated+=item[0];});
 
-function speakText(text,lang){
-  if(!text||isSpeakerOff)return;
-  if(!audioActivated){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    ctx.resume();
-    audioActivated=true;
-  }catch(e){
-    document.getElementById('audioActivateBtn').classList.add('show');
-    return;
+    document.getElementById('translatedText').innerText=translated;
+
+    // ✅ أرسل النص المترجم للشريك عبر Socket
+    socket.emit('voice-message',{
+      roomId,
+      originalText:text,
+      translatedText:translated,
+      senderName:myName,
+      senderLanguage:myLang,
+      targetLanguage:tLang
+    });
+
+    // ✅ أضف في سجل المحادثة
+    addMessage({
+      senderId:socket.id,
+      senderName:myName,
+      originalText:text,
+      translatedText:translated,
+      senderLanguage:myLang,
+      targetLanguage:tLang,
+      timestamp:new Date()
+    },true);
+
+    // ✅ أنت لا تسمع صوتك - الشريك هو من يسمع
+  }catch(err){
+    console.error(err);
+    showNotification('خطأ في الترجمة','error');
   }
 }
+
+// ============================================
+// ✅ Speak Text (محسّن للهاتف والكمبيوتر)
+// ============================================
+function speakText(text,lang){
+  if(!text||isSpeakerOff) return;
+
+  // تفعيل الصوت تلقائياً
+  if(!audioActivated){
+    try{
+      const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      ctx.resume();
+      audioActivated=true;
+    }catch(e){
+      document.getElementById('audioActivateBtn').classList.add('show');
+      return;
+    }
+  }
+
   window.speechSynthesis.cancel();
   const voiceLang=langs[lang]?.voice||'en-US';
+
   function doSpeak(voices){
     const utt=new SpeechSynthesisUtterance(text);
-    utt.lang=voiceLang;utt.rate=0.88;utt.pitch=1;utt.volume=1;
-    const voice=voices.find(v=>v.lang===voiceLang)||voices.find(v=>v.lang.startsWith(lang));
-    if(voice)utt.voice=voice;
-    utt.onstart=()=>{const k=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.resume();else clearInterval(k);},5000);};
+    utt.lang=voiceLang;
+    utt.rate=0.88;
+    utt.pitch=1;
+    utt.volume=1;
+
+    const voice=voices.find(v=>v.lang===voiceLang)
+      ||voices.find(v=>v.lang.startsWith(lang));
+    if(voice) utt.voice=voice;
+
+    // Fix for Chrome mobile TTS cutoff
+    utt.onstart=()=>{
+      const keepAlive=setInterval(()=>{
+        if(window.speechSynthesis.speaking){
+          window.speechSynthesis.resume();
+        }else{
+          clearInterval(keepAlive);
+        }
+      },5000);
+    };
+
     utt.onerror=e=>console.error('TTS:',e);
     window.speechSynthesis.speak(utt);
   }
+
   const voices=window.speechSynthesis.getVoices();
-  if(voices.length>0)doSpeak(voices);
-  else{window.speechSynthesis.onvoiceschanged=()=>doSpeak(window.speechSynthesis.getVoices());setTimeout(()=>doSpeak(window.speechSynthesis.getVoices()),500);}
+  if(voices.length>0){
+    doSpeak(voices);
+  }else{
+    window.speechSynthesis.onvoiceschanged=()=>{
+      doSpeak(window.speechSynthesis.getVoices());
+    };
+    setTimeout(()=>doSpeak(window.speechSynthesis.getVoices()),500);
+  }
 }
 
+// ============================================
+// Messages
+// ============================================
 function addMessage(msg,isOwn){
   const container=document.getElementById('messages');
   const empty=container.querySelector('.empty-msgs');
-  if(empty)empty.remove();
+  if(empty) empty.remove();
   const time=new Date(msg.timestamp).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
   const div=document.createElement('div');
   div.className=`msg ${isOwn?'':'partner'}`;
-  div.innerHTML=`<div class="msg-header"><span class="msg-sender">${msg.senderName}</span><span class="msg-time">${time}</span></div><div class="msg-original">${langs[msg.senderLanguage]?.flag||'🌐'} ${msg.originalText}</div><div class="msg-translated">${langs[msg.targetLanguage]?.flag||'🌐'} ${msg.translatedText}</div>`;
-  container.appendChild(div);container.scrollTop=container.scrollHeight;messages.push(msg);
+  div.innerHTML=`
+    <div class="msg-header">
+      <span class="msg-sender">${msg.senderName}</span>
+      <span class="msg-time">${time}</span>
+    </div>
+    <div class="msg-original">${langs[msg.senderLanguage]?.flag||'🌐'} ${msg.originalText}</div>
+    <div class="msg-translated">${langs[msg.targetLanguage]?.flag||'🌐'} ${msg.translatedText}</div>
+  `;
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
+  messages.push(msg);
 }
 
+// ============================================
+// Controls
+// ============================================
 function toggleMute(){
   isMuted=!isMuted;
   document.getElementById('muteIcon').className=isMuted?'fas fa-microphone-slash':'fas fa-microphone';
   document.getElementById('muteBtn').classList.toggle('off',isMuted);
-  if(isMuted&&isRecording)stopRecording();
-  showNotification(isMuted?'تم كتم الميكروفون 🔇':'تم تفعيل الميكروفون 🎤','info');
-}
-  isMuted=!isMuted;
-  document.getElementById('muteIcon').className=isMuted?'fas fa-microphone-slash':'fas fa-microphone';
-  document.getElementById('muteBtn').classList.toggle('off',isMuted);
-  // Also mute/unmute in stream
-  if(localStream){const audioTrack=localStream.getAudioTracks()[0];if(audioTrack)audioTrack.enabled=!isMuted;}
-  if(isMuted&&isRecording)stopRecording();
+  // لا نكتم localStream لأنه فيديو فقط
+  if(isMuted&&isRecording) stopRecording();
   showNotification(isMuted?'تم كتم الميكروفون 🔇':'تم تفعيل الميكروفون 🎤','info');
 }
 
@@ -1581,7 +1283,7 @@ function toggleSpeaker(){
   isSpeakerOff=!isSpeakerOff;
   document.getElementById('speakerIcon').className=isSpeakerOff?'fas fa-volume-xmark':'fas fa-volume-high';
   document.getElementById('speakerBtn').classList.toggle('off',isSpeakerOff);
-  if(isSpeakerOff)window.speechSynthesis.cancel();
+  if(isSpeakerOff) window.speechSynthesis.cancel();
   showNotification(isSpeakerOff?'تم إيقاف الصوت 🔈':'تم تفعيل الصوت 🔊','info');
 }
 
@@ -1595,17 +1297,32 @@ function leaveRoom(){
   window.speechSynthesis.cancel();
   stopTimer();
   clearSession();
-  if(socket&&roomId)socket.emit('leave-room',{roomId});
-  if(socket)socket.emit('ai-clear-context');
+  if(socket&&roomId) socket.emit('leave-room',{roomId});
+  if(socket) socket.emit('ai-clear-context');
   roomId=null;partnerInfo=null;messages=[];
   document.getElementById('messages').innerHTML='<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div>';
   document.getElementById('room-page').classList.remove('active');
   document.getElementById('landing').classList.add('active');
 }
 
-function copyRoomCode(){if(!roomId)return;navigator.clipboard.writeText(roomId).then(()=>showNotification('تم نسخ الرمز 📋','success'));}
-function copyInviteLink(){const link=`${window.location.href.split('?')[0]}?join=${roomId}`;navigator.clipboard.writeText(link).then(()=>showNotification('تم نسخ رابط الدعوة 🔗','success'));}
-function copyResult(id){const text=document.getElementById(id).innerText;if(!text||text.includes('سيظهر'))return;navigator.clipboard.writeText(text).then(()=>showNotification('تم النسخ ✅','success'));}
+function copyRoomCode(){
+  if(!roomId) return;
+  navigator.clipboard.writeText(roomId)
+    .then(()=>showNotification('تم نسخ الرمز 📋','success'));
+}
+
+function copyInviteLink(){
+  const link=`${window.location.href.split('?')[0]}?join=${roomId}`;
+  navigator.clipboard.writeText(link)
+    .then(()=>showNotification('تم نسخ رابط الدعوة 🔗','success'));
+}
+
+function copyResult(id){
+  const text=document.getElementById(id).innerText;
+  if(!text||text.includes('سيظهر')) return;
+  navigator.clipboard.writeText(text)
+    .then(()=>showNotification('تم النسخ ✅','success'));
+}
 
 function downloadHistory(){
   if(messages.length===0){showNotification('لا يوجد سجل!','error');return;}
@@ -1616,24 +1333,39 @@ function downloadHistory(){
   });
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));
-  a.download=`TranslationCall_${roomId}_${Date.now()}.txt`;a.click();
+  a.download=`TranslationCall_${roomId}_${Date.now()}.txt`;
+  a.click();
   showNotification('تم التحميل ✅','success');
 }
 
-function clearMessages(){if(!confirm('مسح السجل؟'))return;messages=[];document.getElementById('messages').innerHTML='<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div>';}
+function clearMessages(){
+  if(!confirm('مسح السجل؟')) return;
+  messages=[];
+  document.getElementById('messages').innerHTML='<div class="empty-msgs"><i class="fas fa-comments" style="font-size:2rem;opacity:0.2;display:block;margin-bottom:10px;"></i>لا توجد رسائل بعد</div>';
+}
 
 // ============================================
-// AI Assistant
+// AI Assistant - Gemini
 // ============================================
 function setAIMode(mode,btn){
   aiMode=mode;
   document.querySelectorAll('.ai-mode-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
+  if(btn) btn.classList.add('active');
   const practiceSetup=document.getElementById('practiceSetup');
   const suggestions=document.getElementById('aiSuggestions');
-  if(mode==='language-teacher'){practiceSetup.classList.remove('hidden');suggestions.style.display='none';addAIMessage('bot',`🎓 وضع مدرّس اللغة\n\nاختر اللغة التي تريد تعلمها وابدأ جلسة التعلم!\nسأتحدث معك بها وأصحح أخطاءك بلطف 😊`);}
-  else if(mode==='translator'){practiceSetup.classList.add('hidden');suggestions.style.display='flex';addAIMessage('bot',`🌐 وضع المترجم الذكي\n\nأنا هنا لمساعدتك في:\n• ترجمة أي جملة بدقة عالية\n• شرح الفروق الدقيقة\n• نصائح ثقافية متعمقة\n\nاكتب أو قل ما تريد ترجمته! 🚀`);}
-  else{practiceSetup.classList.add('hidden');suggestions.style.display='flex';addAIMessage('bot',`🤖 وضع المساعد العام\n\nيمكنني مساعدتك في:\n• ترجمة الجمل\n• نصائح ثقافية\n• تعلم تعابير جديدة\n\nاسألني أي شيء! 😊`);}
+  if(mode==='language-teacher'){
+    practiceSetup.classList.remove('hidden');
+    suggestions.style.display='none';
+    addAIMessage('bot','🎓 وضع مدرّس اللغة\n\nاختر اللغة التي تريد تعلمها وابدأ!\nسأتحدث معك بها وأصحح أخطاءك 😊');
+  }else if(mode==='translator'){
+    practiceSetup.classList.add('hidden');
+    suggestions.style.display='flex';
+    addAIMessage('bot','🌐 وضع المترجم الذكي\n\nأرسل لي أي جملة وسأترجمها بدقة عالية مع شرح ثقافي 🚀');
+  }else{
+    practiceSetup.classList.add('hidden');
+    suggestions.style.display='flex';
+    addAIMessage('bot','🤖 وضع المساعد العام\n\nاسألني أي شيء! ترجمة، نصائح ثقافية، تعابير... 😊');
+  }
 }
 
 function startPractice(){
@@ -1641,10 +1373,10 @@ function startPractice(){
   isPracticeActive=true;
   document.getElementById('practiceSetup').classList.add('hidden');
   document.getElementById('practiceBanner').classList.add('show');
-  document.getElementById('practiceBannerText').innerText=`🎓 تعلم ${langs[practiceTargetLang]?.name} - تحدث وسيصحح AI أخطاءك`;
-  document.getElementById('aiInput').placeholder=`تحدث أو اكتب بـ${langs[practiceTargetLang]?.name}...`;
+  document.getElementById('practiceBannerText').innerText=`🎓 تعلم ${langs[practiceTargetLang]?.name}`;
+  document.getElementById('aiInput').placeholder=`تحدث بـ${langs[practiceTargetLang]?.name}...`;
   socket.emit('ai-clear-context');
-  addAIMessage('bot',`🎓 ممتاز! بدأت جلسة تعلم ${langs[practiceTargetLang]?.name}!\n\nسأتحدث معك بها وأصحح أخطاءك بلطف.\n\nابدأ بتقديم نفسك! 🚀`);
+  addAIMessage('bot',`🎓 ممتاز! بدأت جلسة تعلم ${langs[practiceTargetLang]?.name}!\n\nابدأ بتقديم نفسك 🚀`);
 }
 
 function stopPractice(){
@@ -1653,19 +1385,21 @@ function stopPractice(){
   document.getElementById('practiceSetup').classList.remove('hidden');
   document.getElementById('aiInput').placeholder='اسأل Gemini AI...';
   socket.emit('ai-clear-context');
-  addAIMessage('bot','تم إيقاف جلسة التعلم. يمكنك بدء جلسة جديدة في أي وقت! 😊');
+  addAIMessage('bot','تم إيقاف جلسة التعلم 😊');
 }
 
 async function sendAI(){
-  if(aiIsTyping)return;
+  if(aiIsTyping) return;
   const input=document.getElementById('aiInput');
   const text=input.value.trim();
-  if(!text)return;
+  if(!text) return;
   input.value='';
   await processAIMessage(text);
 }
 
-async function sendAISuggestion(text){if(!aiIsTyping)await processAIMessage(text);}
+async function sendAISuggestion(text){
+  if(!aiIsTyping) await processAIMessage(text);
+}
 
 async function processAIMessage(text){
   aiIsTyping=true;
@@ -1673,39 +1407,66 @@ async function processAIMessage(text){
   addAIMessage('user',text);
   document.getElementById('aiTyping').classList.add('show');
   document.getElementById('aiMessages').scrollTop=99999;
+
   const context=isPracticeActive?{targetLang:practiceTargetLang}:null;
-  socket.emit('ai-chat',{message:text,language:myLang,mode:isPracticeActive?'language-teacher':aiMode,context},(res)=>{
+
+  socket.emit('ai-chat',{
+    message:text,
+    language:myLang,
+    mode:isPracticeActive?'language-teacher':aiMode,
+    context
+  },(res)=>{
     document.getElementById('aiTyping').classList.remove('show');
     aiIsTyping=false;
     document.getElementById('aiSendBtn').disabled=false;
+
     if(res.success){
       addAIMessage('bot',res.response);
-      if(res.feedback)setTimeout(()=>addAIMessage('feedback',res.feedback),500);
+      if(res.feedback) setTimeout(()=>addAIMessage('feedback',res.feedback),500);
       if(!isSpeakerOff&&audioActivated){
         const speakLang=isPracticeActive?practiceTargetLang:myLang;
         setTimeout(()=>speakText(res.response.split('\n')[0],speakLang),300);
       }
-    }else{addAIMessage('error',res.error||'حدث خطأ في الاتصال بـ Gemini AI');}
+    }else{
+      addAIMessage('error',res.error||'حدث خطأ في Gemini AI');
+    }
     document.getElementById('aiMessages').scrollTop=99999;
   });
 }
 
-function toggleAIVoice(){if(isAIVoiceRecording)stopAIVoice();else startAIVoice();}
+function toggleAIVoice(){
+  if(isAIVoiceRecording) stopAIVoice();
+  else startAIVoice();
+}
 
 function startAIVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){showNotification('استخدم Chrome','error');return;}
   const voiceLang=isPracticeActive?langs[practiceTargetLang]?.voice:langs[myLang]?.voice||'ar-SA';
-  aiVoiceRecognition=new SR();aiVoiceRecognition.lang=voiceLang;aiVoiceRecognition.continuous=false;aiVoiceRecognition.interimResults=false;
-  aiVoiceRecognition.onstart=()=>{isAIVoiceRecording=true;document.getElementById('aiVoiceBtn').classList.add('recording');document.getElementById('aiVoiceIcon').className='fas fa-stop';showNotification('🎤 تحدث للمساعد...','info');};
-  aiVoiceRecognition.onresult=(event)=>{const text=event.results[0][0].transcript;document.getElementById('aiInput').value=text;stopAIVoice();if(text.trim())processAIMessage(text);};
-  aiVoiceRecognition.onend=()=>stopAIVoice();aiVoiceRecognition.onerror=()=>stopAIVoice();
+  aiVoiceRecognition=new SR();
+  aiVoiceRecognition.lang=voiceLang;
+  aiVoiceRecognition.continuous=false;
+  aiVoiceRecognition.interimResults=false;
+  aiVoiceRecognition.onstart=()=>{
+    isAIVoiceRecording=true;
+    document.getElementById('aiVoiceBtn').classList.add('recording');
+    document.getElementById('aiVoiceIcon').className='fas fa-stop';
+    showNotification('🎤 تحدث للمساعد...','info');
+  };
+  aiVoiceRecognition.onresult=(event)=>{
+    const text=event.results[0][0].transcript;
+    document.getElementById('aiInput').value=text;
+    stopAIVoice();
+    if(text.trim()) processAIMessage(text);
+  };
+  aiVoiceRecognition.onend=()=>stopAIVoice();
+  aiVoiceRecognition.onerror=()=>stopAIVoice();
   try{aiVoiceRecognition.start();}catch(e){stopAIVoice();}
 }
 
 function stopAIVoice(){
   isAIVoiceRecording=false;
-  if(aiVoiceRecognition)try{aiVoiceRecognition.stop();}catch(e){}
+  if(aiVoiceRecognition) try{aiVoiceRecognition.stop();}catch(e){}
   document.getElementById('aiVoiceBtn').classList.remove('recording');
   document.getElementById('aiVoiceIcon').className='fas fa-microphone';
 }
@@ -1715,40 +1476,61 @@ function addAIMessage(type,text){
   const div=document.createElement('div');
   div.className=`ai-bubble ${type}`;
   div.innerHTML=text.replace(/\n/g,'<br>');
-  container.appendChild(div);container.scrollTop=container.scrollHeight;
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
 }
 
 function clearAI(){
-  if(socket)socket.emit('ai-clear-context');
+  if(socket) socket.emit('ai-clear-context');
   isPracticeActive=false;
   document.getElementById('practiceBanner').classList.remove('show');
   document.getElementById('practiceSetup').classList.remove('hidden');
   document.getElementById('aiInput').placeholder='اسأل Gemini AI...';
-  document.getElementById('aiMessages').innerHTML=`<div class="ai-bubble bot">مرحباً! 👋 أنا <strong>Gemini AI</strong> مساعدك الذكي.<br><br>🌐 <strong>ترجمة</strong> دقيقة لأي جملة<br>🎓 <strong>تعليم اللغات</strong> مع تصحيح الأخطاء<br>💡 <strong>نصائح ثقافية</strong> متقدمة<br>💬 <strong>محادثة ذكية</strong> بأي لغة<br><br>اختر وضعاً وابدأ! 😊</div>`;
+  document.getElementById('aiMessages').innerHTML='<div class="ai-bubble bot">مرحباً! 👋 أنا <strong>Gemini AI</strong>.<br>🌐 ترجمة دقيقة<br>🎓 تعليم اللغات<br>💡 نصائح ثقافية<br>اختر وضعاً وابدأ! 😊</div>';
 }
 
+// ============================================
+// Notification
+// ============================================
 function showNotification(msg,type='info'){
   const el=document.getElementById('notification');
-  el.innerText=msg;el.className=`notification show ${type}`;
+  el.innerText=msg;
+  el.className=`notification show ${type}`;
   setTimeout(()=>el.classList.remove('show'),3500);
 }
 
 function checkAutoJoin(){
   const params=new URLSearchParams(window.location.search);
   const joinCode=params.get('join');
-  if(joinCode){document.getElementById('joinCode').value=joinCode.toUpperCase();showNotification(`رمز الغرفة: ${joinCode} - أدخل اسمك وانضم!`,'info');}
+  if(joinCode){
+    document.getElementById('joinCode').value=joinCode.toUpperCase();
+    showNotification(`رمز الغرفة: ${joinCode} - أدخل اسمك وانضم!`,'info');
+  }
 }
 
 // ============================================
-// Init
+// ✅ Init
 // ============================================
 window.onload=()=>{
-  document.addEventListener('click',()=>{if(!audioActivated)activateAudio();},{once:true});
+  // تفعيل الصوت عند أول نقرة
+  document.addEventListener('click',()=>{
+    if(!audioActivated) activateAudio();
+  },{once:true});
+
+  // تحميل الأصوات
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+
+  // تهيئة Socket
   initSocket();
+
+  // تحقق من URL
   checkAutoJoin();
+
+  // تعيين لغة الواجهة
   setUILang('ar',document.querySelector('.lang-switch-btn.active'));
+
+  // تهيئة السحب
   initDraggable();
 };
 </script>
