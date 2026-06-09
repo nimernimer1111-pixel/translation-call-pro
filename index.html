@@ -273,32 +273,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
   </header>
   <div style="position:relative;z-index:1;flex:1;">
     <!-- Invite Gate -->
-<div id="inviteGate" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;">
-  <div style="background:rgba(30,41,59,0.95);backdrop-filter:blur(20px);border-radius:24px;padding:40px;width:100%;max-width:420px;border:1px solid rgba(99,102,241,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;margin:20px;">
-    <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:white;margin:0 auto 20px;box-shadow:0 8px 25px rgba(99,102,241,0.4);">
-      <i class="fas fa-ticket"></i>
-    </div>
-    <h2 style="font-size:1.4rem;margin-bottom:8px;">مرحباً بك!</h2>
-    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:25px;">
-      هذا الموقع خاص بالمدعوين فقط<br>
-      أدخل كود الدعوة للمتابعة
-    </p>
-    <div style="color:var(--danger);font-size:0.85rem;margin-bottom:12px;display:none;" id="inviteError">
-      <i class="fas fa-circle-xmark"></i> كود الدعوة غير صحيح
-    </div>
-    <input type="text" class="input" id="inviteCodeInput"
-      placeholder="أدخل كود الدعوة"
-      style="text-align:center;font-size:1.3rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;"
-      maxlength="10"
-      oninput="this.value=this.value.toUpperCase()">
-    <button class="btn btn-primary btn-full btn-lg" onclick="verifyInvite()">
-      <i class="fas fa-arrow-right-to-bracket"></i> دخول
-    </button>
-    <p style="color:var(--text-muted);font-size:0.75rem;margin-top:20px;">
-      © Omar Nimer 2026
-    </p>
-  </div>
-</div>
+
     <div class="hero">
       <div class="hero-badge"><i class="fas fa-sparkles"></i><span id="heroBadge">مدعوم بـ Gemini AI</span></div>
       <h1><span class="grad1" id="heroTitle1">محادثة حية</span><br><span class="grad2" id="heroTitle2">بلا حواجز اللغة</span></h1>
@@ -313,7 +288,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
       </div>
     </div>
     <div class="action-section">
-      <div class="action-card">
+      <div class="action-card" id="createCard">
         <div class="action-header"><div class="action-icon icon-create"><i class="fas fa-plus"></i></div><div><h3 id="createTitle">إنشاء محادثة</h3><p id="createDesc">أنشئ غرفة وادعُ شريكك</p></div></div>
         <div class="input-group"><label id="labelName1">اسمك</label><input type="text" class="input" id="createName" placeholder="أدخل اسمك..."></div>
         <div class="input-group"><label id="labelLang1">لغتك</label><select class="lang-select" id="createLang"><option value="ar">🇸🇦 العربية</option><option value="en">🇺🇸 English</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="tr">🇹🇷 Türkçe</option><option value="zh">🇨🇳 中文</option><option value="ja">🇯🇵 日本語</option><option value="ru">🇷🇺 Русский</option><option value="pt">🇧🇷 Português</option></select></div>
@@ -322,7 +297,7 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
         <div class="input-group" id="passwordGroup" style="display:none;"><label id="labelPass">كلمة المرور</label><input type="password" class="input" id="createPassword" placeholder="أدخل كلمة المرور..."></div>
         <button class="btn btn-primary btn-full btn-lg" onclick="createRoom()"><i class="fas fa-plus"></i><span id="btnCreate">إنشاء غرفة</span></button>
       </div>
-      <div class="action-card">
+      <div class="action-card" id="joinCard">
         <div class="action-header"><div class="action-icon icon-join"><i class="fas fa-arrow-right-to-bracket"></i></div><div><h3 id="joinTitle">الانضمام لمحادثة</h3><p id="joinDesc">أدخل رمز الغرفة للانضمام</p></div></div>
         <div class="input-group"><label id="labelName2">اسمك</label><input type="text" class="input" id="joinName" placeholder="أدخل اسمك..."></div>
         <div class="input-group"><label id="labelLang2">لغتك</label><select class="lang-select" id="joinLang"><option value="en">🇺🇸 English</option><option value="ar">🇸🇦 العربية</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="tr">🇹🇷 Türkçe</option><option value="zh">🇨🇳 中文</option><option value="ja">🇯🇵 日本語</option><option value="ru">🇷🇺 Русский</option><option value="pt">🇧🇷 Português</option></select></div>
@@ -1609,7 +1584,109 @@ function verifyInvite(){
 // ============================================
 // Init
 // ============================================
-window.onload=()=>{
+// ============================================
+// Site Access Gate
+// ============================================
+function isInviteLink(){
+  const params = new URLSearchParams(window.location.search);
+  return !!params.get('join');
+}
+
+function showSiteAccessGate(){
+  document.getElementById('siteAccessGate').style.display = 'flex';
+}
+
+function hideSiteAccessGate(){
+  document.getElementById('siteAccessGate').style.display = 'none';
+}
+
+function verifySiteCode(){
+  const code = document.getElementById('siteCodeInput').value.trim();
+  if(!code){
+    document.getElementById('siteCodeError').style.display = 'block';
+    document.getElementById('siteCodeError').innerHTML =
+      '<i class="fas fa-circle-xmark"></i> يرجى إدخال كود الموقع';
+    return;
+  }
+
+  socket.emit('verify-site-code', { code }, (res) => {
+    if(res.success){
+      localStorage.setItem('tcSiteAccess', 'granted');
+      hideSiteAccessGate();
+      showNotification('مرحباً بك ✅', 'success');
+    } else {
+      document.getElementById('siteCodeError').style.display = 'block';
+      document.getElementById('siteCodeError').innerHTML =
+        '<i class="fas fa-circle-xmark"></i> كود الموقع غير صحيح';
+    }
+  });
+}
+
+function checkSiteAccess(){
+  // إذا كان رابط دعوة، لا نطلب كود الموقع
+  if(isInviteLink()){
+    hideSiteAccessGate();
+    setupInviteJoinMode();
+    return;
+  }
+
+  // إذا كان المالك دخل سابقاً
+  const granted = localStorage.getItem('tcSiteAccess');
+  if(granted === 'granted'){
+    hideSiteAccessGate();
+    return;
+  }
+
+  showSiteAccessGate();
+}
+
+function setupInviteJoinMode(){
+  const params = new URLSearchParams(window.location.search);
+  const joinCode = params.get('join');
+  if(!joinCode) return;
+
+  // املأ رمز الغرفة تلقائياً
+  const joinCodeInput = document.getElementById('joinCode');
+  if(joinCodeInput){
+    joinCodeInput.value = joinCode.toUpperCase();
+  }
+
+  // أخفِ كرت الإنشاء
+  const createCard = document.getElementById('createCard');
+  if(createCard){
+    createCard.style.display = 'none';
+  }
+
+  // أخفِ حقل رمز الغرفة لأن الرابط يحتوي عليه
+  if(joinCodeInput){
+    const group = joinCodeInput.closest('.input-group');
+    if(group) group.style.display = 'none';
+  }
+
+  // عدّل نص كرت الانضمام
+  const joinTitle = document.getElementById('joinTitle');
+  const joinDesc = document.getElementById('joinDesc');
+  if(joinTitle) joinTitle.innerText = 'الدخول إلى المكالمة';
+  if(joinDesc) joinDesc.innerText = 'أدخل اسمك واختر لغتك ثم انضم';
+}
+  window.onload=()=>{
+  document.addEventListener('click',()=>{
+    if(!audioActivated) activateAudio();
+  },{once:true});
+
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+
+  initSocket();
+  checkAutoJoin();
+  setUILang('ar',document.querySelector('.lang-switch-btn.active'));
+  initDraggable();
+
+  // انتظر قليلاً حتى يتصل socket ثم تحقق من كود الموقع
+  setTimeout(()=>{
+    checkSiteAccess();
+  },700);
+};
   // تفعيل الصوت عند أول نقرة
   document.addEventListener('click',()=>{
     if(!audioActivated) activateAudio();
