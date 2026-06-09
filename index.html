@@ -967,7 +967,10 @@ function initSocket(){
     if(msg.senderId!==socket.id){
       addMessage(msg,false);
       document.getElementById('partnerTranslatedText').innerText=msg.translatedText;
-      if(!isSpeakerOff)speakText(msg.translatedText,myLang);
+      if(!isSpeakerOff){
+  if(!audioActivated) audioActivated=true;
+  setTimeout(()=>speakText(msg.translatedText,myLang),300);
+}
     }
   });
   socket.on('partner-speaking',(data)=>{
@@ -1009,6 +1012,49 @@ function setStatus(connected){
 // ✅ WebRTC Video Call
 // ============================================
 async function initVideoCall(){
+  try{
+    localStream=await navigator.mediaDevices.getUserMedia({
+      video:true,
+      audio:false
+    });
+    const localVideo=document.getElementById('localVideo');
+    localVideo.srcObject=localStream;
+    document.getElementById('localPlaceholder').style.display='none';
+    isVideoCallActive=true;
+    peerConnection=new RTCPeerConnection(RTC_CONFIG);
+    localStream.getVideoTracks().forEach(track=>{
+      peerConnection.addTrack(track,localStream);
+    });
+    peerConnection.ontrack=(event)=>{
+      const remoteVideo=document.getElementById('remoteVideo');
+      remoteVideo.srcObject=event.streams[0];
+      remoteVideo.style.display='block';
+      document.getElementById('remotePlaceholder').style.display='none';
+      document.getElementById('partnerInfoOverlay').style.display='flex';
+      document.getElementById('qualityIndicator').style.display='flex';
+    };
+    peerConnection.onicecandidate=(event)=>{
+      if(event.candidate&&socket&&roomId){
+        socket.emit('rtc-ice',{roomId,candidate:event.candidate});
+      }
+    };
+    peerConnection.oniceconnectionstatechange=()=>{
+      if(peerConnection.iceConnectionState==='connected'){
+        showNotification('✅ تم الاتصال بالفيديو','success');
+      }
+    };
+    if(partnerInfo){
+      await createAndSendOffer();
+    }
+  }catch(error){
+    console.error('Video init error:',error);
+    if(error.name==='NotAllowedError'){
+      showNotification('يرجى السماح بالوصول للكاميرا','error');
+    }else if(error.name==='NotFoundError'){
+      showNotification('لا توجد كاميرا متاحة','warning');
+    }
+  }
+}
   try{
     // Get user media
     localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
@@ -1478,7 +1524,16 @@ async function translateAndSend(text){
 
 function speakText(text,lang){
   if(!text||isSpeakerOff)return;
-  if(!audioActivated){document.getElementById('audioActivateBtn').classList.add('show');return;}
+  if(!audioActivated){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    ctx.resume();
+    audioActivated=true;
+  }catch(e){
+    document.getElementById('audioActivateBtn').classList.add('show');
+    return;
+  }
+}
   window.speechSynthesis.cancel();
   const voiceLang=langs[lang]?.voice||'en-US';
   function doSpeak(voices){
@@ -1507,6 +1562,12 @@ function addMessage(msg,isOwn){
 }
 
 function toggleMute(){
+  isMuted=!isMuted;
+  document.getElementById('muteIcon').className=isMuted?'fas fa-microphone-slash':'fas fa-microphone';
+  document.getElementById('muteBtn').classList.toggle('off',isMuted);
+  if(isMuted&&isRecording)stopRecording();
+  showNotification(isMuted?'تم كتم الميكروفون 🔇':'تم تفعيل الميكروفون 🎤','info');
+}
   isMuted=!isMuted;
   document.getElementById('muteIcon').className=isMuted?'fas fa-microphone-slash':'fas fa-microphone';
   document.getElementById('muteBtn').classList.toggle('off',isMuted);
