@@ -243,6 +243,42 @@ footer{position:relative;z-index:1;padding:18px;text-align:center;color:var(--te
 <body>
 <div class="bg-effects"><div class="bg-blob blob1"></div><div class="bg-blob blob2"></div></div>
 <div class="notification" id="notification"></div>
+  <!-- Site Access Gate -->
+<div id="siteAccessGate" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);align-items:center;justify-content:center;">
+  <div style="background:rgba(30,41,59,0.95);backdrop-filter:blur(20px);border-radius:24px;padding:40px;width:100%;max-width:420px;border:1px solid rgba(99,102,241,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;margin:20px;">
+    <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:white;margin:0 auto 20px;box-shadow:0 8px 25px rgba(99,102,241,0.4);">
+      <i class="fas fa-lock"></i>
+    </div>
+
+    <h2 style="font-size:1.4rem;margin-bottom:8px;">دخول الموقع</h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:25px;">
+      هذا الموقع خاص<br>
+      أدخل كود الوصول للمتابعة
+    </p>
+
+    <div style="color:var(--danger);font-size:0.85rem;margin-bottom:12px;display:none;" id="siteCodeError">
+      <i class="fas fa-circle-xmark"></i> كود الموقع غير صحيح
+    </div>
+
+    <input
+      type="password"
+      class="input"
+      id="siteCodeInput"
+      placeholder="أدخل كود الموقع"
+      style="text-align:center;font-size:1.1rem;font-weight:700;margin-bottom:16px;"
+      onkeypress="if(event.key==='Enter') verifySiteCode()"
+    >
+
+    <button class="btn btn-primary btn-full btn-lg" onclick="verifySiteCode()">
+      <i class="fas fa-arrow-right-to-bracket"></i>
+      دخول
+    </button>
+
+    <p style="color:var(--text-muted);font-size:0.75rem;margin-top:20px;">
+      © Omar Nimer 2026
+    </p>
+  </div>
+</div>
 <div class="admin-warning-banner" id="adminWarningBanner"><i class="fas fa-triangle-exclamation"></i><span id="adminWarningText"></span><button onclick="document.getElementById('adminWarningBanner').classList.remove('show')" style="background:none;border:none;color:white;cursor:pointer;margin-right:auto;"><i class="fas fa-xmark"></i></button></div>
 <button class="audio-activate-btn" id="audioActivateBtn" onclick="activateAudio()"><i class="fas fa-volume-high"></i> اضغط لتفعيل الصوت</button>
 <div class="video-modal" id="videoModal"><button class="video-modal-close" onclick="closeVideoModal()"><i class="fas fa-xmark"></i></button><video id="modalVideo" autoplay playsinline></video><div style="color:var(--text-secondary);font-size:0.85rem;" id="modalVideoLabel"></div></div>
@@ -602,10 +638,10 @@ function initSocket(){
   });
 
   socket.on('connect',()=>{
-    setStatus(true);
-    if(!roomId) tryRestoreSession();
-  });
-
+  setStatus(true);
+  checkSiteAccess();
+  if(!roomId) tryRestoreSession();
+});
   socket.on('disconnect',()=>{
     setStatus(false);
     showNotification('انقطع الاتصال...','error');
@@ -1664,6 +1700,87 @@ function setupInviteJoinMode(){
   }
 
   // عدّل نص كرت الانضمام
+  const joinTitle = document.getElementById('joinTitle');
+  const joinDesc = document.getElementById('joinDesc');
+  if(joinTitle) joinTitle.innerText = 'الدخول إلى المكالمة';
+  if(joinDesc) joinDesc.innerText = 'أدخل اسمك واختر لغتك ثم انضم';
+}
+  // ============================================
+// Site Access Gate
+// ============================================
+function isInviteLink(){
+  const params = new URLSearchParams(window.location.search);
+  return !!params.get('join');
+}
+
+function showSiteAccessGate(){
+  const gate = document.getElementById('siteAccessGate');
+  if(gate) gate.style.display = 'flex';
+}
+
+function hideSiteAccessGate(){
+  const gate = document.getElementById('siteAccessGate');
+  if(gate) gate.style.display = 'none';
+}
+
+function verifySiteCode(){
+  const input = document.getElementById('siteCodeInput');
+  const error = document.getElementById('siteCodeError');
+  const code = input ? input.value.trim() : '';
+
+  if(!code){
+    if(error){
+      error.style.display = 'block';
+      error.innerHTML = '<i class="fas fa-circle-xmark"></i> يرجى إدخال كود الموقع';
+    }
+    return;
+  }
+
+  socket.emit('verify-site-code', { code }, (res) => {
+    if(res.success){
+      localStorage.setItem('tcSiteAccess', 'granted');
+      hideSiteAccessGate();
+      showNotification('مرحباً بك ✅', 'success');
+    } else {
+      if(error){
+        error.style.display = 'block';
+        error.innerHTML = '<i class="fas fa-circle-xmark"></i> كود الموقع غير صحيح';
+      }
+    }
+  });
+}
+
+function checkSiteAccess(){
+  if(isInviteLink()){
+    hideSiteAccessGate();
+    setupInviteJoinMode();
+    return;
+  }
+
+  const granted = localStorage.getItem('tcSiteAccess');
+  if(granted === 'granted'){
+    hideSiteAccessGate();
+    return;
+  }
+
+  showSiteAccessGate();
+}
+
+function setupInviteJoinMode(){
+  const params = new URLSearchParams(window.location.search);
+  const joinCode = params.get('join');
+  if(!joinCode) return;
+
+  const joinCodeInput = document.getElementById('joinCode');
+  if(joinCodeInput){
+    joinCodeInput.value = joinCode.toUpperCase();
+    const group = joinCodeInput.closest('.input-group');
+    if(group) group.style.display = 'none';
+  }
+
+  const createCard = document.getElementById('createCard');
+  if(createCard) createCard.style.display = 'none';
+
   const joinTitle = document.getElementById('joinTitle');
   const joinDesc = document.getElementById('joinDesc');
   if(joinTitle) joinTitle.innerText = 'الدخول إلى المكالمة';
