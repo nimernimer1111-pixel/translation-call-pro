@@ -701,8 +701,8 @@ function showSiteGate(){
 
 function hideSiteGate(){
   document.getElementById('siteGate').style.display='none';
+  document.getElementById('landing').classList.add('active');
 }
-
 function verifySiteCode(){
   const code=document.getElementById('siteCodeInput').value.trim();
   const errorEl=document.getElementById('siteGateError');
