@@ -356,6 +356,14 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
               <div class="mode-icon" style="background:linear-gradient(135deg,var(--warning),#f97316);"><i class="fas fa-spell-check"></i></div>
               <div class="mode-info"><h4>تصحيح الأخطاء</h4><p>اكتب وسيصحح كل أخطائك</p></div>
             </button>
+            <button class="mode-btn" data-mode="discussion" onclick="selectMode(this)">
+  <div class="mode-icon" style="background:linear-gradient(135deg,#ec4899,#f43f5e);"><i class="fas fa-comments"></i></div>
+  <div class="mode-info"><h4>مناقشة موضوع</h4><p>ناقش موضوعاً مثيراً مع AI</p></div>
+</button>
+<button class="mode-btn" data-mode="flashcards" onclick="selectMode(this)">
+  <div class="mode-icon" style="background:linear-gradient(135deg,#06b6d4,#0891b2);"><i class="fas fa-layer-group"></i></div>
+  <div class="mode-info"><h4>بطاقات حفظ</h4><p>تعلم كلمات جديدة ببطاقات تفاعلية</p></div>
+</button>
           </div>
         </div>
       </div>
@@ -377,7 +385,39 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
         <button class="scenario-btn" data-scenario="directions" onclick="selectScenario(this)"><span class="icon">🗺️</span><span class="label">اتجاهات</span></button>
       </div>
     </div>
+<!-- Flashcard Category (يظهر فقط عند اختيار flashcards) -->
+<div class="setup-card" id="flashcardCategoryCard" style="display:none;">
+  <h3><i class="fas fa-layer-group" style="color:#06b6d4;"></i> اختر فئة الكلمات</h3>
+  <div class="scenario-grid">
+    <button class="scenario-btn active" data-category="general" onclick="selectCategory(this)"><span class="icon">📚</span><span class="label">عام</span></button>
+    <button class="scenario-btn" data-category="greetings" onclick="selectCategory(this)"><span class="icon">👋</span><span class="label">تحيات</span></button>
+    <button class="scenario-btn" data-category="food" onclick="selectCategory(this)"><span class="icon">🍽️</span><span class="label">طعام</span></button>
+    <button class="scenario-btn" data-category="travel" onclick="selectCategory(this)"><span class="icon">✈️</span><span class="label">سفر</span></button>
+    <button class="scenario-btn" data-category="work" onclick="selectCategory(this)"><span class="icon">💼</span><span class="label">عمل</span></button>
+    <button class="scenario-btn" data-category="emotions" onclick="selectCategory(this)"><span class="icon">😊</span><span class="label">مشاعر</span></button>
+    <button class="scenario-btn" data-category="family" onclick="selectCategory(this)"><span class="icon">👨‍👩‍👧‍👦</span><span class="label">عائلة</span></button>
+    <button class="scenario-btn" data-category="health" onclick="selectCategory(this)"><span class="icon">🏥</span><span class="label">صحة</span></button>
+    <button class="scenario-btn" data-category="shopping" onclick="selectCategory(this)"><span class="icon">🛒</span><span class="label">تسوق</span></button>
+    <button class="scenario-btn" data-category="nature" onclick="selectCategory(this)"><span class="icon">🌿</span><span class="label">طبيعة</span></button>
+  </div>
+</div>
 
+<!-- Discussion Topics (يظهر فقط عند اختيار discussion) -->
+<div class="setup-card" id="discussionTopicCard" style="display:none;">
+  <h3><i class="fas fa-comments" style="color:#ec4899;"></i> اختر موضوع النقاش (اختياري)</h3>
+  <div class="scenario-grid">
+    <button class="scenario-btn active" data-topic="" onclick="selectTopic(this)"><span class="icon">🎲</span><span class="label">AI يختار</span></button>
+    <button class="scenario-btn" data-topic="technology" onclick="selectTopic(this)"><span class="icon">💻</span><span class="label">تكنولوجيا</span></button>
+    <button class="scenario-btn" data-topic="culture" onclick="selectTopic(this)"><span class="icon">🌍</span><span class="label">ثقافات</span></button>
+    <button class="scenario-btn" data-topic="sports" onclick="selectTopic(this)"><span class="icon">⚽</span><span class="label">رياضة</span></button>
+    <button class="scenario-btn" data-topic="food" onclick="selectTopic(this)"><span class="icon">🍕</span><span class="label">طعام</span></button>
+    <button class="scenario-btn" data-topic="travel" onclick="selectTopic(this)"><span class="icon">🌎</span><span class="label">سفر</span></button>
+    <button class="scenario-btn" data-topic="movies" onclick="selectTopic(this)"><span class="icon">🎬</span><span class="label">أفلام</span></button>
+    <button class="scenario-btn" data-topic="future" onclick="selectTopic(this)"><span class="icon">🚀</span><span class="label">المستقبل</span></button>
+    <button class="scenario-btn" data-topic="environment" onclick="selectTopic(this)"><span class="icon">🌱</span><span class="label">بيئة</span></button>
+    <button class="scenario-btn" data-topic="education" onclick="selectTopic(this)"><span class="icon">📖</span><span class="label">تعليم</span></button>
+  </div>
+</div>
     <button class="start-btn" id="startBtn" onclick="startSession()">
       <i class="fas fa-play"></i>
       ابدأ جلسة التعلم
@@ -574,7 +614,10 @@ const scenarios = {
 const modes = {
   'language-teacher':{label:'مدرّس اللغة',icon:'🎓'},
   'conversation':{label:'محادثة حرة',icon:'💬'},
-  'correction':{label:'تصحيح الأخطاء',icon:'✏️'}
+  'correction':{label:'تصحيح الأخطاء',icon:'✏️'},
+  'discussion':{label:'مناقشة موضوع',icon:'🗣️'},
+  'flashcards':{label:'بطاقات حفظ',icon:'📚'}
+  
 };
 
 const quickPromptsData = {
@@ -598,6 +641,8 @@ let selectedLang = 'en';
 let selectedLevel = 'A1';
 let selectedMode = 'language-teacher';
 let selectedScenario = 'general';
+  let selectedCategory = 'general';
+let selectedTopic = '';
 let userNativeLang = 'ar';
 let sessionActive = false;
 let sessionTimer = null;
@@ -667,9 +712,27 @@ function selectMode(btn){
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   selectedMode = btn.dataset.mode;
+
+  // إظهار/إخفاء الأقسام حسب الوضع
+  document.getElementById('flashcardCategoryCard').style.display =
+    selectedMode === 'flashcards' ? 'block' : 'none';
+  document.getElementById('discussionTopicCard').style.display =
+    selectedMode === 'discussion' ? 'block' : 'none';
+}
 }
 
 function selectScenario(btn){
+  function selectCategory(btn){
+  document.querySelectorAll('#flashcardCategoryCard .scenario-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedCategory = btn.dataset.category;
+}
+
+function selectTopic(btn){
+  document.querySelectorAll('#discussionTopicCard .scenario-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedTopic = btn.dataset.topic;
+}
   document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   selectedScenario = btn.dataset.scenario;
@@ -690,7 +753,16 @@ function startSession(){
   document.getElementById('sessionScenario').innerHTML = `${scenarios[selectedScenario]?.icon} ${scenarios[selectedScenario]?.label}`;
 
   // Load quick prompts
-  const prompts = quickPromptsData[selectedScenario] || quickPromptsData.general;
+  let prompts;
+if(selectedMode === 'flashcards'){
+  prompts = ['أعطني 5 كلمات جديدة','كلمات أصعب','اختبرني في الكلمات','كلمات عن الطعام'];
+}else if(selectedMode === 'discussion'){
+  prompts = ['أعطني موضوعاً جديداً','أوافقك الرأي','لا أوافق لأن...','ما رأيك في...؟'];
+}else if(selectedMode === 'correction'){
+  prompts = ['صحح هذه الجملة','هل هذا صحيح؟','كيف أقول هذا بشكل أفضل؟','أعطني تمريناً'];
+}else{
+  prompts = quickPromptsData[selectedScenario] || quickPromptsData.general;
+}
   document.getElementById('quickPrompts').innerHTML = prompts.map(p=>
     `<button class="quick-prompt" onclick="useQuickPrompt('${p}')">${p}</button>`
   ).join('');
@@ -715,7 +787,32 @@ function startSession(){
   document.getElementById('messagesContainer').innerHTML = '';
 
   // Send welcome message
-  sendWelcomeMessage();
+  async function sendWelcomeMessage(){
+  const langInfo = langs[selectedLang];
+  const scenarioLabel = scenarios[selectedScenario]?.label || 'عام';
+
+  const welcomeMessages = {
+    'language-teacher': `مرحباً! 🎓 أنا مدرّسك الخاص لتعلم ${langInfo.native}.\n\nسنتدرب على: ${scenarioLabel}\nمستواك: ${selectedLevel}\n\nابدأ بتقديم نفسك بـ${langInfo.native}! 😊`,
+    'conversation': `مرحباً! 💬 سنتحدث معاً بشكل طبيعي بـ${langInfo.native}.\n\nالسيناريو: ${scenarioLabel}\n\nتفضل وابدأ! 🗣️`,
+    'correction': `مرحباً! ✏️ أنا هنا لتصحيح كتاباتك بـ${langInfo.native}.\n\nاكتب أي جملة وسأصحح لك بالتفصيل وأشرح كل قاعدة! 📝`,
+    'discussion': `مرحباً! 🗣️ سنناقش موضوعاً مثيراً معاً بـ${langInfo.native}.\n\n${selectedTopic ? 'الموضوع: ' + selectedTopic : 'سأقترح عليك 3 مواضيع مثيرة، اختر ما يعجبك!'}\n\nمستواك: ${selectedLevel}\n\nهيا نبدأ! 🚀`,
+    'flashcards': `مرحباً! 📚 سنتعلم كلمات جديدة بـ${langInfo.native}!\n\nالفئة: ${selectedCategory}\nمستواك: ${selectedLevel}\n\nسأعرض لك 5 كلمات مع أمثلة ونصائح حفظ.\n\nهل أنت مستعد؟ 🎯`
+  };
+
+  const welcome = welcomeMessages[selectedMode] || welcomeMessages['language-teacher'];
+  addAIMessage(welcome);
+
+  // إذا كان flashcards أو discussion بدون موضوع محدد، أرسل طلب لـ AI مباشرة
+  if(selectedMode === 'flashcards'){
+    setTimeout(()=>{
+      processAIMessageAuto(`Generate 5 flashcard words for category: ${selectedCategory}`);
+    }, 1000);
+  } else if(selectedMode === 'discussion' && !selectedTopic){
+    setTimeout(()=>{
+      processAIMessageAuto('Suggest 3 interesting discussion topics for my level');
+    }, 1000);
+  }
+}();
 }
 
 // ============================================
@@ -737,7 +834,36 @@ async function sendWelcomeMessage(){
 // ============================================
 // Send Message
 // ============================================
-async function sendMessage(){
+async function processAIMessageAuto(text){
+  document.getElementById('aiTypingMsg').classList.add('show');
+  document.getElementById('messagesContainer').scrollTop = 99999;
+
+  socket.emit('ai-chat',{
+    message: text,
+    language: userNativeLang,
+    mode: selectedMode,
+    context: {
+      targetLang: selectedLang,
+      level: selectedLevel,
+      scenario: selectedScenario,
+      category: selectedCategory,
+      topic: selectedTopic
+    }
+  },(res)=>{
+    document.getElementById('aiTypingMsg').classList.remove('show');
+    if(res.success){
+      const response = res.response;
+      const feedback = res.feedback;
+      addAIMessage(response);
+      if(feedback) setTimeout(()=>addFeedbackMessage(feedback),500);
+      speakText(response, selectedLang);
+    }else{
+      addSystemMessage('❌ خطأ في الاتصال. حاول مرة أخرى.');
+    }
+    document.getElementById('messagesContainer').scrollTop = 99999;
+  });
+}
+  async function sendMessage(){
   const input = document.getElementById('msgInput');
   const text = input.value.trim();
   if(!text || !sessionActive) return;
@@ -760,7 +886,9 @@ async function sendMessage(){
     context: {
       targetLang: selectedLang,
       level: selectedLevel,
-      scenario: selectedScenario
+      scenario: selectedScenario,
+      category: selectedCategory,
+      topic: selectedTopic
     }
   },(res)=>{
     document.getElementById('aiTypingMsg').classList.remove('show');
@@ -982,7 +1110,7 @@ function speakText(text, lang){
   // ✅ نظّف النص بشكل أفضل قبل النطق
 const cleanText = text
   .split('---')[0]
-  .replace(/[✅❌💡📚🎯⭐📝📖]/g,'')
+  .replace(/[✅❌💡📚🎯⭐📝📖📌🔤🔄🗣️]/g,'')
   .replace(/\n+/g,' ')
   .trim();
   // Remove emojis for better speech
