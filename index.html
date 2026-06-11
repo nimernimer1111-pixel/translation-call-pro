@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TranslationCall Pro</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TransCall">
+<link rel="apple-touch-icon" href="https://via.placeholder.com/192x192/6366f1/ffffff?text=TC">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <style>
@@ -962,7 +968,15 @@ async function processAIMessage(text){
   const context=isPracticeActive?{targetLang:practiceTargetLang}:null;
   socket.emit('ai-chat',{message:text,language:myLang,mode:isPracticeActive?'language-teacher':aiMode,context},(res)=>{
     document.getElementById('aiTyping').classList.remove('show');aiIsTyping=false;document.getElementById('aiSendBtn').disabled=false;
-    if(res.success){addAIMessage('bot',res.response);if(res.feedback)setTimeout(()=>addAIMessage('feedback',res.feedback),500);if(!isSpeakerOff&&audioActivated){const sl=isPracticeActive?practiceTargetLang:myLang;setTimeout(()=>speakText(res.response.split('\n')[0],sl),300);}}
+    if(res.success){addAIMessage('bot',res.response);if(res.feedback)setTimeout(()=>addAIMessage('feedback',res.feedback),500);if(!isSpeakerOff&&audioActivated){const sl=isPracticeActive?practiceTargetLang:myLang;setTimeout(()=>{
+  // ✅ نطق النص الكامل بشكل صحيح (ليس فقط السطر الأول)
+  const textToSpeak = res.response
+    .split('---')[0]  // نأخذ الجزء قبل الـ feedback
+    .replace(/[✅❌💡📚🎯⭐📝📖💬🌐🎓]/g,'') // نزيل الرموز
+    .replace(/\n+/g,' ') // نحول السطور لمسافات
+    .trim();
+  if(textToSpeak) speakText(textToSpeak, sl);
+},300);}}
     else{addAIMessage('error',res.error||'خطأ في Gemini AI');}
     document.getElementById('aiMessages').scrollTop=99999;
   });
@@ -986,6 +1000,12 @@ function showNotification(msg,type='info'){const el=document.getElementById('not
 function checkAutoJoin(){const params=new URLSearchParams(window.location.search);const joinCode=params.get('join');if(joinCode)document.getElementById('joinCode').value=joinCode.toUpperCase();}
 
 window.onload=()=>{
+  // ✅ Safari Warning
+if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
+  setTimeout(()=>{
+    showNotification('للحصول على أفضل تجربة استخدم Chrome أو Edge 🌐','warning');
+  },3000);
+}
   document.addEventListener('click',()=>{if(!audioActivated)activateAudio();},{once:true});
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.getVoices();loadVoiceOptions();};
