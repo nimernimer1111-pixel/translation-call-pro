@@ -672,6 +672,46 @@ function verifyGate(){
   const errorText = document.getElementById('gateErrorText');
   if(!code){errorEl.style.display='block';errorText.innerText='يرجى إدخال الكود';return;}
 
+  // تحقق أن السوكت متصل
+  if(!socket || !socket.connected){
+    // إذا لم يتصل بعد، حاول الاتصال ثم تحقق
+    initSocket();
+    setTimeout(()=>{
+      if(socket && socket.connected){
+        doVerifyGate(code);
+      }else{
+        errorEl.style.display='block';
+        errorText.innerText='جاري الاتصال بالسيرفر... حاول مرة أخرى';
+      }
+    }, 2000);
+    return;
+  }
+
+  doVerifyGate(code);
+}
+
+function doVerifyGate(code){
+  const errorEl = document.getElementById('gateError');
+  const errorText = document.getElementById('gateErrorText');
+
+  socket.emit('verify-site-code',{code},(res)=>{
+    if(res.success){
+      localStorage.setItem('tcAccess','ok');
+      document.getElementById('gate').style.display='none';
+      document.getElementById('main').classList.add('active');
+      showNotification('مرحباً! 🎓','success');
+    }else{
+      errorEl.style.display='block';
+      errorText.innerText='الكود غير صحيح ❌';
+      document.getElementById('gateInput').value='';
+    }
+  });
+}
+  const code = document.getElementById('gateInput').value.trim();
+  const errorEl = document.getElementById('gateError');
+  const errorText = document.getElementById('gateErrorText');
+  if(!code){errorEl.style.display='block';errorText.innerText='يرجى إدخال الكود';return;}
+
   socket.emit('verify-site-code',{code},(res)=>{
     if(res.success){
       localStorage.setItem('tcAccess','ok');
@@ -1248,6 +1288,31 @@ function initSocket(){
 // Init
 // ============================================
 window.onload = ()=>{
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
+
+  document.addEventListener('click',()=>{
+    try{new(window.AudioContext||window.webkitAudioContext)().resume();}catch(e){}
+  },{once:true});
+
+  // Safari Warning
+  if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
+    setTimeout(()=>showNotification('للحصول على أفضل تجربة استخدم Chrome 🌐','warning'),3000);
+  }
+
+  // Service Worker
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW:',e));
+  }
+
+  // اتصل بالسوكت أولاً
+  initSocket();
+
+  // تحقق من الوصول بعد الاتصال
+  socket.on('connect',()=>{
+    checkAccess();
+  });
+};
   // Safari Warning
 if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
   setTimeout(()=>showNotification('للحصول على أفضل تجربة استخدم Chrome أو Edge 🌐','warning'),3000);
