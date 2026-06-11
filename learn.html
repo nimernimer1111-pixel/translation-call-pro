@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TranslationCall - تعلم اللغات</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#10b981">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TransCall">
+<link rel="apple-touch-icon" href="https://via.placeholder.com/192x192/10b981/ffffff?text=TC">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <style>
@@ -973,7 +979,12 @@ function speakText(text, lang){
 
   const voiceLang = langs[lang]?.voice || 'en-US';
   // Extract only the response part (before ---FEEDBACK--- if present)
-  const cleanText = text.split('---FEEDBACK---')[0].trim();
+  // ✅ نظّف النص بشكل أفضل قبل النطق
+const cleanText = text
+  .split('---')[0]
+  .replace(/[✅❌💡📚🎯⭐📝📖]/g,'')
+  .replace(/\n+/g,' ')
+  .trim();
   // Remove emojis for better speech
   const speechText = cleanText.replace(/[^\w\s\u0600-\u06FF\u00C0-\u024F.,!?]/g,'').trim();
   if(!speechText) return;
@@ -1109,6 +1120,17 @@ function initSocket(){
 // Init
 // ============================================
 window.onload = ()=>{
+  // Safari Warning
+if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
+  setTimeout(()=>showNotification('للحصول على أفضل تجربة استخدم Chrome أو Edge 🌐','warning'),3000);
+}
+
+// Register Service Worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js')
+    .then(()=>console.log('✅ SW registered'))
+    .catch(e=>console.log('SW error:',e));
+}
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
 
