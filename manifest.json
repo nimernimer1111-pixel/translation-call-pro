@@ -1,0 +1,45 @@
+{
+  "name": "TranslationCall Pro",
+  "short_name": "TransCall",
+  "description": "محادثة حية مع ترجمة فورية بالذكاء الاصطناعي",
+  "start_url": "/translation-call-pro/",
+  "scope": "/translation-call-pro/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#6366f1",
+  "background_color": "#0f172a",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["communication", "education", "productivity"],
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/6366f1/ffffff?text=TC",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/6366f1/ffffff?text=TC",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "إنشاء محادثة",
+      "short_name": "محادثة",
+      "description": "إنشاء غرفة محادثة جديدة",
+      "url": "/translation-call-pro/",
+      "icons": [{"src": "https://via.placeholder.com/96x96/6366f1/ffffff?text=+", "sizes": "96x96"}]
+    },
+    {
+      "name": "تعلم اللغات",
+      "short_name": "تعلم",
+      "description": "ابدأ جلسة تعلم مع AI",
+      "url": "/translation-call-pro/learn.html",
+      "icons": [{"src": "https://via.placeholder.com/96x96/10b981/ffffff?text=AI", "sizes": "96x96"}]
+    }
+  ]
+}
