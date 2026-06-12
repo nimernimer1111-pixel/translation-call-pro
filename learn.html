@@ -418,16 +418,14 @@ function activateIOSAudio(){
 }
 
 function showIOSAudioBtn(){
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  var isMac = navigator.maxTouchPoints > 0 && /Mac/.test(navigator.userAgent);
-  if(isIOS || isMac){
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if(isMobile && !iosAudioActivated){
     document.getElementById('iosAudioBtn').classList.add('show');
-    // إخفاء بعد 15 ثانية
     setTimeout(function(){
       if(!iosAudioActivated){
         document.getElementById('iosAudioBtn').classList.remove('show');
       }
-    },15000);
+    },20000);
   }
 }
 
