@@ -577,14 +577,8 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
 <footer>© Omar Nimer 2026 | TranslationCall Pro - مركز تعلم اللغات</footer>
 
 <script>
-// ============================================
-// CONFIG
-// ============================================
 const SERVER_URL = 'https://translationcall-server.onrender.com';
 
-// ============================================
-// Languages Config
-// ============================================
 const langs = {
   en:{name:'English',flag:'🇺🇸',voice:'en-US',native:'الإنجليزية'},
   es:{name:'Español',flag:'🇪🇸',voice:'es-ES',native:'الإسبانية'},
@@ -599,16 +593,11 @@ const langs = {
 };
 
 const scenarios = {
-  general:{label:'عام',icon:'💬'},
-  restaurant:{label:'مطعم',icon:'🍽️'},
-  airport:{label:'مطار',icon:'✈️'},
-  work:{label:'عمل',icon:'💼'},
-  shopping:{label:'تسوق',icon:'🛒'},
-  meeting:{label:'تعارف',icon:'🤝'},
-  hotel:{label:'فندق',icon:'🏨'},
-  doctor:{label:'طبيب',icon:'🏥'},
-  phone:{label:'هاتف',icon:'📞'},
-  directions:{label:'اتجاهات',icon:'🗺️'}
+  general:{label:'عام',icon:'💬'},restaurant:{label:'مطعم',icon:'🍽️'},
+  airport:{label:'مطار',icon:'✈️'},work:{label:'عمل',icon:'💼'},
+  shopping:{label:'تسوق',icon:'🛒'},meeting:{label:'تعارف',icon:'🤝'},
+  hotel:{label:'فندق',icon:'🏨'},doctor:{label:'طبيب',icon:'🏥'},
+  phone:{label:'هاتف',icon:'📞'},directions:{label:'اتجاهات',icon:'🗺️'}
 };
 
 const modes = {
@@ -617,31 +606,28 @@ const modes = {
   'correction':{label:'تصحيح الأخطاء',icon:'✏️'},
   'discussion':{label:'مناقشة موضوع',icon:'🗣️'},
   'flashcards':{label:'بطاقات حفظ',icon:'📚'}
-  
 };
 
 const quickPromptsData = {
   general:['مرحباً!','كيف حالك؟','ما اسمك؟','من أين أنت؟'],
   restaurant:['أريد طاولة لشخصين','ما هي القائمة؟','أريد الفاتورة','هل الطعام لذيذ؟'],
-  airport:['أين بوابة الصعود؟','متى يغادر الطائرة؟','لدي حقيبة','هل الرحلة في الموعد؟'],
+  airport:['أين بوابة الصعود؟','متى تغادر الطائرة؟','لدي حقيبة','هل الرحلة في الموعد؟'],
   work:['أهلاً، أنا جديد هنا','ما هو دورك؟','نريد اجتماعاً','متى الموعد النهائي؟'],
-  shopping:['كم سعر هذا؟','أريد هذا باللون الأزرق','هل لديكم مقاس أكبر؟','هل يمكن الدفع ببطاقة؟'],
+  shopping:['كم سعر هذا؟','أريد مقاس أكبر','هل يمكن الدفع ببطاقة؟','شكراً'],
   meeting:['اسمي...','أنا من...','سعيد بمعرفتك','ما عملك؟'],
   hotel:['لدي حجز','أريد غرفة هادئة','ما وقت الإفطار؟','هل لديكم واي فاي؟'],
   doctor:['أشعر بألم','منذ متى؟','هل لديك دواء؟','أريد موعداً'],
-  phone:['هل يمكنني التحدث مع...؟','من أتصل؟','هل يمكنك تكرار ذلك؟','شكراً على اتصالك'],
+  phone:['هل يمكنني التحدث مع...؟','من أتصل؟','شكراً على اتصالك','أعد الاتصال لاحقاً'],
   directions:['أين المحطة؟','كيف أصل إلى...؟','هل هو بعيد؟','اتجه يساراً']
 };
 
-// ============================================
 // State
-// ============================================
 let socket = null;
 let selectedLang = 'en';
 let selectedLevel = 'A1';
 let selectedMode = 'language-teacher';
 let selectedScenario = 'general';
-  let selectedCategory = 'general';
+let selectedCategory = 'general';
 let selectedTopic = '';
 let userNativeLang = 'ar';
 let sessionActive = false;
@@ -650,69 +636,49 @@ let sessionSeconds = 0;
 let isVoiceRecording = false;
 let voiceRecognition = null;
 let isSpeaking = false;
-
-// Stats
-let stats = {
-  messages: 0,
-  words: 0,
-  corrections: 0,
-  errors: 0,
-  accuracy: 0
-};
-
+let stats = {messages:0,words:0,corrections:0,errors:0,accuracy:0};
 let vocabulary = [];
 let sessionHistory = [];
 
-// ============================================
-// Gate
-// ============================================
-function verifyGate(){
-  const code = document.getElementById('gateInput').value.trim();
-  const errorEl = document.getElementById('gateError');
-  const errorText = document.getElementById('gateErrorText');
-  if(!code){errorEl.style.display='block';errorText.innerText='يرجى إدخال الكود';return;}
+// Sound Settings
+let speechSettings = {rate:0.95,pitch:1,volume:1,voiceByLang:{}};
+try{
+  const saved = JSON.parse(localStorage.getItem('tcSpeechSettings')||'{}');
+  speechSettings = {rate:saved.rate??0.95,pitch:saved.pitch??1,volume:saved.volume??1,voiceByLang:saved.voiceByLang||{}};
+}catch(e){}
 
-  // تحقق أن السوكت متصل
-  if(!socket || !socket.connected){
-    // إذا لم يتصل بعد، حاول الاتصال ثم تحقق
-    initSocket();
-    setTimeout(()=>{
-      if(socket && socket.connected){
-        doVerifyGate(code);
-      }else{
-        errorEl.style.display='block';
-        errorText.innerText='جاري الاتصال بالسيرفر... حاول مرة أخرى';
-      }
-    }, 2000);
+// Socket
+function initSocket(){
+  socket = io(SERVER_URL,{transports:['websocket','polling']});
+  socket.on('connect',function(){
+    console.log('✅ Socket connected');
+    checkAccess();
+  });
+  socket.on('disconnect',function(){
+    showNotification('انقطع الاتصال...','warning');
+  });
+}
+
+// Gate
+function verifyGate(){
+  var code = document.getElementById('gateInput').value.trim();
+  var errorEl = document.getElementById('gateError');
+  var errorText = document.getElementById('gateErrorText');
+
+  if(!code){
+    errorEl.style.display='block';
+    errorText.innerText='يرجى إدخال الكود';
     return;
   }
 
-  doVerifyGate(code);
-}
+  if(!socket || !socket.connected){
+    errorEl.style.display='block';
+    errorText.innerText='جاري الاتصال بالسيرفر... انتظر ثانية وحاول مرة أخرى';
+    initSocket();
+    return;
+  }
 
-function doVerifyGate(code){
-  const errorEl = document.getElementById('gateError');
-  const errorText = document.getElementById('gateErrorText');
-
-  socket.emit('verify-site-code',{code},(res)=>{
-    if(res.success){
-      localStorage.setItem('tcAccess','ok');
-      document.getElementById('gate').style.display='none';
-      document.getElementById('main').classList.add('active');
-      showNotification('مرحباً! 🎓','success');
-    }else{
-      errorEl.style.display='block';
-      errorText.innerText='الكود غير صحيح ❌';
-      document.getElementById('gateInput').value='';
-    }
-  });
-}
-  const code = document.getElementById('gateInput').value.trim();
-  const errorEl = document.getElementById('gateError');
-  const errorText = document.getElementById('gateErrorText');
-  if(!code){errorEl.style.display='block';errorText.innerText='يرجى إدخال الكود';return;}
-
-  socket.emit('verify-site-code',{code},(res)=>{
+  socket.emit('verify-site-code',{code:code},function(res){
     if(res.success){
       localStorage.setItem('tcAccess','ok');
       document.getElementById('gate').style.display='none';
@@ -733,179 +699,138 @@ function checkAccess(){
   }
 }
 
-// ============================================
-// Setup Selections
-// ============================================
+// Selections
 function selectLang(btn){
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   selectedLang = btn.dataset.lang;
 }
 
 function selectLevel(btn){
-  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.level-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   selectedLevel = btn.dataset.level;
 }
 
 function selectMode(btn){
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   selectedMode = btn.dataset.mode;
 
-  // إظهار/إخفاء الأقسام حسب الوضع
-  document.getElementById('flashcardCategoryCard').style.display =
-    selectedMode === 'flashcards' ? 'block' : 'none';
-  document.getElementById('discussionTopicCard').style.display =
-    selectedMode === 'discussion' ? 'block' : 'none';
-}
+  var fcCard = document.getElementById('flashcardCategoryCard');
+  var discCard = document.getElementById('discussionTopicCard');
+  if(fcCard) fcCard.style.display = selectedMode==='flashcards' ? 'block' : 'none';
+  if(discCard) discCard.style.display = selectedMode==='discussion' ? 'block' : 'none';
 }
 
 function selectScenario(btn){
-  function selectCategory(btn){
-  document.querySelectorAll('#flashcardCategoryCard .scenario-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.scenario-btn').forEach(function(b){
+    if(b.parentElement === btn.parentElement) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  selectedScenario = btn.dataset.scenario;
+}
+
+function selectCategory(btn){
+  document.querySelectorAll('#flashcardCategoryCard .scenario-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   selectedCategory = btn.dataset.category;
 }
 
 function selectTopic(btn){
-  document.querySelectorAll('#discussionTopicCard .scenario-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#discussionTopicCard .scenario-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   selectedTopic = btn.dataset.topic;
 }
-  document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedScenario = btn.dataset.scenario;
-}
 
-// ============================================
 // Start Session
-// ============================================
 function startSession(){
   document.getElementById('setupScreen').classList.add('hidden');
   document.getElementById('learningScreen').classList.add('active');
 
-  // Update session bar
-  const langInfo = langs[selectedLang];
-  document.getElementById('sessionLang').innerHTML = `<i class="fas fa-globe"></i> ${langInfo.flag} ${langInfo.name}`;
-  document.getElementById('sessionLevel').innerHTML = `<i class="fas fa-signal"></i> ${selectedLevel}`;
-  document.getElementById('sessionMode').innerHTML = `<i class="fas fa-graduation-cap"></i> ${modes[selectedMode]?.label}`;
-  document.getElementById('sessionScenario').innerHTML = `${scenarios[selectedScenario]?.icon} ${scenarios[selectedScenario]?.label}`;
+  var langInfo = langs[selectedLang];
+  document.getElementById('sessionLang').innerHTML = '<i class="fas fa-globe"></i> '+langInfo.flag+' '+langInfo.name;
+  document.getElementById('sessionLevel').innerHTML = '<i class="fas fa-signal"></i> '+selectedLevel;
+  document.getElementById('sessionMode').innerHTML = '<i class="fas fa-graduation-cap"></i> '+(modes[selectedMode]?.label||'');
+  document.getElementById('sessionScenario').innerHTML = (scenarios[selectedScenario]?.icon||'')+' '+(scenarios[selectedScenario]?.label||'');
 
-  // Load quick prompts
-  let prompts;
-if(selectedMode === 'flashcards'){
-  prompts = ['أعطني 5 كلمات جديدة','كلمات أصعب','اختبرني في الكلمات','كلمات عن الطعام'];
-}else if(selectedMode === 'discussion'){
-  prompts = ['أعطني موضوعاً جديداً','أوافقك الرأي','لا أوافق لأن...','ما رأيك في...؟'];
-}else if(selectedMode === 'correction'){
-  prompts = ['صحح هذه الجملة','هل هذا صحيح؟','كيف أقول هذا بشكل أفضل؟','أعطني تمريناً'];
-}else{
-  prompts = quickPromptsData[selectedScenario] || quickPromptsData.general;
-}
-  document.getElementById('quickPrompts').innerHTML = prompts.map(p=>
-    `<button class="quick-prompt" onclick="useQuickPrompt('${p}')">${p}</button>`
-  ).join('');
+  var prompts;
+  if(selectedMode==='flashcards'){
+    prompts = ['أعطني 5 كلمات جديدة','كلمات أصعب','اختبرني','كلمات عن الطعام'];
+  }else if(selectedMode==='discussion'){
+    prompts = ['أعطني موضوعاً جديداً','أوافقك','لا أوافق لأن...','ما رأيك؟'];
+  }else if(selectedMode==='correction'){
+    prompts = ['صحح هذه الجملة','هل هذا صحيح؟','كيف أقولها أفضل؟','أعطني تمريناً'];
+  }else{
+    prompts = quickPromptsData[selectedScenario] || quickPromptsData.general;
+  }
+  document.getElementById('quickPrompts').innerHTML = prompts.map(function(p){
+    return '<button class="quick-prompt" onclick="useQuickPrompt(\''+p.replace(/'/g,"\\'")+'\')">'+p+'</button>';
+  }).join('');
 
-  // Start timer
   sessionSeconds = 0;
   sessionActive = true;
-  sessionTimer = setInterval(()=>{
+  sessionTimer = setInterval(function(){
     sessionSeconds++;
-    const m = Math.floor(sessionSeconds/60).toString().padStart(2,'0');
-    const s = (sessionSeconds%60).toString().padStart(2,'0');
-    document.getElementById('sessionTimer').innerText = `${m}:${s}`;
+    var m = Math.floor(sessionSeconds/60).toString().padStart(2,'0');
+    var s = (sessionSeconds%60).toString().padStart(2,'0');
+    document.getElementById('sessionTimer').innerText = m+':'+s;
   },1000);
 
-  // Reset stats
   stats = {messages:0,words:0,corrections:0,errors:0,accuracy:0};
   vocabulary = [];
   sessionHistory = [];
   updateStats();
-
-  // Clear chat
   document.getElementById('messagesContainer').innerHTML = '';
-
-  // Send welcome message
-  async function sendWelcomeMessage(){
-  const langInfo = langs[selectedLang];
-  const scenarioLabel = scenarios[selectedScenario]?.label || 'عام';
-
-  const welcomeMessages = {
-    'language-teacher': `مرحباً! 🎓 أنا مدرّسك الخاص لتعلم ${langInfo.native}.\n\nسنتدرب على: ${scenarioLabel}\nمستواك: ${selectedLevel}\n\nابدأ بتقديم نفسك بـ${langInfo.native}! 😊`,
-    'conversation': `مرحباً! 💬 سنتحدث معاً بشكل طبيعي بـ${langInfo.native}.\n\nالسيناريو: ${scenarioLabel}\n\nتفضل وابدأ! 🗣️`,
-    'correction': `مرحباً! ✏️ أنا هنا لتصحيح كتاباتك بـ${langInfo.native}.\n\nاكتب أي جملة وسأصحح لك بالتفصيل وأشرح كل قاعدة! 📝`,
-    'discussion': `مرحباً! 🗣️ سنناقش موضوعاً مثيراً معاً بـ${langInfo.native}.\n\n${selectedTopic ? 'الموضوع: ' + selectedTopic : 'سأقترح عليك 3 مواضيع مثيرة، اختر ما يعجبك!'}\n\nمستواك: ${selectedLevel}\n\nهيا نبدأ! 🚀`,
-    'flashcards': `مرحباً! 📚 سنتعلم كلمات جديدة بـ${langInfo.native}!\n\nالفئة: ${selectedCategory}\nمستواك: ${selectedLevel}\n\nسأعرض لك 5 كلمات مع أمثلة ونصائح حفظ.\n\nهل أنت مستعد؟ 🎯`
-  };
-
-  const welcome = welcomeMessages[selectedMode] || welcomeMessages['language-teacher'];
-  addAIMessage(welcome);
-
-  // إذا كان flashcards أو discussion بدون موضوع محدد، أرسل طلب لـ AI مباشرة
-  if(selectedMode === 'flashcards'){
-    setTimeout(()=>{
-      processAIMessageAuto(`Generate 5 flashcard words for category: ${selectedCategory}`);
-    }, 1000);
-  } else if(selectedMode === 'discussion' && !selectedTopic){
-    setTimeout(()=>{
-      processAIMessageAuto('Suggest 3 interesting discussion topics for my level');
-    }, 1000);
-  }
-}();
+  sendWelcomeMessage();
 }
 
-// ============================================
-// Welcome Message
-// ============================================
-async function sendWelcomeMessage(){
-  const langInfo = langs[selectedLang];
-  const scenarioLabel = scenarios[selectedScenario]?.label || 'عام';
+function sendWelcomeMessage(){
+  var langInfo = langs[selectedLang];
+  var scenarioLabel = scenarios[selectedScenario]?.label || 'عام';
 
-  const welcomeMessages = {
-    'language-teacher': `مرحباً! أنا مدرّسك الخاص لتعلم ${langInfo.native}.\n\nسنتدرب على: ${scenarioLabel}\nمستواك: ${selectedLevel}\n\nابدأ بتقديم نفسك! قل مثلاً: "Hello, my name is [اسمك]" 😊`,
-    'conversation': `مرحباً! سنتحدث معاً بشكل طبيعي.\n\nالسيناريو: ${scenarioLabel}\nاللغة: ${langInfo.native}\n\nتفضل وابدأ! 🗣️`,
-    'correction': `مرحباً! أنا هنا لتصحيح كتاباتك باللغة ${langInfo.native}.\n\nاكتب أي جملة وسأصحح لك كل شيء بالتفصيل ✏️`
+  var welcomeMessages = {
+    'language-teacher': 'مرحباً! 🎓 أنا مدرّسك الخاص لتعلم '+langInfo.native+'.\n\nسنتدرب على: '+scenarioLabel+'\nمستواك: '+selectedLevel+'\n\nابدأ بتقديم نفسك بـ'+langInfo.native+'! 😊',
+    'conversation': 'مرحباً! 💬 سنتحدث معاً بـ'+langInfo.native+'.\n\nالسيناريو: '+scenarioLabel+'\n\nتفضل وابدأ! 🗣️',
+    'correction': 'مرحباً! ✏️ اكتب أي جملة بـ'+langInfo.native+' وسأصحح لك بالتفصيل! 📝',
+    'discussion': 'مرحباً! 🗣️ سنناقش موضوعاً مثيراً بـ'+langInfo.native+'.\n\n'+(selectedTopic ? 'الموضوع: '+selectedTopic : 'سأقترح عليك 3 مواضيع!')+'\n\nهيا نبدأ! 🚀',
+    'flashcards': 'مرحباً! 📚 سنتعلم كلمات جديدة بـ'+langInfo.native+'!\n\nالفئة: '+selectedCategory+'\nمستواك: '+selectedLevel+'\n\nهل أنت مستعد؟ 🎯'
   };
 
   addAIMessage(welcomeMessages[selectedMode] || welcomeMessages['language-teacher']);
+
+  if(selectedMode==='flashcards'){
+    setTimeout(function(){processAIMessageAuto('Generate 5 flashcard words for category: '+selectedCategory);},1000);
+  }else if(selectedMode==='discussion' && !selectedTopic){
+    setTimeout(function(){processAIMessageAuto('Suggest 3 interesting discussion topics for my level');},1000);
+  }
 }
 
-// ============================================
-// Send Message
-// ============================================
-async function processAIMessageAuto(text){
+// Process AI (auto - no user message shown)
+function processAIMessageAuto(text){
   document.getElementById('aiTypingMsg').classList.add('show');
   document.getElementById('messagesContainer').scrollTop = 99999;
 
   socket.emit('ai-chat',{
-    message: text,
-    language: userNativeLang,
-    mode: selectedMode,
-    context: {
-      targetLang: selectedLang,
-      level: selectedLevel,
-      scenario: selectedScenario,
-      category: selectedCategory,
-      topic: selectedTopic
-    }
-  },(res)=>{
+    message:text,language:userNativeLang,mode:selectedMode,
+    context:{targetLang:selectedLang,level:selectedLevel,scenario:selectedScenario,category:selectedCategory,topic:selectedTopic}
+  },function(res){
     document.getElementById('aiTypingMsg').classList.remove('show');
     if(res.success){
-      const response = res.response;
-      const feedback = res.feedback;
-      addAIMessage(response);
-      if(feedback) setTimeout(()=>addFeedbackMessage(feedback),500);
-      speakText(response, selectedLang);
+      addAIMessage(res.response);
+      if(res.feedback) setTimeout(function(){addFeedbackMessage(res.feedback);},500);
+      speakText(res.response, selectedLang);
     }else{
       addSystemMessage('❌ خطأ في الاتصال. حاول مرة أخرى.');
     }
     document.getElementById('messagesContainer').scrollTop = 99999;
   });
 }
-  async function sendMessage(){
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
+
+// Send Message
+function sendMessage(){
+  var input = document.getElementById('msgInput');
+  var text = input.value.trim();
   if(!text || !sessionActive) return;
   input.value = '';
 
@@ -914,93 +839,51 @@ async function processAIMessageAuto(text){
   stats.messages++;
   updateStats();
 
-  // Show typing
   document.getElementById('aiTypingMsg').classList.add('show');
   document.getElementById('messagesContainer').scrollTop = 99999;
 
-  // Send to Gemini
   socket.emit('ai-chat',{
-    message: text,
-    language: userNativeLang,
-    mode: selectedMode,
-    context: {
-      targetLang: selectedLang,
-      level: selectedLevel,
-      scenario: selectedScenario,
-      category: selectedCategory,
-      topic: selectedTopic
-    }
-  },(res)=>{
+    message:text,language:userNativeLang,mode:selectedMode,
+    context:{targetLang:selectedLang,level:selectedLevel,scenario:selectedScenario,category:selectedCategory,topic:selectedTopic}
+  },function(res){
     document.getElementById('aiTypingMsg').classList.remove('show');
-
     if(res.success){
-      const response = res.response;
-      const feedback = res.feedback;
-
-      addAIMessage(response);
-      sessionHistory.push({role:'assistant', content:response});
-
-      // Parse feedback for stats
-      if(feedback){
-        setTimeout(()=>{
-          addFeedbackMessage(feedback);
-          parseFeedbackStats(feedback);
-        },500);
+      addAIMessage(res.response);
+      sessionHistory.push({role:'assistant', content:res.response});
+      if(res.feedback){
+        setTimeout(function(){addFeedbackMessage(res.feedback);parseFeedbackStats(res.feedback);},500);
       }
-
-      // Speak response
-      speakText(response, selectedLang);
-
+      speakText(res.response, selectedLang);
     }else{
-      addSystemMessage('❌ خطأ في الاتصال بـ Gemini AI. حاول مرة أخرى.');
+      addSystemMessage('❌ خطأ. حاول مرة أخرى.');
     }
-
     document.getElementById('messagesContainer').scrollTop = 99999;
   });
 }
 
-// ============================================
-// Parse Feedback for Stats
-// ============================================
 function parseFeedbackStats(feedback){
-  // Count corrections
-  const correctionMatches = feedback.match(/❌/g);
-  if(correctionMatches){
-    stats.errors += correctionMatches.length;
-    stats.corrections += correctionMatches.length;
-  }
-
-  // Count new words
-  const wordMatches = feedback.match(/📚/g);
+  var correctionMatches = feedback.match(/❌/g);
+  if(correctionMatches){stats.errors += correctionMatches.length;stats.corrections += correctionMatches.length;}
+  var wordMatches = feedback.match(/📚/g);
   if(wordMatches){
     stats.words += wordMatches.length;
-    // Extract vocabulary
-    const lines = feedback.split('\n');
-    lines.forEach(line=>{
+    var lines = feedback.split('\n');
+    lines.forEach(function(line){
       if(line.includes('📚')){
-        const wordMatch = line.match(/[A-Za-zÀ-ÿ]+\s*[-=:]\s*(.+)/);
-        if(wordMatch){
-          vocabulary.push({
-            word: line.replace('📚','').split(':')[0].trim().substring(0,20),
-            meaning: wordMatch[1].substring(0,30)
-          });
+        var parts = line.replace('📚','').split(':');
+        if(parts.length>=2){
+          vocabulary.push({word:parts[0].trim().substring(0,20),meaning:parts[1].trim().substring(0,30)});
           updateVocab();
         }
       }
     });
   }
-
-  // Update accuracy
-  const total = stats.messages;
-  const errors = stats.errors;
+  var total = stats.messages;
+  var errors = stats.errors;
   stats.accuracy = total > 0 ? Math.max(0, Math.round(((total - errors) / total) * 100)) : 0;
-
   updateStats();
 }
 
-// ============================================
-// Update Stats UI
-// ============================================
 function updateStats(){
   document.getElementById('statMessages').innerText = stats.messages;
   document.getElementById('statWords').innerText = stats.words;
@@ -1011,73 +894,48 @@ function updateStats(){
 }
 
 function updateVocab(){
-  const list = document.getElementById('vocabList');
-  if(vocabulary.length === 0){
-    list.innerHTML = '<div class="vocab-empty">ستظهر الكلمات الجديدة هنا 📚</div>';
-    return;
-  }
-  list.innerHTML = vocabulary.slice(0,10).map(v=>`
-    <div class="vocab-item">
-      <span class="vocab-word">${v.word}</span>
-      <span class="vocab-meaning">${v.meaning}</span>
-    </div>
-  `).join('');
+  var list = document.getElementById('vocabList');
+  if(vocabulary.length===0){list.innerHTML='<div class="vocab-empty">ستظهر الكلمات الجديدة هنا 📚</div>';return;}
+  list.innerHTML = vocabulary.slice(0,10).map(function(v){
+    return '<div class="vocab-item"><span class="vocab-word">'+v.word+'</span><span class="vocab-meaning">'+v.meaning+'</span></div>';
+  }).join('');
 }
 
-// ============================================
 // Message Helpers
-// ============================================
 function addUserMessage(text){
-  const container = document.getElementById('messagesContainer');
-  const time = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
-  const div = document.createElement('div');
+  var container = document.getElementById('messagesContainer');
+  var time = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  var div = document.createElement('div');
   div.className = 'msg-wrapper user';
-  div.innerHTML = `
-    <div class="msg-avatar user-av">أ</div>
-    <div>
-      <div class="msg-bubble user">${escapeHtml(text)}</div>
-      <div class="msg-time" style="text-align:left;">${time}</div>
-    </div>
-  `;
+  div.innerHTML = '<div class="msg-avatar user-av">أ</div><div><div class="msg-bubble user">'+escapeHtml(text)+'</div><div class="msg-time" style="text-align:left;">'+time+'</div></div>';
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
 
 function addAIMessage(text){
-  const container = document.getElementById('messagesContainer');
-  const time = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
-  const div = document.createElement('div');
+  var container = document.getElementById('messagesContainer');
+  var time = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  var div = document.createElement('div');
   div.className = 'msg-wrapper';
-  div.innerHTML = `
-    <div class="msg-avatar ai-av"><i class="fas fa-robot"></i></div>
-    <div>
-      <div class="msg-bubble ai">${text.replace(/\n/g,'<br>')}</div>
-      <div class="msg-time">${time}</div>
-    </div>
-  `;
+  div.innerHTML = '<div class="msg-avatar ai-av"><i class="fas fa-robot"></i></div><div><div class="msg-bubble ai">'+text.replace(/\n/g,'<br>')+'</div><div class="msg-time">'+time+'</div></div>';
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
 
 function addFeedbackMessage(text){
-  const container = document.getElementById('messagesContainer');
-  const div = document.createElement('div');
+  var container = document.getElementById('messagesContainer');
+  var div = document.createElement('div');
   div.className = 'msg-wrapper';
-  div.innerHTML = `
-    <div class="msg-avatar ai-av"><i class="fas fa-graduation-cap"></i></div>
-    <div>
-      <div class="msg-bubble feedback">${text.replace(/\n/g,'<br>')}</div>
-    </div>
-  `;
+  div.innerHTML = '<div class="msg-avatar ai-av"><i class="fas fa-graduation-cap"></i></div><div><div class="msg-bubble feedback">'+text.replace(/\n/g,'<br>')+'</div></div>';
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
 
 function addSystemMessage(text){
-  const container = document.getElementById('messagesContainer');
-  const div = document.createElement('div');
+  var container = document.getElementById('messagesContainer');
+  var div = document.createElement('div');
   div.style.cssText = 'width:100%;';
-  div.innerHTML = `<div class="msg-bubble system">${text}</div>`;
+  div.innerHTML = '<div class="msg-bubble system">'+text+'</div>';
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
@@ -1086,107 +944,94 @@ function escapeHtml(text){
   return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ============================================
-// Quick Prompts
-// ============================================
 function useQuickPrompt(text){
   document.getElementById('msgInput').value = text;
   sendMessage();
 }
 
-// ============================================
-// Voice Input
-// ============================================
+// Voice
 function toggleVoice(){
   if(isVoiceRecording) stopVoice();
   else startVoice();
 }
 
 function startVoice(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){showNotification('استخدم Chrome للتحدث بالصوت','error');return;}
-
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){showNotification('استخدم Chrome','error');return;}
   voiceRecognition = new SR();
   voiceRecognition.lang = langs[selectedLang]?.voice || 'en-US';
   voiceRecognition.continuous = false;
   voiceRecognition.interimResults = false;
-
-  voiceRecognition.onstart = ()=>{
+  voiceRecognition.onstart = function(){
     isVoiceRecording = true;
     document.getElementById('voiceBtn').classList.add('recording');
     document.getElementById('voiceIcon').className = 'fas fa-stop';
-    showNotification(`🎤 تحدث بـ${langs[selectedLang]?.name}...`,'info');
+    showNotification('🎤 تحدث بـ'+langs[selectedLang]?.name+'...','info');
   };
-
-  voiceRecognition.onresult = (e)=>{
-    const text = e.results[0][0].transcript;
+  voiceRecognition.onresult = function(e){
+    var text = e.results[0][0].transcript;
     document.getElementById('msgInput').value = text;
     stopVoice();
-    setTimeout(()=>sendMessage(), 300);
+    setTimeout(function(){sendMessage();}, 300);
   };
-
-  voiceRecognition.onend = ()=>stopVoice();
-  voiceRecognition.onerror = ()=>stopVoice();
-
+  voiceRecognition.onend = function(){stopVoice();};
+  voiceRecognition.onerror = function(){stopVoice();};
   try{voiceRecognition.start();}catch(e){stopVoice();}
 }
 
 function stopVoice(){
   isVoiceRecording = false;
-  if(voiceRecognition)try{voiceRecognition.stop();}catch(e){}
+  if(voiceRecognition) try{voiceRecognition.stop();}catch(e){}
   document.getElementById('voiceBtn').classList.remove('recording');
   document.getElementById('voiceIcon').className = 'fas fa-microphone';
 }
 
-// ============================================
-// Text to Speech
-// ============================================
+// Speak
 function speakText(text, lang){
   if(!text) return;
   window.speechSynthesis.cancel();
 
-  const voiceLang = langs[lang]?.voice || 'en-US';
-  // Extract only the response part (before ---FEEDBACK--- if present)
-  // ✅ نظّف النص بشكل أفضل قبل النطق
-const cleanText = text
-  .split('---')[0]
-  .replace(/[✅❌💡📚🎯⭐📝📖📌🔤🔄🗣️]/g,'')
-  .replace(/\n+/g,' ')
-  .trim();
-  // Remove emojis for better speech
-  const speechText = cleanText.replace(/[^\w\s\u0600-\u06FF\u00C0-\u024F.,!?]/g,'').trim();
-  if(!speechText) return;
+  var voiceLang = langs[lang]?.voice || 'en-US';
+  var wantedVoice = speechSettings.voiceByLang?.[lang] || '';
+
+  var cleanText = text
+    .split('---')[0]
+    .replace(/[✅❌💡📚🎯⭐📝📖📌🔤🔄🗣️]/g,'')
+    .replace(/\n+/g,' ')
+    .trim();
+  if(!cleanText) return;
 
   function doSpeak(voices){
-    const utt = new SpeechSynthesisUtterance(speechText);
+    var utt = new SpeechSynthesisUtterance(cleanText);
     utt.lang = voiceLang;
-    utt.rate = 0.85;
-    utt.pitch = 1;
-    utt.volume = 1;
-    const voice = voices.find(v=>v.lang===voiceLang) || voices.find(v=>v.lang.startsWith(lang));
+    utt.rate = speechSettings.rate || 0.95;
+    utt.pitch = speechSettings.pitch || 1;
+    utt.volume = speechSettings.volume || 1;
+
+    var voice = null;
+    if(wantedVoice) voice = voices.find(function(v){return v.name===wantedVoice;});
+    if(!voice) voice = voices.find(function(v){return v.lang===voiceLang;}) || voices.find(function(v){return v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase());});
     if(voice) utt.voice = voice;
-    utt.onstart = ()=>{
-      isSpeaking = true;
-      const keepAlive = setInterval(()=>{
+
+    utt.onstart = function(){
+      var k = setInterval(function(){
         if(window.speechSynthesis.speaking) window.speechSynthesis.resume();
-        else clearInterval(keepAlive);
+        else clearInterval(k);
       },5000);
     };
-    utt.onend = ()=>{ isSpeaking = false; };
+
     window.speechSynthesis.speak(utt);
   }
 
-  const voices = window.speechSynthesis.getVoices();
+  var voices = window.speechSynthesis.getVoices();
   if(voices.length > 0) doSpeak(voices);
   else{
-    window.speechSynthesis.onvoiceschanged = ()=>doSpeak(window.speechSynthesis.getVoices());
-    setTimeout(()=>doSpeak(window.speechSynthesis.getVoices()),500);
+    window.speechSynthesis.onvoiceschanged = function(){doSpeak(window.speechSynthesis.getVoices());};
+    setTimeout(function(){doSpeak(window.speechSynthesis.getVoices());},500);
   }
 }
 
-// ============================================
 // End Session
-// ============================================
 function endSession(){
   if(!confirm('هل تريد إنهاء الجلسة؟')) return;
   clearInterval(sessionTimer);
@@ -1200,54 +1045,36 @@ function showReport(){
   document.getElementById('learningScreen').classList.remove('active');
   document.getElementById('reportScreen').classList.add('active');
 
-  // Fill report
-  const m = Math.floor(sessionSeconds/60);
-  const s = sessionSeconds % 60;
-  document.getElementById('reportTime').innerText = `${m}:${s.toString().padStart(2,'0')}`;
+  var m = Math.floor(sessionSeconds/60);
+  var s = sessionSeconds % 60;
+  document.getElementById('reportTime').innerText = m+':'+s.toString().padStart(2,'0');
   document.getElementById('reportMessages').innerText = stats.messages;
   document.getElementById('reportAccuracy').innerText = stats.accuracy + '%';
 
-  // Subtitle
-  let subtitle = '';
-  if(stats.accuracy >= 80) subtitle = '🌟 ممتاز! أداء رائع جداً!';
-  else if(stats.accuracy >= 60) subtitle = '✅ جيد! استمر في التدريب!';
+  var subtitle = '';
+  if(stats.accuracy >= 80) subtitle = '🌟 ممتاز! أداء رائع!';
+  else if(stats.accuracy >= 60) subtitle = '✅ جيد! استمر!';
   else if(stats.accuracy >= 40) subtitle = '💪 لا بأس! التكرار يصنع الإتقان!';
-  else subtitle = '🎯 ابدأ من الأساسيات، أنت تتقدم!';
+  else subtitle = '🎯 ابدأ من الأساسيات!';
   document.getElementById('reportSubtitle').innerText = subtitle;
 
-  // Vocab
   if(vocabulary.length > 0){
-    document.getElementById('reportVocab').innerHTML = vocabulary.map(v=>`
-      <div class="vocab-card-item">
-        <div class="vocab-card-word">${v.word}</div>
-        <div class="vocab-card-meaning">${v.meaning}</div>
-      </div>
-    `).join('');
+    document.getElementById('reportVocab').innerHTML = vocabulary.map(function(v){
+      return '<div class="vocab-card-item"><div class="vocab-card-word">'+v.word+'</div><div class="vocab-card-meaning">'+v.meaning+'</div></div>';
+    }).join('');
   }
 
-  // Evaluation
-  const evalText = `
-🎓 اللغة: ${langs[selectedLang]?.native} | المستوى: ${selectedLevel}
-⏱️ الوقت: ${m} دقيقة و${s} ثانية
-💬 الرسائل: ${stats.messages}
-✅ الدقة: ${stats.accuracy}%
-📚 كلمات جديدة: ${stats.words}
-❌ أخطاء: ${stats.errors}
-
-${stats.accuracy >= 70 ? '🌟 أداء ممتاز! أنت جاهز للمستوى التالي.' : '💡 نصيحة: ركز على الكلمات الأساسية وكررها يومياً.'}
-  `.trim();
+  var evalText = '🎓 اللغة: '+(langs[selectedLang]?.native||'')+' | المستوى: '+selectedLevel+
+    '\n⏱️ الوقت: '+m+' دقيقة\n💬 الرسائل: '+stats.messages+
+    '\n✅ الدقة: '+stats.accuracy+'%\n📚 كلمات: '+stats.words+
+    '\n❌ أخطاء: '+stats.errors;
   document.getElementById('reportEvaluation').innerText = evalText;
 
-  // Ask AI for evaluation
   socket.emit('ai-chat',{
-    message: `Give a brief encouraging evaluation of my session: ${stats.messages} messages, ${stats.accuracy}% accuracy, ${stats.words} new words learned, in ${m} minutes practicing ${langs[selectedLang]?.name} at ${selectedLevel} level.`,
-    language: userNativeLang,
-    mode: 'general',
-    context: {}
-  },(res)=>{
-    if(res.success){
-      document.getElementById('reportEvaluation').innerText = res.response;
-    }
+    message:'Give a brief encouraging evaluation of my session: '+stats.messages+' messages, '+stats.accuracy+'% accuracy, '+stats.words+' new words, in '+m+' minutes practicing '+langs[selectedLang]?.name+' at '+selectedLevel+' level.',
+    language:userNativeLang,mode:'general',context:{}
+  },function(res){
+    if(res.success) document.getElementById('reportEvaluation').innerText = res.response;
   });
 }
 
@@ -1258,79 +1085,34 @@ function restartSession(){
 
 function changeSettings(){
   document.getElementById('reportScreen').classList.remove('active');
+  document.getElementById('learningScreen').classList.remove('active');
   document.getElementById('setupScreen').classList.remove('hidden');
 }
 
-// ============================================
 // Notification
-// ============================================
-function showNotification(msg,type='info'){
-  const el = document.getElementById('notification');
+function showNotification(msg,type){
+  var el = document.getElementById('notification');
   el.innerText = msg;
-  el.className = `notification show ${type}`;
-  setTimeout(()=>el.classList.remove('show'),3500);
+  el.className = 'notification show '+(type||'info');
+  setTimeout(function(){el.classList.remove('show');},3500);
 }
 
-// ============================================
-// Socket
-// ============================================
-function initSocket(){
-  socket = io(SERVER_URL,{transports:['websocket','polling']});
-  socket.on('connect',()=>{
-    checkAccess();
-  });
-  socket.on('disconnect',()=>{
-    showNotification('انقطع الاتصال...','warning');
-  });
-}
-
-// ============================================
 // Init
-// ============================================
-window.onload = ()=>{
+window.onload = function(){
   window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = function(){window.speechSynthesis.getVoices();};
 
-  document.addEventListener('click',()=>{
+  document.addEventListener('click',function(){
     try{new(window.AudioContext||window.webkitAudioContext)().resume();}catch(e){}
   },{once:true});
 
-  // Safari Warning
   if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
-    setTimeout(()=>showNotification('للحصول على أفضل تجربة استخدم Chrome 🌐','warning'),3000);
+    setTimeout(function(){showNotification('للحصول على أفضل تجربة استخدم Chrome 🌐','warning');},3000);
   }
 
-  // Service Worker
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW:',e));
+    navigator.serviceWorker.register('sw.js').catch(function(e){console.log('SW:',e);});
   }
-
-  // اتصل بالسوكت أولاً
-  initSocket();
-
-  // تحقق من الوصول بعد الاتصال
-  socket.on('connect',()=>{
-    checkAccess();
-  });
-};
-  // Safari Warning
-if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
-  setTimeout(()=>showNotification('للحصول على أفضل تجربة استخدم Chrome أو Edge 🌐','warning'),3000);
-}
-
-// Register Service Worker
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js')
-    .then(()=>console.log('✅ SW registered'))
-    .catch(e=>console.log('SW error:',e));
-}
-  window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
-
-  // Activate audio on first click
-  document.addEventListener('click',()=>{
-    try{new(window.AudioContext||window.webkitAudioContext)().resume();}catch(e){}
-  },{once:true});
 
   initSocket();
 };
