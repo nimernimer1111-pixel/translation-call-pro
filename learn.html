@@ -1196,17 +1196,7 @@ function stopVoice(){
 function speakText(text, lang){
   if(!text) return;
 
-  // ✅ تفعيل الصوت تلقائياً
-  try{
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
-    ctx.resume();
-  }catch(e){}
-
-  window.speechSynthesis.cancel();
-
-  var voiceLang = langs[lang]?.voice || 'en-US';
-  var wantedVoice = speechSettings.voiceByLang?.[lang] || '';
-
+  // تنظيف النص
   var cleanText = text
     .split('---')[0]
     .replace(/[✅❌💡📚🎯⭐📝📖📌🔤🔄🗣️]/g,'')
@@ -1214,27 +1204,63 @@ function speakText(text, lang){
     .trim();
   if(!cleanText) return;
 
-  function doSpeak(voices){
-    v ar utt = new SpeechSynthesisUtterance(cleanText);
+  // إلغاء أي صوت حالي
+  window.speechSynthesis.cancel();
+
+  var voiceLang = langs[lang]?.voice || 'en-US';
+  var wantedVoice = speechSettings.voiceByLang?.[lang] || '';
+
+  function doSpeak(){
+    var voices = window.speechSynthesis.getVoices();
+    var utt = new SpeechSynthesisUtterance(cleanText);
     utt.lang = voiceLang;
     utt.rate = speechSettings.rate || 0.95;
     utt.pitch = speechSettings.pitch || 1;
     utt.volume = speechSettings.volume || 1;
 
+    // اختيار الصوت
     var voice = null;
     if(wantedVoice) voice = voices.find(function(v){return v.name===wantedVoice;});
-    if(!voice) voice = voices.find(function(v){return v.lang===voiceLang;}) || voices.find(function(v){return v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase());});
+    if(!voice) voice = voices.find(function(v){return v.lang===voiceLang;});
+    if(!voice) voice = voices.find(function(v){return v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase());});
     if(voice) utt.voice = voice;
 
+    // منع توقف الصوت على الهاتف
     utt.onstart = function(){
-      var k = setInterval(function(){
-        if(window.speechSynthesis.speaking) window.speechSynthesis.resume();
-        else clearInterval(k);
-      },5000);
+      var keepAlive = setInterval(function(){
+        if(window.speechSynthesis.speaking){
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        }else{
+          clearInterval(keepAlive);
+        }
+      }, 3000);
+    };
+
+    utt.onerror = function(e){
+      console.log('TTS error:', e);
+      // ✅ إعادة المحاولة مرة واحدة
+      setTimeout(function(){
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utt);
+      }, 500);
     };
 
     window.speechSynthesis.speak(utt);
   }
+
+  // ✅ تأكد من تحميل الأصوات
+  var voices = window.speechSynthesis.getVoices();
+  if(voices.length > 0){
+    doSpeak();
+  }else{
+    window.speechSynthesis.onvoiceschanged = function(){
+      doSpeak();
+    };
+    // محاولة بعد تأخير
+    setTimeout(doSpeak, 800);
+  }
+}
 
   // ✅ تأخير بسيط للهاتف
   setTimeout(function(){
@@ -1364,13 +1390,27 @@ window.onload = function(){
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = function(){window.speechSynthesis.getVoices();};
 
-  document.addEventListener('click',function(){
-  try{new(window.AudioContext||window.webkitAudioContext)().resume();}catch(e){}
-  window.speechSynthesis.cancel();
-  var utt = new SpeechSynthesisUtterance(' ');
-  utt.volume = 0;
-  window.speechSynthesis.speak(utt);
-},{once:true});
+  // ✅ تفعيل الصوت بصمت عند أول لمسة (بدون إشعار)
+  var audioReady = false;
+  function silentActivate(){
+    if(audioReady) return;
+    try{
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      ctx.resume();
+    }catch(e){}
+    window.speechSynthesis.cancel();
+    var utt = new SpeechSynthesisUtterance('.');
+    utt.volume = 0.01;
+    utt.rate = 10;
+    window.speechSynthesis.speak(utt);
+    audioReady = true;
+    console.log('✅ Audio activated silently');
+  }
+
+  document.addEventListener('click', silentActivate, {once:true});
+  document.addEventListener('touchstart', silentActivate, {once:true});
+  document.addEventListener('touchend', silentActivate, {once:true});
+
   if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
     setTimeout(function(){showNotification('للحصول على أفضل تجربة استخدم Chrome 🌐','warning');},3000);
   }
