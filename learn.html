@@ -10,6 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+ <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--primary:#6366f1;--secondary:#10b981;--danger:#ef4444;--warning:#f59e0b;--bg:#0f172a;--bg-card:#1e293b;--text:#f8fafc;--text-secondary:#94a3b8;--text-muted:#64748b;--border:rgba(255,255,255,0.06);--radius:16px;--radius-sm:10px;}
@@ -198,7 +199,12 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
 <div class="bg-effects"><div class="bg-blob blob1"></div><div class="bg-blob blob2"></div></div>
 <div class="notification" id="notification"></div>
 <div class="ios-audio-btn" id="iosAudioBtn" onclick="activateIOSAudio()">🔊 اضغط لتفعيل الصوت</div>
-<div class="gate" id="gate">
+<!-- Gender selector -->
+<div id="genderSelector" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:9997;display:flex;gap:10px;">
+  <button onclick="setGender('female')" style="padding:10px 18px;border-radius:20px;border:none;background:rgba(99,102,241,0.9);color:white;font-size:0.85rem;cursor:pointer;font-weight:600;">👩 أنثى</button>
+  <button onclick="setGender('male')" style="padding:10px 18px;border-radius:20px;border:none;background:rgba(16,185,129,0.9);color:white;font-size:0.85rem;cursor:pointer;font-weight:600;">👨 ذكر</button>
+</div>
+  <div class="gate" id="gate">
   <div class="gate-card">
     <div class="gate-icon"><i class="fas fa-graduation-cap"></i></div>
     <h2 style="font-size:1.4rem;margin-bottom:8px;">مركز تعلم اللغات</h2>
@@ -750,74 +756,51 @@ function speakText(text, lang){
     .trim();
   if(!cleanText || cleanText.length < 2) return;
 
-  var voiceLang = langs[lang] ? langs[lang].voice : 'en-US';
-  var wantedVoice = speechSettings.voiceByLang[lang] || '';
+  var voiceMap = {
+    'en': {female:'UK English Female', male:'UK English Male'},
+    'ar': {female:'Arabic Female', male:'Arabic Male'},
+    'es': {female:'Spanish Female', male:'Spanish Male'},
+    'fr': {female:'French Female', male:'French Male'},
+    'de': {female:'Deutsch Female', male:'Deutsch Male'},
+    'tr': {female:'Turkish Female', male:'Turkish Male'},
+    'zh': {female:'Chinese Female', male:'Chinese Male'},
+    'ja': {female:'Japanese Female', male:'Japanese Male'},
+    'ru': {female:'Russian Female', male:'Russian Male'},
+    'pt': {female:'Brazilian Portuguese Female', male:'Brazilian Portuguese Male'}
+  };
 
-  function doSpeak(){
-    window.speechSynthesis.cancel();
+  var gender = speechSettings.gender || 'female';
+  var voices = voiceMap[lang] || voiceMap['en'];
+  var voiceName = voices[gender] || voices.female;
 
-    var voices = window.speechSynthesis.getVoices();
-    var utt = new SpeechSynthesisUtterance(cleanText);
-    utt.lang = voiceLang;
-    utt.rate = speechSettings.rate || 0.88;
-    utt.pitch = speechSettings.pitch || 1;
-    utt.volume = speechSettings.volume || 1;
+  var rate = speechSettings.rate || 0.88;
 
-    var voice = null;
-    if(wantedVoice){
-      for(var i=0;i<voices.length;i++){if(voices[i].name===wantedVoice){voice=voices[i];break;}}
-    }
-    if(!voice){
-      for(var i=0;i<voices.length;i++){if(voices[i].lang===voiceLang){voice=voices[i];break;}}
-    }
-    if(!voice){
-      for(var i=0;i<voices.length;i++){if(voices[i].lang&&voices[i].lang.toLowerCase().startsWith(lang.toLowerCase())){voice=voices[i];break;}}
-    }
-    if(voice) utt.voice = voice;
-
-    // ✅ Keep alive on mobile
-    var keepAliveInterval = null;
-    utt.onstart = function(){
-      keepAliveInterval = setInterval(function(){
-        if(window.speechSynthesis.speaking){
-          window.speechSynthesis.pause();
-          window.speechSynthesis.resume();
-        }else{
-          clearInterval(keepAliveInterval);
-        }
-      }, 5000);
-    };
-
-    utt.onend = function(){
-      if(keepAliveInterval) clearInterval(keepAliveInterval);
-    };
-
-    utt.onerror = function(e){
-      if(keepAliveInterval) clearInterval(keepAliveInterval);
-      console.log('TTS error:',e.error);
-    };
-
-    window.speechSynthesis.speak(utt);
-  }
-
-  // ✅ iOS: يحتاج تفعيل أولاً
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   var isMac = navigator.maxTouchPoints > 0 && /Mac/.test(navigator.userAgent);
 
   if((isIOS || isMac) && !iosAudioActivated){
-    // أظهر الزر للمستخدم
     document.getElementById('iosAudioBtn').classList.add('show');
     return;
   }
 
-  // ✅ تنفيذ الصوت
-  var voices = window.speechSynthesis.getVoices();
-  if(voices.length > 0){
-    doSpeak();
-  }else{
-    window.speechSynthesis.onvoiceschanged = function(){doSpeak();};
-    setTimeout(doSpeak, 800);
+  if(typeof responsiveVoice !== 'undefined'){
+    responsiveVoice.cancel();
+    responsiveVoice.speak(cleanText, voiceName, {
+      rate: rate,
+      volume: speechSettings.volume || 1,
+      pitch: speechSettings.pitch || 1
+    });
+    return;
   }
+
+  window.speechSynthesis.cancel();
+  var voiceLang = langs[lang] ? langs[lang].voice : 'en-US';
+  var utt = new SpeechSynthesisUtterance(cleanText);
+  utt.lang = voiceLang;
+  utt.rate = rate;
+  utt.pitch = speechSettings.pitch || 1;
+  utt.volume = speechSettings.volume || 1;
+  window.speechSynthesis.speak(utt);
 }
 
 // ============================================
@@ -873,7 +856,13 @@ function showNotification(msg,type){
 // ============================================
 // ✅ Init
 // ============================================
-window.onload = function(){
+// ✅ Gender Setting
+function setGender(gender){
+  speechSettings.gender = gender;
+  localStorage.setItem('tcSpeechSettings', JSON.stringify(speechSettings));
+  showNotification(gender==='female'?'صوت أنثى 👩':'صوت ذكر 👨','info');
+}
+  window.onload = function(){
   // Load voices
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = function(){window.speechSynthesis.getVoices();};
