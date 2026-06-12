@@ -1195,6 +1195,62 @@ function stopVoice(){
 // Speak
 function speakText(text, lang){
   if(!text) return;
+
+  // ✅ تفعيل الصوت تلقائياً
+  try{
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    ctx.resume();
+  }catch(e){}
+
+  window.speechSynthesis.cancel();
+
+  var voiceLang = langs[lang]?.voice || 'en-US';
+  var wantedVoice = speechSettings.voiceByLang?.[lang] || '';
+
+  var cleanText = text
+    .split('---')[0]
+    .replace(/[✅❌💡📚🎯⭐📝📖📌🔤🔄🗣️]/g,'')
+    .replace(/\n+/g,' ')
+    .trim();
+  if(!cleanText) return;
+
+  function doSpeak(voices){
+    v ar utt = new SpeechSynthesisUtterance(cleanText);
+    utt.lang = voiceLang;
+    utt.rate = speechSettings.rate || 0.95;
+    utt.pitch = speechSettings.pitch || 1;
+    utt.volume = speechSettings.volume || 1;
+
+    var voice = null;
+    if(wantedVoice) voice = voices.find(function(v){return v.name===wantedVoice;});
+    if(!voice) voice = voices.find(function(v){return v.lang===voiceLang;}) || voices.find(function(v){return v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase());});
+    if(voice) utt.voice = voice;
+
+    utt.onstart = function(){
+      var k = setInterval(function(){
+        if(window.speechSynthesis.speaking) window.speechSynthesis.resume();
+        else clearInterval(k);
+      },5000);
+    };
+
+    window.speechSynthesis.speak(utt);
+  }
+
+  // ✅ تأخير بسيط للهاتف
+  setTimeout(function(){
+    var voices = window.speechSynthesis.getVoices();
+    if(voices.length > 0){
+      doSpeak(voices);
+    }else{
+      window.speechSynthesis.onvoiceschanged = function(){
+        doSpeak(window.speechSynthesis.getVoices());
+      };
+      setTimeout(function(){
+        doSpeak(window.speechSynthesis.getVoices());
+      },500);
+    }
+  }, 100);
+}
   window.speechSynthesis.cancel();
 
   var voiceLang = langs[lang]?.voice || 'en-US';
@@ -1309,9 +1365,12 @@ window.onload = function(){
   window.speechSynthesis.onvoiceschanged = function(){window.speechSynthesis.getVoices();};
 
   document.addEventListener('click',function(){
-    try{new(window.AudioContext||window.webkitAudioContext)().resume();}catch(e){}
-  },{once:true});
-
+  try{new(window.AudioContext||window.webkitAudioContext)().resume();}catch(e){}
+  window.speechSynthesis.cancel();
+  var utt = new SpeechSynthesisUtterance(' ');
+  utt.volume = 0;
+  window.speechSynthesis.speak(utt);
+},{once:true});
   if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
     setTimeout(function(){showNotification('للحصول على أفضل تجربة استخدم Chrome 🌐','warning');},3000);
   }
