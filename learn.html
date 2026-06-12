@@ -4,51 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TranslationCall - تعلم اللغات</title>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#10b981">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="TransCall">
-<link rel="apple-touch-icon" href="https://via.placeholder.com/192x192/10b981/ffffff?text=TC">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#10b981">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --primary:#6366f1;--secondary:#10b981;--danger:#ef4444;
-  --warning:#f59e0b;--bg:#0f172a;--bg-card:#1e293b;
-  --text:#f8fafc;--text-secondary:#94a3b8;--text-muted:#64748b;
-  --border:rgba(255,255,255,0.06);--radius:16px;--radius-sm:10px;
-}
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+:root{--primary:#6366f1;--secondary:#10b981;--danger:#ef4444;--warning:#f59e0b;--bg:#0f172a;--bg-card:#1e293b;--text:#f8fafc;--text-secondary:#94a3b8;--text-muted:#64748b;--border:rgba(255,255,255,0.06);--radius:16px;--radius-sm:10px;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;max-width:100vw;}
+html{overflow-x:hidden;max-width:100vw;}
 .bg-effects{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
 .bg-blob{position:absolute;border-radius:50%;filter:blur(120px);opacity:0.15;}
 .blob1{width:800px;height:800px;background:var(--primary);top:-400px;right:-400px;animation:blob 20s ease-in-out infinite;}
 .blob2{width:700px;height:700px;background:var(--secondary);bottom:-300px;left:-300px;animation:blob 25s ease-in-out infinite reverse;}
-.blob3{width:500px;height:500px;background:var(--warning);top:40%;left:40%;animation:blob 18s ease-in-out infinite 3s;}
 @keyframes blob{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-40px) scale(1.1);}66%{transform:translate(-30px,30px) scale(0.9);};}
-
-/* ===== Gate ===== */
 .gate{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;}
 .gate-card{background:rgba(30,41,59,0.95);backdrop-filter:blur(20px);border-radius:24px;padding:40px;width:100%;max-width:420px;border:1px solid rgba(99,102,241,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;margin:20px;}
 .gate-icon{width:70px;height:70px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:white;margin:0 auto 20px;box-shadow:0 8px 25px rgba(99,102,241,0.4);}
 .gate-error{color:var(--danger);font-size:0.85rem;margin-bottom:12px;display:none;padding:8px;background:rgba(239,68,68,0.1);border-radius:8px;}
-
-/* ===== Header ===== */
 header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:15px 25px;display:flex;justify-content:space-between;align-items:center;}
 .logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
 .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;}
 .logo-name{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .logo-badge{font-size:0.65rem;color:var(--secondary);letter-spacing:2px;display:block;}
 .header-right{display:flex;align-items:center;gap:10px;}
-.back-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:20px;color:var(--text-secondary);cursor:pointer;font-size:0.82rem;text-decoration:none;transition:all 0.2s;}
+.back-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:20px;color:var(--text-secondary);cursor:pointer;font-size:0.82rem;text-decoration:none;}
 .back-btn:hover{background:rgba(255,255,255,0.1);color:var(--text);}
-
-/* ===== Main Layout ===== */
 .main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:30px 20px;display:none;}
 .main.active{display:block;}
-
-/* ===== Setup Screen ===== */
 .setup-screen{display:block;}
 .setup-screen.hidden{display:none;}
 .hero-section{text-align:center;padding:20px 0 40px;}
@@ -57,14 +42,9 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .grad1{background:linear-gradient(135deg,var(--primary),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .grad2{background:linear-gradient(135deg,var(--secondary),#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero-subtitle{color:var(--text-secondary);font-size:1.05rem;line-height:1.7;max-width:600px;margin:0 auto 30px;}
-
-/* Setup Steps */
 .setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px;}
-@media(max-width:700px){.setup-grid{grid-template-columns:1fr;}.hero-title{font-size:2rem;}}
 .setup-card{background:rgba(30,41,59,0.85);backdrop-filter:blur(20px);border-radius:var(--radius);padding:24px;border:1px solid var(--border);}
 .setup-card h3{font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;display:flex;align-items:center;gap:8px;}
-
-/* Language Grid */
 .lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;}
 .lang-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;background:rgba(0,0,0,0.2);border:2px solid transparent;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;color:var(--text);}
 .lang-btn:hover{border-color:rgba(99,102,241,0.3);}
@@ -72,16 +52,12 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .lang-btn .flag{font-size:1.8rem;}
 .lang-btn .name{font-size:0.72rem;color:var(--text-muted);}
 .lang-btn.active .name{color:var(--primary);}
-
-/* Level Grid */
 .level-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .level-btn{padding:12px;background:rgba(0,0,0,0.2);border:2px solid transparent;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;text-align:center;color:var(--text);}
 .level-btn:hover{border-color:rgba(99,102,241,0.3);}
 .level-btn.active{border-color:var(--primary);background:rgba(99,102,241,0.12);}
 .level-code{font-size:1.2rem;font-weight:700;color:var(--primary);display:block;margin-bottom:3px;}
 .level-name{font-size:0.7rem;color:var(--text-muted);}
-
-/* Mode Grid */
 .mode-grid{display:grid;grid-template-columns:1fr;gap:10px;}
 .mode-btn{display:flex;align-items:center;gap:14px;padding:15px;background:rgba(0,0,0,0.2);border:2px solid transparent;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;color:var(--text);text-align:right;}
 .mode-btn:hover{border-color:rgba(99,102,241,0.3);}
@@ -89,8 +65,6 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .mode-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:white;flex-shrink:0;}
 .mode-info h4{font-size:0.9rem;margin-bottom:3px;}
 .mode-info p{font-size:0.75rem;color:var(--text-muted);}
-
-/* Scenario Grid */
 .scenario-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;}
 .scenario-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;background:rgba(0,0,0,0.2);border:2px solid transparent;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;color:var(--text);}
 .scenario-btn:hover{border-color:rgba(16,185,129,0.3);}
@@ -98,17 +72,10 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .scenario-btn .icon{font-size:1.4rem;}
 .scenario-btn .label{font-size:0.68rem;color:var(--text-muted);text-align:center;}
 .scenario-btn.active .label{color:var(--secondary);}
-
-/* Start Button */
 .start-btn{width:100%;padding:18px;border-radius:var(--radius);border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;box-shadow:0 8px 25px rgba(99,102,241,0.4);display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;}
-.start-btn:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(99,102,241,0.5);}
-.start-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
-
-/* ===== Learning Screen ===== */
+.start-btn:hover{transform:translateY(-3px);}
 .learning-screen{display:none;}
 .learning-screen.active{display:flex;flex-direction:column;gap:20px;}
-
-/* Session Info Bar */
 .session-bar{background:rgba(30,41,59,0.85);border-radius:var(--radius);padding:15px 20px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 .session-info{display:flex;align-items:center;gap:15px;flex-wrap:wrap;}
 .session-tag{display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;font-size:0.8rem;}
@@ -116,15 +83,10 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .session-tag.level{background:rgba(16,185,129,0.15);color:#34d399;}
 .session-tag.mode{background:rgba(245,158,11,0.15);color:#fbbf24;}
 .session-tag.scenario{background:rgba(239,68,68,0.15);color:#f87171;}
-.session-timer{font-size:1.1rem;font-weight:700;color:var(--primary);font-variant-numeric:tabular-nums;}
-.end-session-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);color:var(--danger);cursor:pointer;font-size:0.85rem;font-weight:600;transition:all 0.2s;}
+.session-timer{font-size:1.1rem;font-weight:700;color:var(--primary);}
+.end-session-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);color:var(--danger);cursor:pointer;font-size:0.85rem;font-weight:600;}
 .end-session-btn:hover{background:var(--danger);color:white;}
-
-/* Main Learning Area */
 .learning-layout{display:grid;grid-template-columns:1fr 380px;gap:20px;}
-@media(max-width:900px){.learning-layout{grid-template-columns:1fr;}}
-
-/* Chat Area */
 .chat-area{background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid var(--border);display:flex;flex-direction:column;height:600px;}
 .chat-header{padding:15px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .ai-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:white;}
@@ -132,8 +94,6 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .ai-status{font-size:0.75rem;color:var(--secondary);display:flex;align-items:center;gap:4px;}
 .ai-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--secondary);display:inline-block;}
 .messages-container{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:12px;}
-
-/* Messages */
 .msg-wrapper{display:flex;gap:10px;max-width:85%;}
 .msg-wrapper.user{align-self:flex-end;flex-direction:row-reverse;}
 .msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;align-self:flex-end;}
@@ -145,8 +105,6 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .msg-bubble.feedback{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;white-space:pre-line;font-size:0.82rem;}
 .msg-bubble.system{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:12px;font-size:0.8rem;color:#fbbf24;text-align:center;}
 .msg-time{font-size:0.65rem;color:var(--text-muted);margin-top:4px;padding:0 4px;}
-
-/* AI Typing */
 .ai-typing-msg{display:none;align-items:center;gap:10px;}
 .ai-typing-msg.show{display:flex;}
 .typing-bubble{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:18px 18px 18px 4px;padding:12px 16px;display:flex;align-items:center;gap:4px;}
@@ -154,30 +112,21 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .typing-dot:nth-child(2){animation-delay:0.2s;}
 .typing-dot:nth-child(3){animation-delay:0.4s;}
 @keyframes td{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);};}
-
-/* Input Area */
 .input-area{padding:15px;border-top:1px solid var(--border);flex-shrink:0;}
 .input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
-.msg-input{flex:1;padding:12px 16px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:25px;color:var(--text);font-size:0.9rem;transition:all 0.2s;}
+.msg-input{flex:1;padding:12px 16px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:25px;color:var(--text);font-size:0.9rem;}
 .msg-input:focus{outline:none;border-color:var(--primary);}
 .msg-input::placeholder{color:var(--text-muted);}
-.voice-input-btn{width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:var(--text-secondary);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
+.voice-input-btn{width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:var(--text-secondary);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .voice-input-btn:hover{background:rgba(255,255,255,0.15);}
 .voice-input-btn.recording{background:var(--danger);color:white;animation:rpulse 1s infinite;}
 @keyframes rpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);};}
-.send-btn{width:44px;height:44px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+.send-btn{width:44px;height:44px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .send-btn:hover{transform:scale(1.08);}
-.send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
-
-/* Quick prompts */
 .quick-prompts{display:flex;gap:6px;flex-wrap:wrap;}
-.quick-prompt{padding:5px 12px;border-radius:15px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.15);color:#a5b4fc;font-size:0.75rem;cursor:pointer;transition:all 0.2s;}
+.quick-prompt{padding:5px 12px;border-radius:15px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.15);color:#a5b4fc;font-size:0.75rem;cursor:pointer;}
 .quick-prompt:hover{background:rgba(99,102,241,0.15);}
-
-/* ===== Right Panel ===== */
 .right-panel{display:flex;flex-direction:column;gap:15px;}
-
-/* Stats Card */
 .stats-card{background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid var(--border);padding:20px;}
 .stats-card h3{font-size:0.82rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;display:flex;align-items:center;gap:7px;}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -188,16 +137,12 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .stat-value.warning{color:var(--warning);}
 .stat-value.danger{color:var(--danger);}
 .stat-label{font-size:0.7rem;color:var(--text-muted);margin-top:4px;}
-
-/* Accuracy Bar */
 .accuracy-bar{margin-top:15px;}
 .accuracy-label{display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:6px;}
 .accuracy-label span:first-child{color:var(--text-secondary);}
 .accuracy-label span:last-child{color:var(--secondary);font-weight:600;}
 .bar-bg{height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;}
 .bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:4px;transition:width 0.5s ease;}
-
-/* Vocabulary Card */
 .vocab-card{background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid var(--border);padding:20px;max-height:250px;overflow:hidden;display:flex;flex-direction:column;}
 .vocab-card h3{font-size:0.82rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:7px;flex-shrink:0;}
 .vocab-list{overflow-y:auto;flex:1;}
@@ -206,21 +151,17 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .vocab-word{color:var(--primary);font-weight:600;}
 .vocab-meaning{color:var(--text-secondary);font-size:0.78rem;}
 .vocab-empty{color:var(--text-muted);font-size:0.82rem;text-align:center;padding:15px 0;}
-
-/* Tips Card */
 .tips-card{background:rgba(30,41,59,0.85);border-radius:var(--radius);border:1px solid rgba(245,158,11,0.2);padding:20px;}
 .tips-card h3{font-size:0.82rem;color:var(--warning);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
 .tip-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.82rem;}
 .tip-item:last-child{border-bottom:none;}
 .tip-icon{font-size:1rem;flex-shrink:0;}
 .tip-text{color:var(--text-secondary);line-height:1.5;}
-
-/* ===== Session Report ===== */
 .report-screen{display:none;}
 .report-screen.active{display:block;}
 .report-card{background:rgba(30,41,59,0.85);border-radius:20px;border:1px solid var(--border);padding:30px;max-width:700px;margin:0 auto;}
 .report-header{text-align:center;margin-bottom:30px;}
-.report-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;margin:0 auto 15px;box-shadow:0 8px 25px rgba(99,102,241,0.4);}
+.report-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;margin:0 auto 15px;}
 .report-title{font-size:1.5rem;font-weight:700;margin-bottom:5px;}
 .report-subtitle{color:var(--text-muted);font-size:0.9rem;}
 .report-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:25px 0;}
@@ -234,13 +175,10 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .vocab-card-word{font-size:0.9rem;font-weight:600;color:var(--primary);margin-bottom:3px;}
 .vocab-card-meaning{font-size:0.75rem;color:var(--text-muted);}
 .report-actions{display:flex;gap:12px;margin-top:25px;flex-wrap:wrap;}
-.report-btn{flex:1;padding:14px;border-radius:12px;border:none;font-weight:600;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;min-width:140px;}
+.report-btn{flex:1;padding:14px;border-radius:12px;border:none;font-weight:600;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px;min-width:140px;}
 .report-btn.primary{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;}
 .report-btn.secondary{background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;}
 .report-btn.ghost{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text);}
-.report-btn:hover{transform:translateY(-2px);}
-
-/* Notification */
 .notification{position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:25px;font-size:0.88rem;font-weight:600;z-index:1000;display:none;max-width:90vw;text-align:center;}
 .notification.show{display:block;animation:ni 0.3s ease;}
 .notification.success{background:rgba(16,185,129,0.95);color:white;}
@@ -248,219 +186,67 @@ header{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.85);backdrop
 .notification.info{background:rgba(99,102,241,0.95);color:white;}
 .notification.warning{background:rgba(245,158,11,0.95);color:white;}
 @keyframes ni{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
-
-/* Input */
-.input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.95rem;transition:all 0.3s;}
+.input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);color:var(--text);font-size:0.95rem;}
 .input:focus{outline:none;border-color:var(--primary);}
 .input::placeholder{color:var(--text-muted);}
-.btn-primary-full{width:100%;padding:16px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-primary-full:hover{transform:translateY(-2px);}
-/* ============================================
-   ✅ RESPONSIVE - MOBILE OPTIMIZATION
-   ============================================ */
+.btn-primary-full{width:100%;padding:16px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 
-/* Tablets */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media(max-width:1000px){
   .learning-layout{grid-template-columns:1fr !important;}
-  .right-panel{order:2;}
 }
-
-/* Mobile */
 @media(max-width:700px){
-  /* Header */
   header{padding:10px 15px;flex-wrap:wrap;gap:8px;}
   .logo-icon{width:36px;height:36px;font-size:16px;}
   .logo-name{font-size:1rem;}
-  .header-right{gap:6px;flex-wrap:wrap;}
-  .back-btn{padding:6px 12px;font-size:0.75rem;gap:5px;}
-
-  /* Hero */
+  .back-btn{padding:6px 12px;font-size:0.75rem;}
   .hero-section{padding:15px 0 25px;}
   .hero-title{font-size:1.8rem !important;}
-  .hero-subtitle{font-size:0.9rem;margin-bottom:20px;}
-  .hero-badge{font-size:0.72rem;padding:6px 14px;margin-bottom:15px;}
-
-  /* Setup */
+  .hero-subtitle{font-size:0.9rem;}
+  .hero-badge{font-size:0.72rem;padding:6px 14px;}
   .setup-grid{grid-template-columns:1fr !important;gap:15px;}
-  .setup-card{padding:18px;border-radius:14px;}
-  .setup-card h3{font-size:0.78rem;margin-bottom:12px;}
-
-  /* Language Grid */
+  .setup-card{padding:18px;}
+  .setup-card h3{font-size:0.78rem;}
   .lang-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr)) !important;gap:8px;}
-  .lang-btn{padding:10px 6px;gap:4px;}
-  .lang-btn .flag{font-size:1.4rem;}
-  .lang-btn .name{font-size:0.65rem;}
-
-  /* Level Grid */
-  .level-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
-  .level-btn{padding:10px 8px;}
-  .level-code{font-size:1rem;}
-  .level-name{font-size:0.62rem;}
-
-  /* Mode Grid */
-  .mode-btn{padding:12px;gap:10px;}
-  .mode-icon{width:38px;height:38px;font-size:1rem;}
-  .mode-info h4{font-size:0.82rem;}
-  .mode-info p{font-size:0.68rem;}
-
-  /* Scenario Grid */
-  .scenario-grid{grid-template-columns:repeat(auto-fill,minmax(75px,1fr)) !important;gap:6px;}
-  .scenario-btn{padding:8px 6px;gap:4px;}
-  .scenario-btn .icon{font-size:1.2rem;}
-  .scenario-btn .label{font-size:0.6rem;}
-
-  /* Start Button */
-  .start-btn{padding:14px;font-size:0.95rem;gap:10px;border-radius:12px;}
-
-  /* Session Bar */
-  .session-bar{padding:10px 14px;flex-direction:column;gap:8px;align-items:stretch;}
-  .session-info{gap:8px;justify-content:center;flex-wrap:wrap;}
-  .session-tag{padding:4px 10px;font-size:0.72rem;}
-  .session-timer{font-size:0.95rem;text-align:center;}
-  .end-session-btn{padding:6px 14px;font-size:0.78rem;justify-content:center;}
-
-  /* Learning Layout */
+  .lang-btn{padding:10px 6px;}.lang-btn .flag{font-size:1.4rem;}.lang-btn .name{font-size:0.65rem;}
+  .level-grid{gap:8px;}.level-btn{padding:10px 8px;}.level-code{font-size:1rem;}.level-name{font-size:0.62rem;}
+  .mode-btn{padding:12px;gap:10px;}.mode-icon{width:38px;height:38px;font-size:1rem;}.mode-info h4{font-size:0.82rem;}.mode-info p{font-size:0.68rem;}
+  .scenario-grid{grid-template-columns:repeat(auto-fill,minmax(75px,1fr)) !important;gap:6px;}.scenario-btn{padding:8px 6px;}.scenario-btn .icon{font-size:1.2rem;}.scenario-btn .label{font-size:0.6rem;}
+  .start-btn{padding:14px;font-size:0.95rem;}
+  .session-bar{padding:10px 14px;flex-direction:column;gap:8px;}.session-info{gap:8px;justify-content:center;}.session-tag{padding:4px 10px;font-size:0.72rem;}
   .learning-layout{grid-template-columns:1fr !important;gap:12px;}
-
-  /* Chat Area */
-  .chat-area{height:450px;border-radius:14px;}
-  .chat-header{padding:12px 15px;gap:8px;}
-  .ai-avatar{width:34px;height:34px;font-size:0.95rem;}
-  .ai-name{font-size:0.85rem;}
-  .ai-status{font-size:0.68rem;}
-
-  /* Messages */
-  .messages-container{padding:10px;}
-  .msg-wrapper{max-width:92% !important;gap:8px;}
-  .msg-avatar{width:28px;height:28px;font-size:0.75rem;}
-  .msg-bubble{padding:10px 13px;font-size:0.82rem;border-radius:14px;}
-  .msg-bubble.ai{border-radius:14px 14px 14px 4px;}
-  .msg-bubble.user{border-radius:14px 14px 4px 14px;}
-  .msg-bubble.feedback{font-size:0.75rem;padding:10px 12px;}
-  .msg-bubble.system{font-size:0.72rem;}
-  .msg-time{font-size:0.6rem;}
-
-  /* Typing */
-  .typing-bubble{padding:10px 14px;}
-  .typing-dot{width:6px;height:6px;}
-
-  /* Input Area */
-  .input-area{padding:10px;}
-  .input-row{gap:6px;}
-  .msg-input{padding:10px 14px;font-size:0.82rem;}
-  .voice-input-btn{width:38px;height:38px;font-size:0.9rem;}
-  .send-btn{width:38px;height:38px;font-size:0.9rem;}
-
-  /* Quick Prompts */
-  .quick-prompts{gap:5px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:5px;-webkit-overflow-scrolling:touch;}
-  .quick-prompt{padding:4px 10px;font-size:0.68rem;white-space:nowrap;flex-shrink:0;}
-
-  /* Right Panel */
-  .right-panel{gap:12px;}
-
-  /* Stats Card */
-  .stats-card{padding:15px;border-radius:12px;}
-  .stats-card h3{font-size:0.75rem;margin-bottom:10px;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
-  .stat-item{padding:10px;border-radius:8px;}
-  .stat-value{font-size:1.3rem;}
-  .stat-label{font-size:0.62rem;}
-  .accuracy-bar{margin-top:10px;}
-  .accuracy-label{font-size:0.72rem;}
-
-  /* Vocab Card */
-  .vocab-card{padding:15px;max-height:200px;border-radius:12px;}
-  .vocab-card h3{font-size:0.75rem;margin-bottom:10px;}
-  .vocab-item{padding:6px 0;font-size:0.78rem;}
-  .vocab-word{font-size:0.78rem;}
-  .vocab-meaning{font-size:0.7rem;}
-  .vocab-empty{font-size:0.75rem;padding:10px 0;}
-
-  /* Tips Card */
-  .tips-card{padding:15px;border-radius:12px;}
-  .tips-card h3{font-size:0.75rem;margin-bottom:10px;}
-  .tip-item{padding:6px 0;font-size:0.75rem;gap:8px;}
-  .tip-icon{font-size:0.85rem;}
-  .tip-text{font-size:0.72rem;}
-
-  /* Report */
-  .report-card{padding:22px 18px;border-radius:16px;margin:0 10px;}
-  .report-icon{width:65px;height:65px;font-size:1.6rem;}
-  .report-title{font-size:1.2rem;}
-  .report-subtitle{font-size:0.82rem;}
-  .report-stats{grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;}
-  .report-stat{padding:12px 8px;border-radius:10px;}
-  .report-stat-value{font-size:1.5rem;}
-  .report-stat-label{font-size:0.65rem;}
-  .report-section{margin:15px 0;}
-  .report-section h4{font-size:0.78rem;margin-bottom:10px;}
-  .vocab-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr)) !important;gap:6px;}
-  .vocab-card-item{padding:8px;border-radius:6px;}
-  .vocab-card-word{font-size:0.8rem;}
-  .vocab-card-meaning{font-size:0.68rem;}
-  #reportEvaluation{padding:12px;font-size:0.8rem;}
-  .report-actions{gap:8px;margin-top:20px;}
+  .chat-area{height:450px;}.chat-header{padding:12px 15px;}.ai-avatar{width:34px;height:34px;}.ai-name{font-size:0.85rem;}
+  .messages-container{padding:10px;}.msg-wrapper{max-width:92% !important;}.msg-avatar{width:28px;height:28px;font-size:0.75rem;}.msg-bubble{padding:10px 13px;font-size:0.82rem;}
+  .input-area{padding:10px;}.msg-input{padding:10px 14px;font-size:0.82rem;}.voice-input-btn,.send-btn{width:38px;height:38px;font-size:0.9rem;}
+  .quick-prompts{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;}.quick-prompt{white-space:nowrap;flex-shrink:0;font-size:0.68rem;}
+  .stats-card,.vocab-card,.tips-card{padding:15px;}.stats-card h3,.vocab-card h3,.tips-card h3{font-size:0.75rem;}
+  .stat-value{font-size:1.3rem;}.stat-label{font-size:0.62rem;}
+  .vocab-item{font-size:0.78rem;}.tip-item{font-size:0.75rem;}
+  .report-card{padding:22px 18px;margin:0 10px;}.report-icon{width:65px;height:65px;font-size:1.6rem;}.report-title{font-size:1.2rem;}
+  .report-stats{gap:10px;}.report-stat{padding:12px 8px;}.report-stat-value{font-size:1.5rem;}.report-stat-label{font-size:0.65rem;}
   .report-btn{padding:12px;font-size:0.85rem;min-width:100px;}
-
-  /* Gate */
   .gate-card{padding:30px 20px;max-width:95%;margin:10px;}
-  .gate-icon{width:60px;height:60px;font-size:1.5rem;}
-
-  /* Flashcard & Discussion Cards */
-  #flashcardCategoryCard,#discussionTopicCard{padding:15px;border-radius:12px;}
-  #flashcardCategoryCard h3,#discussionTopicCard h3{font-size:0.78rem;}
-
-  /* Main padding */
   .main{padding:15px 10px;}
-
-  /* Footer */
-  footer{padding:12px;font-size:0.7rem;margin-top:20px;}
-
-  /* Notifications */
+  footer{padding:12px;font-size:0.7rem;}
   .notification{font-size:0.8rem;padding:10px 18px;top:60px;}
-
-  /* Sound Settings */
-  .sound-modal-card{padding:22px 18px;max-width:95%;margin:10px;}
+  .end-session-btn{padding:6px 14px;font-size:0.78rem;}
+  .session-timer{font-size:0.95rem;}
 }
-
-/* Very Small Phones */
 @media(max-width:380px){
   .hero-title{font-size:1.5rem !important;}
-  .hero-subtitle{font-size:0.82rem;}
   .lang-grid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr)) !important;}
-  .lang-btn{padding:8px 4px;}
-  .lang-btn .flag{font-size:1.2rem;}
-  .lang-btn .name{font-size:0.58rem;}
-  .level-grid{gap:6px;}
-  .level-btn{padding:8px 6px;}
-  .level-code{font-size:0.9rem;}
   .scenario-grid{grid-template-columns:repeat(auto-fill,minmax(65px,1fr)) !important;}
-  .scenario-btn{padding:6px 4px;}
-  .scenario-btn .icon{font-size:1rem;}
-  .scenario-btn .label{font-size:0.55rem;}
-  .mode-btn{padding:10px;gap:8px;}
-  .mode-icon{width:34px;height:34px;font-size:0.9rem;}
-  .start-btn{padding:12px;font-size:0.88rem;}
   .chat-area{height:380px;}
-  .msg-bubble{font-size:0.78rem;padding:8px 10px;}
-  .msg-input{font-size:0.78rem;padding:8px 12px;}
-  .voice-input-btn{width:34px;height:34px;}
-  .send-btn{width:34px;height:34px;}
-  .stat-value{font-size:1.1rem;}
+  .msg-bubble{font-size:0.78rem;}
   .report-stat-value{font-size:1.2rem;}
-  .report-btn{padding:10px;font-size:0.78rem;}
 }
 
-/* Fix horizontal scroll */
-html,body{
-  max-width:100vw;
-  overflow-x:hidden;
-}
-
-/* Safe Area for iPhone notch */
-@supports(padding: max(0px)){
-  header{padding-top:max(10px, env(safe-area-inset-top));}
-  footer{padding-bottom:max(12px, env(safe-area-inset-bottom));}
+html,body{max-width:100vw;overflow-x:hidden;}
+@supports(padding:max(0px)){
+  header{padding-top:max(10px,env(safe-area-inset-top));}
+  footer{padding-bottom:max(12px,env(safe-area-inset-bottom));}
 }
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.1);}
@@ -469,57 +255,33 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
 </style>
 </head>
 <body>
-
-<div class="bg-effects"><div class="bg-blob blob1"></div><div class="bg-blob blob2"></div><div class="bg-blob blob3"></div></div>
+<div class="bg-effects"><div class="bg-blob blob1"></div><div class="bg-blob blob2"></div></div>
 <div class="notification" id="notification"></div>
-
-<!-- ===== GATE ===== -->
 <div class="gate" id="gate">
   <div class="gate-card">
     <div class="gate-icon"><i class="fas fa-graduation-cap"></i></div>
     <h2 style="font-size:1.4rem;margin-bottom:8px;">مركز تعلم اللغات</h2>
-    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:25px;">
-      أدخل كود الوصول للمتابعة
-    </p>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:25px;">أدخل كود الوصول للمتابعة</p>
     <div class="gate-error" id="gateError"><i class="fas fa-circle-xmark"></i> <span id="gateErrorText">كود غير صحيح</span></div>
     <input type="password" class="input" id="gateInput" placeholder="أدخل كود الموقع" style="text-align:center;font-size:1.1rem;font-weight:700;margin-bottom:16px;" onkeypress="if(event.key==='Enter')verifyGate()">
     <button class="btn-primary-full" onclick="verifyGate()"><i class="fas fa-arrow-right-to-bracket"></i> دخول</button>
     <p style="color:var(--text-muted);font-size:0.75rem;margin-top:20px;">© Omar Nimer 2026</p>
   </div>
 </div>
-
-<!-- ===== HEADER ===== -->
 <header>
-  <a href="index.html" class="logo">
-    <div class="logo-icon"><i class="fas fa-language"></i></div>
-    <div><div class="logo-name">TranslationCall</div><span class="logo-badge">PRO</span></div>
-  </a>
-  <div class="header-right">
-    <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للموقع</a>
-  </div>
+  <a href="index.html" class="logo"><div class="logo-icon"><i class="fas fa-language"></i></div><div><div class="logo-name">TranslationCall</div><span class="logo-badge">PRO</span></div></a>
+  <div class="header-right"><a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة</a></div>
 </header>
-
-<!-- ===== MAIN ===== -->
 <div class="main" id="main">
-
-  <!-- ===== SETUP SCREEN ===== -->
   <div class="setup-screen" id="setupScreen">
     <div class="hero-section">
       <div class="hero-badge"><i class="fas fa-graduation-cap"></i> مدرّس AI متقدم</div>
-      <h1 class="hero-title">
-        <span class="grad1">تعلّم أي لغة</span><br>
-        <span class="grad2">مع Gemini AI</span>
-      </h1>
-      <p class="hero-subtitle">
-        تحدث مع مدرّس ذكاء اصطناعي يصحح أخطاءك ويعلمك كلمات جديدة
-        ويرد عليك بالصوت مثل معلم حقيقي 🎓
-      </p>
+      <h1 class="hero-title"><span class="grad1">تعلّم أي لغة</span><br><span class="grad2">مع Gemini AI</span></h1>
+      <p class="hero-subtitle">تحدث مع مدرّس ذكاء اصطناعي يصحح أخطاءك ويعلمك كلمات جديدة 🎓</p>
     </div>
-
     <div class="setup-grid">
-      <!-- Language Selection -->
       <div class="setup-card">
-        <h3><i class="fas fa-globe" style="color:var(--primary);"></i> اختر اللغة التي تريد تعلمها</h3>
+        <h3><i class="fas fa-globe" style="color:var(--primary);"></i> اختر اللغة</h3>
         <div class="lang-grid">
           <button class="lang-btn active" data-lang="en" onclick="selectLang(this)"><span class="flag">🇺🇸</span><span class="name">English</span></button>
           <button class="lang-btn" data-lang="es" onclick="selectLang(this)"><span class="flag">🇪🇸</span><span class="name">Español</span></button>
@@ -533,11 +295,9 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
           <button class="lang-btn" data-lang="pt" onclick="selectLang(this)"><span class="flag">🇧🇷</span><span class="name">Português</span></button>
         </div>
       </div>
-
-      <!-- Level + Mode -->
       <div style="display:flex;flex-direction:column;gap:20px;">
         <div class="setup-card">
-          <h3><i class="fas fa-signal" style="color:var(--secondary);"></i> مستواك الحالي</h3>
+          <h3><i class="fas fa-signal" style="color:var(--secondary);"></i> مستواك</h3>
           <div class="level-grid">
             <button class="level-btn active" data-level="A1" onclick="selectLevel(this)"><span class="level-code">A1</span><span class="level-name">مبتدئ</span></button>
             <button class="level-btn" data-level="A2" onclick="selectLevel(this)"><span class="level-code">A2</span><span class="level-name">أساسي</span></button>
@@ -546,38 +306,20 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
             <button class="level-btn" data-level="C1" onclick="selectLevel(this)"><span class="level-code">C1</span><span class="level-name">متقدم</span></button>
           </div>
         </div>
-
         <div class="setup-card">
           <h3><i class="fas fa-chalkboard-teacher" style="color:var(--warning);"></i> نوع التدريب</h3>
           <div class="mode-grid">
-            <button class="mode-btn active" data-mode="language-teacher" onclick="selectMode(this)">
-              <div class="mode-icon" style="background:linear-gradient(135deg,var(--primary),#8b5cf6);"><i class="fas fa-graduation-cap"></i></div>
-              <div class="mode-info"><h4>مدرّس اللغة</h4><p>محادثة مع تصحيح وشرح تفصيلي</p></div>
-            </button>
-            <button class="mode-btn" data-mode="conversation" onclick="selectMode(this)">
-              <div class="mode-icon" style="background:linear-gradient(135deg,var(--secondary),#14b8a6);"><i class="fas fa-comments"></i></div>
-              <div class="mode-info"><h4>محادثة حرة</h4><p>تحدث بحرية مع AI بلا تقطع</p></div>
-            </button>
-            <button class="mode-btn" data-mode="correction" onclick="selectMode(this)">
-              <div class="mode-icon" style="background:linear-gradient(135deg,var(--warning),#f97316);"><i class="fas fa-spell-check"></i></div>
-              <div class="mode-info"><h4>تصحيح الأخطاء</h4><p>اكتب وسيصحح كل أخطائك</p></div>
-            </button>
-            <button class="mode-btn" data-mode="discussion" onclick="selectMode(this)">
-  <div class="mode-icon" style="background:linear-gradient(135deg,#ec4899,#f43f5e);"><i class="fas fa-comments"></i></div>
-  <div class="mode-info"><h4>مناقشة موضوع</h4><p>ناقش موضوعاً مثيراً مع AI</p></div>
-</button>
-<button class="mode-btn" data-mode="flashcards" onclick="selectMode(this)">
-  <div class="mode-icon" style="background:linear-gradient(135deg,#06b6d4,#0891b2);"><i class="fas fa-layer-group"></i></div>
-  <div class="mode-info"><h4>بطاقات حفظ</h4><p>تعلم كلمات جديدة ببطاقات تفاعلية</p></div>
-</button>
+            <button class="mode-btn active" data-mode="language-teacher" onclick="selectMode(this)"><div class="mode-icon" style="background:linear-gradient(135deg,var(--primary),#8b5cf6);"><i class="fas fa-graduation-cap"></i></div><div class="mode-info"><h4>مدرّس اللغة</h4><p>محادثة مع تصحيح وشرح</p></div></button>
+            <button class="mode-btn" data-mode="conversation" onclick="selectMode(this)"><div class="mode-icon" style="background:linear-gradient(135deg,var(--secondary),#14b8a6);"><i class="fas fa-comments"></i></div><div class="mode-info"><h4>محادثة حرة</h4><p>تحدث بحرية مع AI</p></div></button>
+            <button class="mode-btn" data-mode="correction" onclick="selectMode(this)"><div class="mode-icon" style="background:linear-gradient(135deg,var(--warning),#f97316);"><i class="fas fa-spell-check"></i></div><div class="mode-info"><h4>تصحيح الأخطاء</h4><p>اكتب وسيصحح أخطائك</p></div></button>
+            <button class="mode-btn" data-mode="discussion" onclick="selectMode(this)"><div class="mode-icon" style="background:linear-gradient(135deg,#ec4899,#f43f5e);"><i class="fas fa-comments"></i></div><div class="mode-info"><h4>مناقشة موضوع</h4><p>ناقش موضوعاً مثيراً مع AI</p></div></button>
+            <button class="mode-btn" data-mode="flashcards" onclick="selectMode(this)"><div class="mode-icon" style="background:linear-gradient(135deg,#06b6d4,#0891b2);"><i class="fas fa-layer-group"></i></div><div class="mode-info"><h4>بطاقات حفظ</h4><p>تعلم كلمات ببطاقات تفاعلية</p></div></button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Scenario Selection -->
     <div class="setup-card">
-      <h3><i class="fas fa-map-location-dot" style="color:var(--danger);"></i> اختر السيناريو (اختياري)</h3>
+      <h3><i class="fas fa-map-location-dot" style="color:var(--danger);"></i> السيناريو</h3>
       <div class="scenario-grid">
         <button class="scenario-btn active" data-scenario="general" onclick="selectScenario(this)"><span class="icon">💬</span><span class="label">عام</span></button>
         <button class="scenario-btn" data-scenario="restaurant" onclick="selectScenario(this)"><span class="icon">🍽️</span><span class="label">مطعم</span></button>
@@ -591,48 +333,39 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
         <button class="scenario-btn" data-scenario="directions" onclick="selectScenario(this)"><span class="icon">🗺️</span><span class="label">اتجاهات</span></button>
       </div>
     </div>
-<!-- Flashcard Category (يظهر فقط عند اختيار flashcards) -->
-<div class="setup-card" id="flashcardCategoryCard" style="display:none;">
-  <h3><i class="fas fa-layer-group" style="color:#06b6d4;"></i> اختر فئة الكلمات</h3>
-  <div class="scenario-grid">
-    <button class="scenario-btn active" data-category="general" onclick="selectCategory(this)"><span class="icon">📚</span><span class="label">عام</span></button>
-    <button class="scenario-btn" data-category="greetings" onclick="selectCategory(this)"><span class="icon">👋</span><span class="label">تحيات</span></button>
-    <button class="scenario-btn" data-category="food" onclick="selectCategory(this)"><span class="icon">🍽️</span><span class="label">طعام</span></button>
-    <button class="scenario-btn" data-category="travel" onclick="selectCategory(this)"><span class="icon">✈️</span><span class="label">سفر</span></button>
-    <button class="scenario-btn" data-category="work" onclick="selectCategory(this)"><span class="icon">💼</span><span class="label">عمل</span></button>
-    <button class="scenario-btn" data-category="emotions" onclick="selectCategory(this)"><span class="icon">😊</span><span class="label">مشاعر</span></button>
-    <button class="scenario-btn" data-category="family" onclick="selectCategory(this)"><span class="icon">👨‍👩‍👧‍👦</span><span class="label">عائلة</span></button>
-    <button class="scenario-btn" data-category="health" onclick="selectCategory(this)"><span class="icon">🏥</span><span class="label">صحة</span></button>
-    <button class="scenario-btn" data-category="shopping" onclick="selectCategory(this)"><span class="icon">🛒</span><span class="label">تسوق</span></button>
-    <button class="scenario-btn" data-category="nature" onclick="selectCategory(this)"><span class="icon">🌿</span><span class="label">طبيعة</span></button>
+    <div class="setup-card" id="flashcardCategoryCard" style="display:none;">
+      <h3><i class="fas fa-layer-group" style="color:#06b6d4;"></i> فئة الكلمات</h3>
+      <div class="scenario-grid">
+        <button class="scenario-btn active" data-category="general" onclick="selectCategory(this)"><span class="icon">📚</span><span class="label">عام</span></button>
+        <button class="scenario-btn" data-category="greetings" onclick="selectCategory(this)"><span class="icon">👋</span><span class="label">تحيات</span></button>
+        <button class="scenario-btn" data-category="food" onclick="selectCategory(this)"><span class="icon">🍽️</span><span class="label">طعام</span></button>
+        <button class="scenario-btn" data-category="travel" onclick="selectCategory(this)"><span class="icon">✈️</span><span class="label">سفر</span></button>
+        <button class="scenario-btn" data-category="work" onclick="selectCategory(this)"><span class="icon">💼</span><span class="label">عمل</span></button>
+        <button class="scenario-btn" data-category="emotions" onclick="selectCategory(this)"><span class="icon">😊</span><span class="label">مشاعر</span></button>
+        <button class="scenario-btn" data-category="family" onclick="selectCategory(this)"><span class="icon">👨‍👩‍👧‍👦</span><span class="label">عائلة</span></button>
+        <button class="scenario-btn" data-category="health" onclick="selectCategory(this)"><span class="icon">🏥</span><span class="label">صحة</span></button>
+        <button class="scenario-btn" data-category="shopping" onclick="selectCategory(this)"><span class="icon">🛒</span><span class="label">تسوق</span></button>
+        <button class="scenario-btn" data-category="nature" onclick="selectCategory(this)"><span class="icon">🌿</span><span class="label">طبيعة</span></button>
+      </div>
+    </div>
+    <div class="setup-card" id="discussionTopicCard" style="display:none;">
+      <h3><i class="fas fa-comments" style="color:#ec4899;"></i> موضوع النقاش</h3>
+      <div class="scenario-grid">
+        <button class="scenario-btn active" data-topic="" onclick="selectTopic(this)"><span class="icon">🎲</span><span class="label">AI يختار</span></button>
+        <button class="scenario-btn" data-topic="technology" onclick="selectTopic(this)"><span class="icon">💻</span><span class="label">تكنولوجيا</span></button>
+        <button class="scenario-btn" data-topic="culture" onclick="selectTopic(this)"><span class="icon">🌍</span><span class="label">ثقافات</span></button>
+        <button class="scenario-btn" data-topic="sports" onclick="selectTopic(this)"><span class="icon">⚽</span><span class="label">رياضة</span></button>
+        <button class="scenario-btn" data-topic="food" onclick="selectTopic(this)"><span class="icon">🍕</span><span class="label">طعام</span></button>
+        <button class="scenario-btn" data-topic="travel" onclick="selectTopic(this)"><span class="icon">🌎</span><span class="label">سفر</span></button>
+        <button class="scenario-btn" data-topic="movies" onclick="selectTopic(this)"><span class="icon">🎬</span><span class="label">أفلام</span></button>
+        <button class="scenario-btn" data-topic="future" onclick="selectTopic(this)"><span class="icon">🚀</span><span class="label">المستقبل</span></button>
+        <button class="scenario-btn" data-topic="environment" onclick="selectTopic(this)"><span class="icon">🌱</span><span class="label">بيئة</span></button>
+        <button class="scenario-btn" data-topic="education" onclick="selectTopic(this)"><span class="icon">📖</span><span class="label">تعليم</span></button>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startSession()"><i class="fas fa-play"></i> ابدأ جلسة التعلم</button>
   </div>
-</div>
-
-<!-- Discussion Topics (يظهر فقط عند اختيار discussion) -->
-<div class="setup-card" id="discussionTopicCard" style="display:none;">
-  <h3><i class="fas fa-comments" style="color:#ec4899;"></i> اختر موضوع النقاش (اختياري)</h3>
-  <div class="scenario-grid">
-    <button class="scenario-btn active" data-topic="" onclick="selectTopic(this)"><span class="icon">🎲</span><span class="label">AI يختار</span></button>
-    <button class="scenario-btn" data-topic="technology" onclick="selectTopic(this)"><span class="icon">💻</span><span class="label">تكنولوجيا</span></button>
-    <button class="scenario-btn" data-topic="culture" onclick="selectTopic(this)"><span class="icon">🌍</span><span class="label">ثقافات</span></button>
-    <button class="scenario-btn" data-topic="sports" onclick="selectTopic(this)"><span class="icon">⚽</span><span class="label">رياضة</span></button>
-    <button class="scenario-btn" data-topic="food" onclick="selectTopic(this)"><span class="icon">🍕</span><span class="label">طعام</span></button>
-    <button class="scenario-btn" data-topic="travel" onclick="selectTopic(this)"><span class="icon">🌎</span><span class="label">سفر</span></button>
-    <button class="scenario-btn" data-topic="movies" onclick="selectTopic(this)"><span class="icon">🎬</span><span class="label">أفلام</span></button>
-    <button class="scenario-btn" data-topic="future" onclick="selectTopic(this)"><span class="icon">🚀</span><span class="label">المستقبل</span></button>
-    <button class="scenario-btn" data-topic="environment" onclick="selectTopic(this)"><span class="icon">🌱</span><span class="label">بيئة</span></button>
-    <button class="scenario-btn" data-topic="education" onclick="selectTopic(this)"><span class="icon">📖</span><span class="label">تعليم</span></button>
-  </div>
-</div>
-    <button class="start-btn" id="startBtn" onclick="startSession()">
-      <i class="fas fa-play"></i>
-      ابدأ جلسة التعلم
-    </button>
-  </div>
-
-  <!-- ===== LEARNING SCREEN ===== -->
   <div class="learning-screen" id="learningScreen">
-    <!-- Session Bar -->
     <div class="session-bar">
       <div class="session-info">
         <div class="session-tag lang" id="sessionLang"><i class="fas fa-globe"></i> English</div>
@@ -642,150 +375,70 @@ footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.78rem;
       </div>
       <div style="display:flex;align-items:center;gap:15px;">
         <div class="session-timer" id="sessionTimer">00:00</div>
-        <button class="end-session-btn" onclick="endSession()"><i class="fas fa-flag-checkered"></i> إنهاء الجلسة</button>
+        <button class="end-session-btn" onclick="endSession()"><i class="fas fa-flag-checkered"></i> إنهاء</button>
       </div>
     </div>
-
     <div class="learning-layout">
-      <!-- Chat Area -->
       <div class="chat-area">
-        <div class="chat-header">
-          <div class="ai-avatar"><i class="fas fa-robot"></i></div>
-          <div>
-            <div class="ai-name">Gemini AI Teacher</div>
-            <div class="ai-status">متصل ومستعد للتعليم</div>
-          </div>
-        </div>
-
-        <div class="messages-container" id="messagesContainer">
-          <!-- Messages will be added here -->
-        </div>
-
-        <div class="ai-typing-msg" id="aiTypingMsg" style="padding:0 15px 10px;">
-          <div class="msg-avatar ai-av"><i class="fas fa-robot"></i></div>
-          <div class="typing-bubble">
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-          </div>
-        </div>
-
+        <div class="chat-header"><div class="ai-avatar"><i class="fas fa-robot"></i></div><div><div class="ai-name">Gemini AI Teacher</div><div class="ai-status">متصل</div></div></div>
+        <div class="messages-container" id="messagesContainer"></div>
+        <div class="ai-typing-msg" id="aiTypingMsg" style="padding:0 15px 10px;"><div class="msg-avatar ai-av"><i class="fas fa-robot"></i></div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>
         <div class="input-area">
           <div class="input-row">
             <button class="voice-input-btn" id="voiceBtn" onclick="toggleVoice()"><i class="fas fa-microphone" id="voiceIcon"></i></button>
-            <input type="text" class="msg-input" id="msgInput" placeholder="اكتب أو تحدث باللغة التي تتعلمها..." onkeypress="if(event.key==='Enter')sendMessage()">
-            <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" class="msg-input" id="msgInput" placeholder="اكتب أو تحدث..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
           </div>
-          <div class="quick-prompts" id="quickPrompts">
-            <!-- Will be populated based on scenario -->
-          </div>
+          <div class="quick-prompts" id="quickPrompts"></div>
         </div>
       </div>
-
-      <!-- Right Panel -->
       <div class="right-panel">
-        <!-- Stats -->
         <div class="stats-card">
-          <h3><i class="fas fa-chart-line"></i> إحصائيات الجلسة</h3>
+          <h3><i class="fas fa-chart-line"></i> إحصائيات</h3>
           <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-value primary" id="statMessages">0</div>
-              <div class="stat-label">رسائل</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value secondary" id="statWords">0</div>
-              <div class="stat-label">كلمة جديدة</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value warning" id="statCorrections">0</div>
-              <div class="stat-label">تصحيح</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value danger" id="statErrors">0</div>
-              <div class="stat-label">خطأ</div>
-            </div>
+            <div class="stat-item"><div class="stat-value primary" id="statMessages">0</div><div class="stat-label">رسائل</div></div>
+            <div class="stat-item"><div class="stat-value secondary" id="statWords">0</div><div class="stat-label">كلمة جديدة</div></div>
+            <div class="stat-item"><div class="stat-value warning" id="statCorrections">0</div><div class="stat-label">تصحيح</div></div>
+            <div class="stat-item"><div class="stat-value danger" id="statErrors">0</div><div class="stat-label">خطأ</div></div>
           </div>
-          <div class="accuracy-bar">
-            <div class="accuracy-label"><span>دقة الإجابات</span><span id="accuracyPct">0%</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="accuracyBar" style="width:0%"></div></div>
-          </div>
+          <div class="accuracy-bar"><div class="accuracy-label"><span>الدقة</span><span id="accuracyPct">0%</span></div><div class="bar-bg"><div class="bar-fill" id="accuracyBar" style="width:0%"></div></div></div>
         </div>
-
-        <!-- Vocabulary -->
         <div class="vocab-card">
-          <h3><i class="fas fa-book"></i> كلمات تعلمتها اليوم</h3>
-          <div class="vocab-list" id="vocabList">
-            <div class="vocab-empty">ستظهر الكلمات الجديدة هنا 📚</div>
-          </div>
+          <h3><i class="fas fa-book"></i> كلمات جديدة</h3>
+          <div class="vocab-list" id="vocabList"><div class="vocab-empty">ستظهر الكلمات هنا 📚</div></div>
         </div>
-
-        <!-- Tips -->
         <div class="tips-card">
-          <h3><i class="fas fa-lightbulb"></i> نصائح للتعلم</h3>
-          <div id="tipsList">
-            <div class="tip-item"><span class="tip-icon">🎯</span><span class="tip-text">تحدث بدون خوف من الأخطاء - هذا أفضل طريقة للتعلم!</span></div>
-            <div class="tip-item"><span class="tip-icon">🔄</span><span class="tip-text">كرر الكلمات الجديدة 3 مرات لحفظها</span></div>
-            <div class="tip-item"><span class="tip-icon">👂</span><span class="tip-text">استمع لرد AI بعناية وحاول تقليد النطق</span></div>
-          </div>
+          <h3><i class="fas fa-lightbulb"></i> نصائح</h3>
+          <div class="tip-item"><span class="tip-icon">🎯</span><span class="tip-text">تحدث بدون خوف!</span></div>
+          <div class="tip-item"><span class="tip-icon">🔄</span><span class="tip-text">كرر الكلمات 3 مرات</span></div>
+          <div class="tip-item"><span class="tip-icon">👂</span><span class="tip-text">استمع وقلّد النطق</span></div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- ===== REPORT SCREEN ===== -->
   <div class="report-screen" id="reportScreen">
     <div class="report-card">
-      <div class="report-header">
-        <div class="report-icon"><i class="fas fa-trophy"></i></div>
-        <div class="report-title">🎉 انتهت الجلسة!</div>
-        <div class="report-subtitle" id="reportSubtitle">جلسة رائعة! هذا ملخص أدائك</div>
-      </div>
-
+      <div class="report-header"><div class="report-icon"><i class="fas fa-trophy"></i></div><div class="report-title">🎉 انتهت الجلسة!</div><div class="report-subtitle" id="reportSubtitle">جلسة رائعة!</div></div>
       <div class="report-stats">
-        <div class="report-stat">
-          <div class="report-stat-value" id="reportTime" style="color:var(--primary);">0:00</div>
-          <div class="report-stat-label">مدة الجلسة</div>
-        </div>
-        <div class="report-stat">
-          <div class="report-stat-value" id="reportMessages" style="color:var(--secondary);">0</div>
-          <div class="report-stat-label">رسائل</div>
-        </div>
-        <div class="report-stat">
-          <div class="report-stat-value" id="reportAccuracy" style="color:var(--warning);">0%</div>
-          <div class="report-stat-label">دقة الإجابات</div>
-        </div>
+        <div class="report-stat"><div class="report-stat-value" id="reportTime" style="color:var(--primary);">0:00</div><div class="report-stat-label">المدة</div></div>
+        <div class="report-stat"><div class="report-stat-value" id="reportMessages" style="color:var(--secondary);">0</div><div class="report-stat-label">رسائل</div></div>
+        <div class="report-stat"><div class="report-stat-value" id="reportAccuracy" style="color:var(--warning);">0%</div><div class="report-stat-label">الدقة</div></div>
       </div>
-
-      <div class="report-section">
-        <h4><i class="fas fa-book" style="color:var(--secondary);"></i> الكلمات الجديدة التي تعلمتها</h4>
-        <div class="vocab-grid" id="reportVocab">
-          <div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:15px;grid-column:1/-1;">لم تُسجَّل كلمات جديدة في هذه الجلسة</div>
-        </div>
-      </div>
-
-      <div class="report-section">
-        <h4><i class="fas fa-star" style="color:var(--warning);"></i> تقييم الجلسة</h4>
-        <div id="reportEvaluation" style="background:rgba(0,0,0,0.2);border-radius:12px;padding:15px;font-size:0.88rem;line-height:1.7;color:var(--text-secondary);">
-          أحسنت! استمر في التدريب يومياً للتحسن.
-        </div>
-      </div>
-
+      <div class="report-section"><h4><i class="fas fa-book" style="color:var(--secondary);"></i> كلمات جديدة</h4><div class="vocab-grid" id="reportVocab"><div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:15px;grid-column:1/-1;">لم تُسجَّل كلمات</div></div></div>
+      <div class="report-section"><h4><i class="fas fa-star" style="color:var(--warning);"></i> التقييم</h4><div id="reportEvaluation" style="background:rgba(0,0,0,0.2);border-radius:12px;padding:15px;font-size:0.88rem;line-height:1.7;color:var(--text-secondary);">أحسنت!</div></div>
       <div class="report-actions">
         <button class="report-btn primary" onclick="restartSession()"><i class="fas fa-rotate-right"></i> جلسة جديدة</button>
-        <button class="report-btn secondary" onclick="changeSettings()"><i class="fas fa-sliders"></i> تغيير الإعدادات</button>
+        <button class="report-btn secondary" onclick="changeSettings()"><i class="fas fa-sliders"></i> تغيير</button>
         <button class="report-btn ghost" onclick="window.location.href='index.html'"><i class="fas fa-house"></i> الرئيسية</button>
       </div>
     </div>
   </div>
-
 </div>
-
-<footer>© Omar Nimer 2026 | TranslationCall Pro - مركز تعلم اللغات</footer>
-
+<footer>© Omar Nimer 2026 | TranslationCall Pro</footer>
 <script>
-const SERVER_URL = 'https://translationcall-server.onrender.com';
+var SERVER_URL = 'https://translationcall-server.onrender.com';
 
-const langs = {
+var langs = {
   en:{name:'English',flag:'🇺🇸',voice:'en-US',native:'الإنجليزية'},
   es:{name:'Español',flag:'🇪🇸',voice:'es-ES',native:'الإسبانية'},
   fr:{name:'Français',flag:'🇫🇷',voice:'fr-FR',native:'الفرنسية'},
@@ -798,7 +451,7 @@ const langs = {
   pt:{name:'Português',flag:'🇧🇷',voice:'pt-BR',native:'البرتغالية'}
 };
 
-const scenarios = {
+var scenarios = {
   general:{label:'عام',icon:'💬'},restaurant:{label:'مطعم',icon:'🍽️'},
   airport:{label:'مطار',icon:'✈️'},work:{label:'عمل',icon:'💼'},
   shopping:{label:'تسوق',icon:'🛒'},meeting:{label:'تعارف',icon:'🤝'},
@@ -806,58 +459,64 @@ const scenarios = {
   phone:{label:'هاتف',icon:'📞'},directions:{label:'اتجاهات',icon:'🗺️'}
 };
 
-const modes = {
-  'language-teacher':{label:'مدرّس اللغة',icon:'🎓'},
-  'conversation':{label:'محادثة حرة',icon:'💬'},
-  'correction':{label:'تصحيح الأخطاء',icon:'✏️'},
-  'discussion':{label:'مناقشة موضوع',icon:'🗣️'},
-  'flashcards':{label:'بطاقات حفظ',icon:'📚'}
+var modes = {
+  'language-teacher':{label:'مدرّس',icon:'🎓'},
+  'conversation':{label:'محادثة',icon:'💬'},
+  'correction':{label:'تصحيح',icon:'✏️'},
+  'discussion':{label:'مناقشة',icon:'🗣️'},
+  'flashcards':{label:'بطاقات',icon:'📚'}
 };
 
-const quickPromptsData = {
+var quickPromptsData = {
   general:['مرحباً!','كيف حالك؟','ما اسمك؟','من أين أنت؟'],
-  restaurant:['أريد طاولة لشخصين','ما هي القائمة؟','أريد الفاتورة','هل الطعام لذيذ؟'],
-  airport:['أين بوابة الصعود؟','متى تغادر الطائرة؟','لدي حقيبة','هل الرحلة في الموعد؟'],
-  work:['أهلاً، أنا جديد هنا','ما هو دورك؟','نريد اجتماعاً','متى الموعد النهائي؟'],
-  shopping:['كم سعر هذا؟','أريد مقاس أكبر','هل يمكن الدفع ببطاقة؟','شكراً'],
+  restaurant:['أريد طاولة','ما القائمة؟','الفاتورة من فضلك','شكراً'],
+  airport:['أين البوابة؟','متى الطائرة؟','لدي حقيبة','هل في الموعد؟'],
+  work:['أنا جديد هنا','ما دورك؟','نريد اجتماعاً','متى الموعد؟'],
+  shopping:['كم السعر؟','مقاس أكبر','الدفع ببطاقة؟','شكراً'],
   meeting:['اسمي...','أنا من...','سعيد بمعرفتك','ما عملك؟'],
-  hotel:['لدي حجز','أريد غرفة هادئة','ما وقت الإفطار؟','هل لديكم واي فاي؟'],
-  doctor:['أشعر بألم','منذ متى؟','هل لديك دواء؟','أريد موعداً'],
-  phone:['هل يمكنني التحدث مع...؟','من أتصل؟','شكراً على اتصالك','أعد الاتصال لاحقاً'],
-  directions:['أين المحطة؟','كيف أصل إلى...؟','هل هو بعيد؟','اتجه يساراً']
+  hotel:['لدي حجز','غرفة هادئة','وقت الإفطار؟','واي فاي؟'],
+  doctor:['أشعر بألم','منذ متى؟','دواء؟','أريد موعداً'],
+  phone:['هل يمكنني التحدث مع؟','من أتصل؟','شكراً','أعد الاتصال'],
+  directions:['أين المحطة؟','كيف أصل؟','هل بعيد؟','يساراً']
 };
 
 // State
-let socket = null;
-let selectedLang = 'en';
-let selectedLevel = 'A1';
-let selectedMode = 'language-teacher';
-let selectedScenario = 'general';
-let selectedCategory = 'general';
-let selectedTopic = '';
-let userNativeLang = 'ar';
-let sessionActive = false;
-let sessionTimer = null;
-let sessionSeconds = 0;
-let isVoiceRecording = false;
-let voiceRecognition = null;
-let isSpeaking = false;
-let stats = {messages:0,words:0,corrections:0,errors:0,accuracy:0};
-let vocabulary = [];
-let sessionHistory = [];
+var socket = null;
+var selectedLang = 'en';
+var selectedLevel = 'A1';
+var selectedMode = 'language-teacher';
+var selectedScenario = 'general';
+var selectedCategory = 'general';
+var selectedTopic = '';
+var userNativeLang = 'ar';
+var sessionActive = false;
+var sessionTimerInterval = null;
+var sessionSeconds = 0;
+var isVoiceRecording = false;
+var voiceRecognition = null;
+var audioReady = false;
 
-// Sound Settings
-let speechSettings = {rate:0.95,pitch:1,volume:1,voiceByLang:{}};
+var stats = {messages:0,words:0,corrections:0,errors:0,accuracy:0};
+var vocabulary = [];
+var sessionHistory = [];
+
+// Speech Settings
+var speechSettings = {rate:0.95,pitch:1,volume:1,voiceByLang:{}};
 try{
-  const saved = JSON.parse(localStorage.getItem('tcSpeechSettings')||'{}');
-  speechSettings = {rate:saved.rate??0.95,pitch:saved.pitch??1,volume:saved.volume??1,voiceByLang:saved.voiceByLang||{}};
+  var saved = JSON.parse(localStorage.getItem('tcSpeechSettings')||'{}');
+  if(saved.rate) speechSettings.rate = saved.rate;
+  if(saved.pitch) speechSettings.pitch = saved.pitch;
+  if(saved.volume) speechSettings.volume = saved.volume;
+  if(saved.voiceByLang) speechSettings.voiceByLang = saved.voiceByLang;
 }catch(e){}
 
+// ============================================
 // Socket
+// ============================================
 function initSocket(){
   socket = io(SERVER_URL,{transports:['websocket','polling']});
   socket.on('connect',function(){
-    console.log('✅ Socket connected');
+    console.log('✅ Connected');
     checkAccess();
   });
   socket.on('disconnect',function(){
@@ -865,7 +524,9 @@ function initSocket(){
   });
 }
 
+// ============================================
 // Gate
+// ============================================
 function verifyGate(){
   var code = document.getElementById('gateInput').value.trim();
   var errorEl = document.getElementById('gateError');
@@ -879,8 +540,7 @@ function verifyGate(){
 
   if(!socket || !socket.connected){
     errorEl.style.display='block';
-    errorText.innerText='جاري الاتصال بالسيرفر... انتظر ثانية وحاول مرة أخرى';
-    initSocket();
+    errorText.innerText='جاري الاتصال... حاول مرة أخرى';
     return;
   }
 
@@ -905,21 +565,26 @@ function checkAccess(){
   }
 }
 
+// ============================================
 // Selections
+// ============================================
 function selectLang(btn){
-  document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active');});
+  var all = document.querySelectorAll('.lang-btn');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
   btn.classList.add('active');
   selectedLang = btn.dataset.lang;
 }
 
 function selectLevel(btn){
-  document.querySelectorAll('.level-btn').forEach(function(b){b.classList.remove('active');});
+  var all = document.querySelectorAll('.level-btn');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
   btn.classList.add('active');
   selectedLevel = btn.dataset.level;
 }
 
 function selectMode(btn){
-  document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.remove('active');});
+  var all = document.querySelectorAll('.mode-btn');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
   btn.classList.add('active');
   selectedMode = btn.dataset.mode;
 
@@ -930,26 +595,30 @@ function selectMode(btn){
 }
 
 function selectScenario(btn){
-  document.querySelectorAll('.scenario-btn').forEach(function(b){
-    if(b.parentElement === btn.parentElement) b.classList.remove('active');
-  });
+  var parent = btn.parentElement;
+  var all = parent.querySelectorAll('.scenario-btn');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
   btn.classList.add('active');
-  selectedScenario = btn.dataset.scenario;
+  if(btn.dataset.scenario !== undefined) selectedScenario = btn.dataset.scenario;
 }
 
 function selectCategory(btn){
-  document.querySelectorAll('#flashcardCategoryCard .scenario-btn').forEach(function(b){b.classList.remove('active');});
+  var all = document.querySelectorAll('#flashcardCategoryCard .scenario-btn');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
   btn.classList.add('active');
   selectedCategory = btn.dataset.category;
 }
 
 function selectTopic(btn){
-  document.querySelectorAll('#discussionTopicCard .scenario-btn').forEach(function(b){b.classList.remove('active');});
+  var all = document.querySelectorAll('#discussionTopicCard .scenario-btn');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
   btn.classList.add('active');
   selectedTopic = btn.dataset.topic;
 }
 
+// ============================================
 // Start Session
+// ============================================
 function startSession(){
   document.getElementById('setupScreen').classList.add('hidden');
   document.getElementById('learningScreen').classList.add('active');
@@ -957,29 +626,29 @@ function startSession(){
   var langInfo = langs[selectedLang];
   document.getElementById('sessionLang').innerHTML = '<i class="fas fa-globe"></i> '+langInfo.flag+' '+langInfo.name;
   document.getElementById('sessionLevel').innerHTML = '<i class="fas fa-signal"></i> '+selectedLevel;
-  document.getElementById('sessionMode').innerHTML = '<i class="fas fa-graduation-cap"></i> '+(modes[selectedMode]?.label||'');
-  document.getElementById('sessionScenario').innerHTML = (scenarios[selectedScenario]?.icon||'')+' '+(scenarios[selectedScenario]?.label||'');
+  document.getElementById('sessionMode').innerHTML = '<i class="fas fa-graduation-cap"></i> '+(modes[selectedMode]?modes[selectedMode].label:'');
+  document.getElementById('sessionScenario').innerHTML = (scenarios[selectedScenario]?scenarios[selectedScenario].icon:'')+' '+(scenarios[selectedScenario]?scenarios[selectedScenario].label:'');
 
   var prompts;
-  if(selectedMode==='flashcards'){
-    prompts = ['أعطني 5 كلمات جديدة','كلمات أصعب','اختبرني','كلمات عن الطعام'];
-  }else if(selectedMode==='discussion'){
-    prompts = ['أعطني موضوعاً جديداً','أوافقك','لا أوافق لأن...','ما رأيك؟'];
-  }else if(selectedMode==='correction'){
-    prompts = ['صحح هذه الجملة','هل هذا صحيح؟','كيف أقولها أفضل؟','أعطني تمريناً'];
-  }else{
-    prompts = quickPromptsData[selectedScenario] || quickPromptsData.general;
+  if(selectedMode==='flashcards') prompts = ['5 كلمات جديدة','كلمات أصعب','اختبرني','كلمات عن الطعام'];
+  else if(selectedMode==='discussion') prompts = ['موضوع جديد','أوافقك','لا أوافق','ما رأيك؟'];
+  else if(selectedMode==='correction') prompts = ['صحح جملتي','هل هذا صحيح؟','كيف أقولها أفضل؟','تمرين'];
+  else prompts = quickPromptsData[selectedScenario] || quickPromptsData.general;
+
+  var promptsHtml = '';
+  for(var i=0;i<prompts.length;i++){
+    promptsHtml += '<button class="quick-prompt" onclick="useQuickPrompt(\''+prompts[i].replace(/'/g,"\\'")+'\')">' + prompts[i] + '</button>';
   }
-  document.getElementById('quickPrompts').innerHTML = prompts.map(function(p){
-    return '<button class="quick-prompt" onclick="useQuickPrompt(\''+p.replace(/'/g,"\\'")+'\')">'+p+'</button>';
-  }).join('');
+  document.getElementById('quickPrompts').innerHTML = promptsHtml;
 
   sessionSeconds = 0;
   sessionActive = true;
-  sessionTimer = setInterval(function(){
+  sessionTimerInterval = setInterval(function(){
     sessionSeconds++;
-    var m = Math.floor(sessionSeconds/60).toString().padStart(2,'0');
-    var s = (sessionSeconds%60).toString().padStart(2,'0');
+    var m = Math.floor(sessionSeconds/60).toString();
+    if(m.length<2) m='0'+m;
+    var s = (sessionSeconds%60).toString();
+    if(s.length<2) s='0'+s;
     document.getElementById('sessionTimer').innerText = m+':'+s;
   },1000);
 
@@ -991,19 +660,22 @@ function startSession(){
   sendWelcomeMessage();
 }
 
+// ============================================
+// Welcome Message
+// ============================================
 function sendWelcomeMessage(){
   var langInfo = langs[selectedLang];
-  var scenarioLabel = scenarios[selectedScenario]?.label || 'عام';
+  var scenarioLabel = scenarios[selectedScenario] ? scenarios[selectedScenario].label : 'عام';
 
-  var welcomeMessages = {
-    'language-teacher': 'مرحباً! 🎓 أنا مدرّسك الخاص لتعلم '+langInfo.native+'.\n\nسنتدرب على: '+scenarioLabel+'\nمستواك: '+selectedLevel+'\n\nابدأ بتقديم نفسك بـ'+langInfo.native+'! 😊',
-    'conversation': 'مرحباً! 💬 سنتحدث معاً بـ'+langInfo.native+'.\n\nالسيناريو: '+scenarioLabel+'\n\nتفضل وابدأ! 🗣️',
-    'correction': 'مرحباً! ✏️ اكتب أي جملة بـ'+langInfo.native+' وسأصحح لك بالتفصيل! 📝',
-    'discussion': 'مرحباً! 🗣️ سنناقش موضوعاً مثيراً بـ'+langInfo.native+'.\n\n'+(selectedTopic ? 'الموضوع: '+selectedTopic : 'سأقترح عليك 3 مواضيع!')+'\n\nهيا نبدأ! 🚀',
-    'flashcards': 'مرحباً! 📚 سنتعلم كلمات جديدة بـ'+langInfo.native+'!\n\nالفئة: '+selectedCategory+'\nمستواك: '+selectedLevel+'\n\nهل أنت مستعد؟ 🎯'
-  };
+  var msg = '';
+  if(selectedMode==='language-teacher') msg = 'مرحباً! 🎓 أنا مدرّسك لتعلم '+langInfo.native+'.\n\nالسيناريو: '+scenarioLabel+'\nالمستوى: '+selectedLevel+'\n\nابدأ بتقديم نفسك! 😊';
+  else if(selectedMode==='conversation') msg = 'مرحباً! 💬 سنتحدث بـ'+langInfo.native+'.\n\nالسيناريو: '+scenarioLabel+'\n\nتفضل! 🗣️';
+  else if(selectedMode==='correction') msg = 'مرحباً! ✏️ اكتب أي جملة بـ'+langInfo.native+' وسأصحح لك! 📝';
+  else if(selectedMode==='discussion') msg = 'مرحباً! 🗣️ سنناقش موضوعاً مثيراً بـ'+langInfo.native+'.\n\n'+(selectedTopic ? 'الموضوع: '+selectedTopic : 'سأقترح عليك مواضيع!')+'\n\nهيا! 🚀';
+  else if(selectedMode==='flashcards') msg = 'مرحباً! 📚 سنتعلم كلمات بـ'+langInfo.native+'!\n\nالفئة: '+selectedCategory+'\n\nهل أنت مستعد؟ 🎯';
+  else msg = 'مرحباً! 😊';
 
-  addAIMessage(welcomeMessages[selectedMode] || welcomeMessages['language-teacher']);
+  addAIMessage(msg);
 
   if(selectedMode==='flashcards'){
     setTimeout(function(){processAIMessageAuto('Generate 5 flashcard words for category: '+selectedCategory);},1000);
@@ -1012,10 +684,12 @@ function sendWelcomeMessage(){
   }
 }
 
-// Process AI (auto - no user message shown)
+// ============================================
+// Process AI (auto)
+// ============================================
 function processAIMessageAuto(text){
   document.getElementById('aiTypingMsg').classList.add('show');
-  document.getElementById('messagesContainer').scrollTop = 99999;
+  scrollChat();
 
   socket.emit('ai-chat',{
     message:text,language:userNativeLang,mode:selectedMode,
@@ -1027,13 +701,15 @@ function processAIMessageAuto(text){
       if(res.feedback) setTimeout(function(){addFeedbackMessage(res.feedback);},500);
       speakText(res.response, selectedLang);
     }else{
-      addSystemMessage('❌ خطأ في الاتصال. حاول مرة أخرى.');
+      addSystemMessage('❌ خطأ. حاول مرة أخرى.');
     }
-    document.getElementById('messagesContainer').scrollTop = 99999;
+    scrollChat();
   });
 }
 
+// ============================================
 // Send Message
+// ============================================
 function sendMessage(){
   var input = document.getElementById('msgInput');
   var text = input.value.trim();
@@ -1041,12 +717,12 @@ function sendMessage(){
   input.value = '';
 
   addUserMessage(text);
-  sessionHistory.push({role:'user', content:text});
+  sessionHistory.push({role:'user',content:text});
   stats.messages++;
   updateStats();
 
   document.getElementById('aiTypingMsg').classList.add('show');
-  document.getElementById('messagesContainer').scrollTop = 99999;
+  scrollChat();
 
   socket.emit('ai-chat',{
     message:text,language:userNativeLang,mode:selectedMode,
@@ -1055,7 +731,7 @@ function sendMessage(){
     document.getElementById('aiTypingMsg').classList.remove('show');
     if(res.success){
       addAIMessage(res.response);
-      sessionHistory.push({role:'assistant', content:res.response});
+      sessionHistory.push({role:'assistant',content:res.response});
       if(res.feedback){
         setTimeout(function(){addFeedbackMessage(res.feedback);parseFeedbackStats(res.feedback);},500);
       }
@@ -1063,30 +739,38 @@ function sendMessage(){
     }else{
       addSystemMessage('❌ خطأ. حاول مرة أخرى.');
     }
-    document.getElementById('messagesContainer').scrollTop = 99999;
+    scrollChat();
   });
 }
 
+function scrollChat(){
+  var c = document.getElementById('messagesContainer');
+  if(c) c.scrollTop = c.scrollHeight;
+}
+
+// ============================================
+// Feedback Stats
+// ============================================
 function parseFeedbackStats(feedback){
-  var correctionMatches = feedback.match(/❌/g);
-  if(correctionMatches){stats.errors += correctionMatches.length;stats.corrections += correctionMatches.length;}
-  var wordMatches = feedback.match(/📚/g);
-  if(wordMatches){
-    stats.words += wordMatches.length;
+  var cm = feedback.match(/❌/g);
+  if(cm){stats.errors += cm.length;stats.corrections += cm.length;}
+  var wm = feedback.match(/📚/g);
+  if(wm){
+    stats.words += wm.length;
     var lines = feedback.split('\n');
-    lines.forEach(function(line){
-      if(line.includes('📚')){
-        var parts = line.replace('📚','').split(':');
+    for(var i=0;i<lines.length;i++){
+      if(lines[i].indexOf('📚')!==-1){
+        var parts = lines[i].replace('📚','').split(':');
         if(parts.length>=2){
           vocabulary.push({word:parts[0].trim().substring(0,20),meaning:parts[1].trim().substring(0,30)});
           updateVocab();
         }
       }
-    });
+    }
   }
   var total = stats.messages;
   var errors = stats.errors;
-  stats.accuracy = total > 0 ? Math.max(0, Math.round(((total - errors) / total) * 100)) : 0;
+  stats.accuracy = total > 0 ? Math.max(0, Math.round(((total-errors)/total)*100)) : 0;
   updateStats();
 }
 
@@ -1095,55 +779,60 @@ function updateStats(){
   document.getElementById('statWords').innerText = stats.words;
   document.getElementById('statCorrections').innerText = stats.corrections;
   document.getElementById('statErrors').innerText = stats.errors;
-  document.getElementById('accuracyPct').innerText = stats.accuracy + '%';
-  document.getElementById('accuracyBar').style.width = stats.accuracy + '%';
+  document.getElementById('accuracyPct').innerText = stats.accuracy+'%';
+  document.getElementById('accuracyBar').style.width = stats.accuracy+'%';
 }
 
 function updateVocab(){
   var list = document.getElementById('vocabList');
-  if(vocabulary.length===0){list.innerHTML='<div class="vocab-empty">ستظهر الكلمات الجديدة هنا 📚</div>';return;}
-  list.innerHTML = vocabulary.slice(0,10).map(function(v){
-    return '<div class="vocab-item"><span class="vocab-word">'+v.word+'</span><span class="vocab-meaning">'+v.meaning+'</span></div>';
-  }).join('');
+  if(vocabulary.length===0){list.innerHTML='<div class="vocab-empty">ستظهر الكلمات هنا 📚</div>';return;}
+  var html = '';
+  var max = Math.min(vocabulary.length,10);
+  for(var i=0;i<max;i++){
+    html += '<div class="vocab-item"><span class="vocab-word">'+vocabulary[i].word+'</span><span class="vocab-meaning">'+vocabulary[i].meaning+'</span></div>';
+  }
+  list.innerHTML = html;
 }
 
+// ============================================
 // Message Helpers
+// ============================================
 function addUserMessage(text){
-  var container = document.getElementById('messagesContainer');
+  var c = document.getElementById('messagesContainer');
   var time = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
   var div = document.createElement('div');
   div.className = 'msg-wrapper user';
   div.innerHTML = '<div class="msg-avatar user-av">أ</div><div><div class="msg-bubble user">'+escapeHtml(text)+'</div><div class="msg-time" style="text-align:left;">'+time+'</div></div>';
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  c.appendChild(div);
+  c.scrollTop = c.scrollHeight;
 }
 
 function addAIMessage(text){
-  var container = document.getElementById('messagesContainer');
+  var c = document.getElementById('messagesContainer');
   var time = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
   var div = document.createElement('div');
   div.className = 'msg-wrapper';
   div.innerHTML = '<div class="msg-avatar ai-av"><i class="fas fa-robot"></i></div><div><div class="msg-bubble ai">'+text.replace(/\n/g,'<br>')+'</div><div class="msg-time">'+time+'</div></div>';
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  c.appendChild(div);
+  c.scrollTop = c.scrollHeight;
 }
 
 function addFeedbackMessage(text){
-  var container = document.getElementById('messagesContainer');
+  var c = document.getElementById('messagesContainer');
   var div = document.createElement('div');
   div.className = 'msg-wrapper';
   div.innerHTML = '<div class="msg-avatar ai-av"><i class="fas fa-graduation-cap"></i></div><div><div class="msg-bubble feedback">'+text.replace(/\n/g,'<br>')+'</div></div>';
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  c.appendChild(div);
+  c.scrollTop = c.scrollHeight;
 }
 
 function addSystemMessage(text){
-  var container = document.getElementById('messagesContainer');
+  var c = document.getElementById('messagesContainer');
   var div = document.createElement('div');
   div.style.cssText = 'width:100%;';
   div.innerHTML = '<div class="msg-bubble system">'+text+'</div>';
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  c.appendChild(div);
+  c.scrollTop = c.scrollHeight;
 }
 
 function escapeHtml(text){
@@ -1155,7 +844,9 @@ function useQuickPrompt(text){
   sendMessage();
 }
 
+// ============================================
 // Voice
+// ============================================
 function toggleVoice(){
   if(isVoiceRecording) stopVoice();
   else startVoice();
@@ -1165,20 +856,20 @@ function startVoice(){
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR){showNotification('استخدم Chrome','error');return;}
   voiceRecognition = new SR();
-  voiceRecognition.lang = langs[selectedLang]?.voice || 'en-US';
+  voiceRecognition.lang = langs[selectedLang] ? langs[selectedLang].voice : 'en-US';
   voiceRecognition.continuous = false;
   voiceRecognition.interimResults = false;
   voiceRecognition.onstart = function(){
     isVoiceRecording = true;
     document.getElementById('voiceBtn').classList.add('recording');
     document.getElementById('voiceIcon').className = 'fas fa-stop';
-    showNotification('🎤 تحدث بـ'+langs[selectedLang]?.name+'...','info');
+    showNotification('🎤 تحدث...','info');
   };
   voiceRecognition.onresult = function(e){
     var text = e.results[0][0].transcript;
     document.getElementById('msgInput').value = text;
     stopVoice();
-    setTimeout(function(){sendMessage();}, 300);
+    setTimeout(function(){sendMessage();},300);
   };
   voiceRecognition.onend = function(){stopVoice();};
   voiceRecognition.onerror = function(){stopVoice();};
@@ -1192,11 +883,13 @@ function stopVoice(){
   document.getElementById('voiceIcon').className = 'fas fa-microphone';
 }
 
-// Speak
+// ============================================
+// ✅ Speak Text (Fixed for Mobile)
+// ============================================
 function speakText(text, lang){
   if(!text) return;
 
-  // تنظيف النص
+  // Clean text
   var cleanText = text
     .split('---')[0]
     .replace(/[✅❌💡📚🎯⭐📝📖📌🔤🔄🗣️]/g,'')
@@ -1204,11 +897,11 @@ function speakText(text, lang){
     .trim();
   if(!cleanText) return;
 
-  // إلغاء أي صوت حالي
+  // Cancel current speech
   window.speechSynthesis.cancel();
 
-  var voiceLang = langs[lang]?.voice || 'en-US';
-  var wantedVoice = speechSettings.voiceByLang?.[lang] || '';
+  var voiceLang = langs[lang] ? langs[lang].voice : 'en-US';
+  var wantedVoice = speechSettings.voiceByLang[lang] || '';
 
   function doSpeak(){
     var voices = window.speechSynthesis.getVoices();
@@ -1218,111 +911,56 @@ function speakText(text, lang){
     utt.pitch = speechSettings.pitch || 1;
     utt.volume = speechSettings.volume || 1;
 
-    // اختيار الصوت
+    // Find voice
     var voice = null;
-    if(wantedVoice) voice = voices.find(function(v){return v.name===wantedVoice;});
-    if(!voice) voice = voices.find(function(v){return v.lang===voiceLang;});
-    if(!voice) voice = voices.find(function(v){return v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase());});
+    if(wantedVoice){
+      for(var i=0;i<voices.length;i++){
+        if(voices[i].name===wantedVoice){voice=voices[i];break;}
+      }
+    }
+    if(!voice){
+      for(var i=0;i<voices.length;i++){
+        if(voices[i].lang===voiceLang){voice=voices[i];break;}
+      }
+    }
+    if(!voice){
+      for(var i=0;i<voices.length;i++){
+        if(voices[i].lang && voices[i].lang.toLowerCase().indexOf(lang.toLowerCase())===0){voice=voices[i];break;}
+      }
+    }
     if(voice) utt.voice = voice;
 
-    // منع توقف الصوت على الهاتف
+    // Keep alive on mobile
     utt.onstart = function(){
-      var keepAlive = setInterval(function(){
+      var k = setInterval(function(){
         if(window.speechSynthesis.speaking){
           window.speechSynthesis.pause();
           window.speechSynthesis.resume();
         }else{
-          clearInterval(keepAlive);
+          clearInterval(k);
         }
-      }, 3000);
-    };
-
-    utt.onerror = function(e){
-      console.log('TTS error:', e);
-      // ✅ إعادة المحاولة مرة واحدة
-      setTimeout(function(){
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utt);
-      }, 500);
+      },3000);
     };
 
     window.speechSynthesis.speak(utt);
   }
 
-  // ✅ تأكد من تحميل الأصوات
+  // Wait for voices
   var voices = window.speechSynthesis.getVoices();
   if(voices.length > 0){
     doSpeak();
   }else{
-    window.speechSynthesis.onvoiceschanged = function(){
-      doSpeak();
-    };
-    // محاولة بعد تأخير
+    window.speechSynthesis.onvoiceschanged = function(){doSpeak();};
     setTimeout(doSpeak, 800);
   }
 }
 
-  // ✅ تأخير بسيط للهاتف
-  setTimeout(function(){
-    var voices = window.speechSynthesis.getVoices();
-    if(voices.length > 0){
-      doSpeak(voices);
-    }else{
-      window.speechSynthesis.onvoiceschanged = function(){
-        doSpeak(window.speechSynthesis.getVoices());
-      };
-      setTimeout(function(){
-        doSpeak(window.speechSynthesis.getVoices());
-      },500);
-    }
-  }, 100);
-}
-  window.speechSynthesis.cancel();
-
-  var voiceLang = langs[lang]?.voice || 'en-US';
-  var wantedVoice = speechSettings.voiceByLang?.[lang] || '';
-
-  var cleanText = text
-    .split('---')[0]
-    .replace(/[✅❌💡📚🎯⭐📝📖📌🔤🔄🗣️]/g,'')
-    .replace(/\n+/g,' ')
-    .trim();
-  if(!cleanText) return;
-
-  function doSpeak(voices){
-    var utt = new SpeechSynthesisUtterance(cleanText);
-    utt.lang = voiceLang;
-    utt.rate = speechSettings.rate || 0.95;
-    utt.pitch = speechSettings.pitch || 1;
-    utt.volume = speechSettings.volume || 1;
-
-    var voice = null;
-    if(wantedVoice) voice = voices.find(function(v){return v.name===wantedVoice;});
-    if(!voice) voice = voices.find(function(v){return v.lang===voiceLang;}) || voices.find(function(v){return v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase());});
-    if(voice) utt.voice = voice;
-
-    utt.onstart = function(){
-      var k = setInterval(function(){
-        if(window.speechSynthesis.speaking) window.speechSynthesis.resume();
-        else clearInterval(k);
-      },5000);
-    };
-
-    window.speechSynthesis.speak(utt);
-  }
-
-  var voices = window.speechSynthesis.getVoices();
-  if(voices.length > 0) doSpeak(voices);
-  else{
-    window.speechSynthesis.onvoiceschanged = function(){doSpeak(window.speechSynthesis.getVoices());};
-    setTimeout(function(){doSpeak(window.speechSynthesis.getVoices());},500);
-  }
-}
-
+// ============================================
 // End Session
+// ============================================
 function endSession(){
   if(!confirm('هل تريد إنهاء الجلسة؟')) return;
-  clearInterval(sessionTimer);
+  clearInterval(sessionTimerInterval);
   sessionActive = false;
   window.speechSynthesis.cancel();
   stopVoice();
@@ -1335,35 +973,38 @@ function showReport(){
 
   var m = Math.floor(sessionSeconds/60);
   var s = sessionSeconds % 60;
-  document.getElementById('reportTime').innerText = m+':'+s.toString().padStart(2,'0');
+  document.getElementById('reportTime').innerText = m+':'+(s<10?'0':'')+s;
   document.getElementById('reportMessages').innerText = stats.messages;
-  document.getElementById('reportAccuracy').innerText = stats.accuracy + '%';
+  document.getElementById('reportAccuracy').innerText = stats.accuracy+'%';
 
   var subtitle = '';
-  if(stats.accuracy >= 80) subtitle = '🌟 ممتاز! أداء رائع!';
-  else if(stats.accuracy >= 60) subtitle = '✅ جيد! استمر!';
-  else if(stats.accuracy >= 40) subtitle = '💪 لا بأس! التكرار يصنع الإتقان!';
+  if(stats.accuracy >= 80) subtitle = '🌟 ممتاز!';
+  else if(stats.accuracy >= 60) subtitle = '✅ جيد!';
+  else if(stats.accuracy >= 40) subtitle = '💪 استمر!';
   else subtitle = '🎯 ابدأ من الأساسيات!';
   document.getElementById('reportSubtitle').innerText = subtitle;
 
   if(vocabulary.length > 0){
-    document.getElementById('reportVocab').innerHTML = vocabulary.map(function(v){
-      return '<div class="vocab-card-item"><div class="vocab-card-word">'+v.word+'</div><div class="vocab-card-meaning">'+v.meaning+'</div></div>';
-    }).join('');
+    var vhtml = '';
+    for(var i=0;i<vocabulary.length;i++){
+      vhtml += '<div class="vocab-card-item"><div class="vocab-card-word">'+vocabulary[i].word+'</div><div class="vocab-card-meaning">'+vocabulary[i].meaning+'</div></div>';
+    }
+    document.getElementById('reportVocab').innerHTML = vhtml;
   }
 
-  var evalText = '🎓 اللغة: '+(langs[selectedLang]?.native||'')+' | المستوى: '+selectedLevel+
-    '\n⏱️ الوقت: '+m+' دقيقة\n💬 الرسائل: '+stats.messages+
-    '\n✅ الدقة: '+stats.accuracy+'%\n📚 كلمات: '+stats.words+
-    '\n❌ أخطاء: '+stats.errors;
+  var evalText = '🎓 اللغة: '+(langs[selectedLang]?langs[selectedLang].native:'')+' | المستوى: '+selectedLevel+
+    '\n⏱️ '+m+' دقيقة\n💬 '+stats.messages+' رسائل\n✅ '+stats.accuracy+'%\n📚 '+stats.words+' كلمات';
   document.getElementById('reportEvaluation').innerText = evalText;
 
-  socket.emit('ai-chat',{
-    message:'Give a brief encouraging evaluation of my session: '+stats.messages+' messages, '+stats.accuracy+'% accuracy, '+stats.words+' new words, in '+m+' minutes practicing '+langs[selectedLang]?.name+' at '+selectedLevel+' level.',
-    language:userNativeLang,mode:'general',context:{}
-  },function(res){
-    if(res.success) document.getElementById('reportEvaluation').innerText = res.response;
-  });
+  // Ask AI for evaluation
+  if(socket && socket.connected){
+    socket.emit('ai-chat',{
+      message:'Give brief encouraging evaluation: '+stats.messages+' messages, '+stats.accuracy+'% accuracy, '+stats.words+' words, '+m+' minutes, '+langs[selectedLang].name+' at '+selectedLevel,
+      language:userNativeLang,mode:'general',context:{}
+    },function(res){
+      if(res.success) document.getElementById('reportEvaluation').innerText = res.response;
+    });
+  }
 }
 
 function restartSession(){
@@ -1377,7 +1018,9 @@ function changeSettings(){
   document.getElementById('setupScreen').classList.remove('hidden');
 }
 
+// ============================================
 // Notification
+// ============================================
 function showNotification(msg,type){
   var el = document.getElementById('notification');
   el.innerText = msg;
@@ -1385,15 +1028,19 @@ function showNotification(msg,type){
   setTimeout(function(){el.classList.remove('show');},3500);
 }
 
-// Init
+// ============================================
+// ✅ Init
+// ============================================
 window.onload = function(){
+  // Load voices
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = function(){window.speechSynthesis.getVoices();};
 
-  // ✅ تفعيل الصوت بصمت عند أول لمسة (بدون إشعار)
-  var audioReady = false;
+  // ✅ Silent audio activation on first touch/click
+  var activated = false;
   function silentActivate(){
-    if(audioReady) return;
+    if(activated) return;
+    activated = true;
     try{
       var ctx = new (window.AudioContext || window.webkitAudioContext)();
       ctx.resume();
@@ -1403,22 +1050,22 @@ window.onload = function(){
     utt.volume = 0.01;
     utt.rate = 10;
     window.speechSynthesis.speak(utt);
-    audioReady = true;
-    console.log('✅ Audio activated silently');
   }
 
-  document.addEventListener('click', silentActivate, {once:true});
-  document.addEventListener('touchstart', silentActivate, {once:true});
-  document.addEventListener('touchend', silentActivate, {once:true});
+  document.addEventListener('click', silentActivate, {once:false});
+  document.addEventListener('touchstart', silentActivate, {once:false});
 
+  // Safari warning
   if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
     setTimeout(function(){showNotification('للحصول على أفضل تجربة استخدم Chrome 🌐','warning');},3000);
   }
 
+  // Service Worker
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(function(e){console.log('SW:',e);});
+    navigator.serviceWorker.register('sw.js').catch(function(e){});
   }
 
+  // Connect
   initSocket();
 };
 </script>
