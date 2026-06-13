@@ -559,7 +559,14 @@ function initSocket(){
   // ✅ WebRTC Signaling
   socket.on('rtc-offer',function(data){
     console.log('📥 Received offer');
-    handleOffer(data.offer);
+    // ✅ تأكد من وجود media أولاً
+    if(!localStream){
+      getLocalMedia(function(){
+        handleOffer(data.offer);
+      });
+    }else{
+      handleOffer(data.offer);
+    }
   });
 
   socket.on('rtc-answer',function(data){
@@ -854,16 +861,57 @@ async function createOffer(){
 async function handleOffer(offer){
   try{
     console.log('📥 Handling offer...');
-    if(!peerConnection){
-      console.log('No peer connection, creating one...');
-      startPeerConnection(false);
-      await new Promise(function(r){setTimeout(r,300);});
+
+    // ✅ أنشئ peer connection جديد إذا لم يكن موجوداً
+    if(peerConnection){
+      try{peerConnection.close();}catch(e){}
+      peerConnection=null;
     }
+
+    peerConnection=new RTCPeerConnection(RTC_CONFIG);
+    console.log('✅ New PeerConnection for answer');
+
+    // ✅ أضف المسارات المحلية (صوت + فيديو)
+    if(localStream){
+      localStream.getTracks().forEach(function(track){
+        peerConnection.addTrack(track,localStream);
+        console.log('✅ Added local track for answer:',track.kind);
+      });
+    }
+
+    // ✅ استقبل مسارات الشريك
+    peerConnection.ontrack=function(event){
+      console.log('📥 Remote track:',event.track.kind);
+      var rv=document.getElementById('remoteVideo');
+      if(event.streams&&event.streams[0]){
+        rv.srcObject=event.streams[0];
+        rv.play().catch(function(e){console.log('Play error:',e);});
+      }
+      rv.style.display='block';
+      document.getElementById('remotePlaceholder').style.display='none';
+      document.getElementById('qualityBadge').style.display='flex';
+    };
+
+    // ICE
+    peerConnection.onicecandidate=function(event){
+      if(event.candidate) socket.emit('rtc-ice',{roomId:roomId,candidate:event.candidate});
+    };
+
+    peerConnection.oniceconnectionstatechange=function(){
+      if(!peerConnection) return;
+      var state=peerConnection.iceConnectionState;
+      console.log('ICE state:',state);
+      if(state==='connected'||state==='completed') showNotif('✅ اتصال ممتاز!','success');
+      else if(state==='failed'){showNotif('⚠️ مشكلة في الاتصال','warning');try{peerConnection.restartIce();}catch(e){}}
+    };
+
+    // ✅ عالج العرض وأرسل الجواب
     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     var answer=await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
     socket.emit('rtc-answer',{roomId:roomId,answer:answer});
-    console.log('📤 Answer sent');
+    console.log('📤 Answer sent successfully');
+
   }catch(e){console.error('Handle offer error:',e);}
 }
 
