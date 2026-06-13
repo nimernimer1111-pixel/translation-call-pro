@@ -560,13 +560,12 @@ function initSocket(){
 
   socket.on('new-message',function(msg){
     if(msg.senderId !== socket.id){
-      // Partner's message - show subtitle and play audio
+      // ✅ الشريك يرى الترجمة كـ subtitle فقط (بدون صوت AI)
       showPartnerSubtitle(msg.originalText, msg.translatedText, msg.senderLanguage, msg.targetLanguage);
       translationCount++;
-      if(isSpeakerOn) speakText(msg.translatedText, myLang);
+      // ✅ لا نشغل صوت AI - الشريك يسمع صوتك الحقيقي عبر WebRTC
     }
   });
-
   socket.on('partner-speaking',function(data){
     var ind = document.getElementById('speakingIndicator');
     var name = document.getElementById('speakingName');
@@ -843,17 +842,44 @@ function setupLocalVideo(){
 // WebRTC
 // ============================================
 function initVideoCall(){
-  if(!localStream) return;
+  if(!localStream){
+    console.log('No local stream, getting media first...');
+    navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},
+      audio:true
+    }).then(function(stream){
+      localStream = stream;
+      document.getElementById('localVideo').srcObject = stream;
+      document.getElementById('localPlaceholder').style.display = 'none';
+      setupPeerConnection();
+    }).catch(function(e){
+      console.error('Media error:',e);
+      // Try audio only
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+        localStream = stream;
+        setupPeerConnection();
+      }).catch(function(e2){console.error('Audio error:',e2);});
+    });
+    return;
+  }
+  setupPeerConnection();
+}
+
+function setupPeerConnection(){
+  if(peerConnection){
+    try{peerConnection.close();}catch(e){}
+  }
 
   peerConnection = new RTCPeerConnection(RTC_CONFIG);
 
-  // Add tracks
+  // ✅ أضف كل المسارات (فيديو + صوت حقيقي)
   localStream.getTracks().forEach(function(track){
     peerConnection.addTrack(track, localStream);
   });
 
-  // Remote stream
+  // ✅ استقبل فيديو وصوت الشريك الحقيقي
   peerConnection.ontrack = function(event){
+    console.log('✅ Received remote track:', event.track.kind);
     var remoteVideo = document.getElementById('remoteVideo');
     if(event.streams && event.streams[0]){
       remoteVideo.srcObject = event.streams[0];
@@ -863,7 +889,7 @@ function initVideoCall(){
     document.getElementById('qualityBadge').style.display = 'flex';
   };
 
-  // ICE
+  // ICE candidates
   peerConnection.onicecandidate = function(event){
     if(event.candidate && socket && roomId){
       socket.emit('rtc-ice',{roomId:roomId, candidate:event.candidate});
@@ -873,16 +899,18 @@ function initVideoCall(){
   peerConnection.oniceconnectionstatechange = function(){
     if(!peerConnection) return;
     var state = peerConnection.iceConnectionState;
-    console.log('ICE state:',state);
-    if(state === 'connected'){
-      showNotif('✅ جودة الاتصال ممتازة','success');
+    console.log('ICE state:', state);
+    if(state === 'connected' || state === 'completed'){
+      showNotif('✅ تم الاتصال بالفيديو والصوت','success');
     }else if(state === 'failed'){
-      showNotif('⚠️ مشكلة في الاتصال، جاري إعادة المحاولة','warning');
-      peerConnection.restartIce();
+      showNotif('⚠️ مشكلة في الاتصال','warning');
+      try{peerConnection.restartIce();}catch(e){}
+    }else if(state === 'disconnected'){
+      showNotif('جاري إعادة الاتصال...','warning');
     }
   };
 
-  // If partner exists, create offer
+  // ✅ إذا كان الشريك موجوداً، أرسل offer
   if(partnerInfo){
     createAndSendOffer();
   }
@@ -901,11 +929,30 @@ async function createAndSendOffer(){
 
 async function handleRTCOffer(data){
   try{
-    if(!peerConnection) return;
+    // ✅ إذا لم يكن هناك peerConnection، أنشئ واحداً
+    if(!peerConnection){
+      if(!localStream){
+        try{
+          localStream = await navigator.mediaDevices.getUserMedia({
+            video:{facingMode:'user'},
+            audio:true
+          });
+          document.getElementById('localVideo').srcObject = localStream;
+          document.getElementById('localPlaceholder').style.display = 'none';
+        }catch(e){
+          try{
+            localStream = await navigator.mediaDevices.getUserMedia({audio:true});
+          }catch(e2){console.error('No media:',e2);return;}
+        }
+      }
+      setupPeerConnection();
+    }
+
     await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
     var answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
     socket.emit('rtc-answer',{roomId:roomId, answer:answer});
+    console.log('✅ Answer sent');
   }catch(e){console.error('Handle offer error:',e);}
 }
 
