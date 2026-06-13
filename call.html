@@ -1,415 +1,6 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TranslationCall - مكالمة مترجمة</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --primary:#6366f1;--secondary:#10b981;--danger:#ef4444;
-  --warning:#f59e0b;--bg:#000;--text:#fff;
-  --subtitle-bg:rgba(0,0,0,0.75);
-  --controls-bg:rgba(0,0,0,0.6);
-}
-html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--text);font-family:'Segoe UI',Arial,sans-serif;max-width:100vw;}
-
-/* ===== GATE ===== */
-.gate{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0f172a,#1e293b);display:flex;align-items:center;justify-content:center;}
-.gate-card{background:rgba(30,41,59,0.95);backdrop-filter:blur(20px);border-radius:24px;padding:40px;width:100%;max-width:420px;border:1px solid rgba(99,102,241,0.3);text-align:center;margin:20px;}
-.gate-icon{width:70px;height:70px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:white;margin:0 auto 20px;}
-.gate-error{color:var(--danger);font-size:0.85rem;margin-bottom:12px;display:none;padding:8px;background:rgba(239,68,68,0.1);border-radius:8px;}
-.gate-input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:0.95rem;margin-bottom:16px;}
-.gate-input:focus{outline:none;border-color:var(--primary);}
-.gate-input::placeholder{color:rgba(255,255,255,0.4);}
-.gate-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;font-weight:700;cursor:pointer;}
-
-/* ===== PRE-CALL SCREEN ===== */
-.pre-call{position:fixed;inset:0;z-index:9998;background:linear-gradient(135deg,#0f172a,#1e293b);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
-.pre-call.active{display:flex;}
-.pre-call-logo{display:flex;align-items:center;gap:12px;margin-bottom:40px;}
-.pre-call-logo-icon{width:50px;height:50px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:white;}
-.pre-call-logo-name{font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.pre-call-preview{width:280px;height:200px;border-radius:20px;overflow:hidden;background:#1a1a2e;position:relative;margin-bottom:30px;border:2px solid rgba(99,102,241,0.3);}
-.pre-call-preview video{width:100%;height:100%;object-fit:cover;}
-.pre-call-preview-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:rgba(255,255,255,0.5);}
-.pre-call-preview-off i{font-size:2.5rem;}
-.pre-call-form{background:rgba(30,41,59,0.8);border-radius:20px;padding:25px;width:100%;max-width:400px;border:1px solid rgba(255,255,255,0.06);}
-.pre-call-form h3{font-size:1.1rem;margin-bottom:20px;text-align:center;color:rgba(255,255,255,0.9);}
-.form-group{margin-bottom:16px;}
-.form-group label{font-size:0.82rem;color:rgba(255,255,255,0.6);display:block;margin-bottom:6px;}
-.form-group input,.form-group select{width:100%;padding:11px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:0.9rem;}
-.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);}
-.form-group select option{background:#1e293b;}
-.pre-call-btns{display:flex;gap:10px;margin-top:5px;}
-.pre-call-btn{flex:1;padding:12px;border-radius:12px;border:none;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
-.pre-call-btn.create{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;}
-.pre-call-btn.join{background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;}
-.pre-call-device-btns{display:flex;gap:10px;margin-bottom:16px;justify-content:center;}
-.device-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
-.device-btn.off{background:rgba(239,68,68,0.2);color:var(--danger);border-color:rgba(239,68,68,0.3);}
-
-/* ===== CALL SCREEN ===== */
-.call-screen{position:fixed;inset:0;z-index:9997;background:#000;display:none;}
-.call-screen.active{display:block;}
-
-/* Remote Video - Full Screen */
-.remote-video-full{position:absolute;inset:0;background:#111;}
-#remoteVideo{width:100%;height:100%;object-fit:cover;}
-.remote-placeholder-full{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;background:linear-gradient(135deg,#0f172a,#1e293b);}
-.remote-avatar-big{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--secondary),#14b8a6);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;color:white;box-shadow:0 0 40px rgba(16,185,129,0.3);}
-.remote-name-big{font-size:1.2rem;font-weight:600;color:rgba(255,255,255,0.9);}
-.remote-status{font-size:0.85rem;color:rgba(255,255,255,0.5);}
-
-/* Local Video - Small Floating */
-.local-video-float{position:absolute;border-radius:16px;overflow:hidden;background:#1a1a2e;border:2px solid rgba(99,102,241,0.5);box-shadow:0 8px 32px rgba(0,0,0,0.6);cursor:grab;z-index:10;transition:border-color 0.3s;}
-.local-video-float:active{cursor:grabbing;}
-.local-video-float.top-right{top:20px;right:20px;width:120px;height:90px;}
-@media(min-width:600px){.local-video-float.top-right{width:160px;height:120px;}}
-.local-video-float.camera-off{border-color:rgba(239,68,68,0.5);}
-#localVideo{width:100%;height:100%;object-fit:cover;display:block;}
-.local-placeholder-float{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#111;color:rgba(255,255,255,0.3);font-size:1.5rem;}
-
-/* Call Info Bar - Top */
-.call-info-bar{position:absolute;top:0;left:0;right:0;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(0,0,0,0.6),transparent);z-index:20;}
-.call-partner-info{display:flex;align-items:center;gap:10px;}
-.call-partner-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--secondary),#14b8a6);display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700;color:white;}
-.call-partner-name{font-size:0.9rem;font-weight:600;}
-.call-partner-lang{font-size:0.72rem;color:rgba(255,255,255,0.6);}
-.call-timer-badge{background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);padding:5px 12px;border-radius:20px;font-size:0.82rem;font-variant-numeric:tabular-nums;}
-.call-quality-badge{display:flex;align-items:center;gap:5px;background:rgba(16,185,129,0.2);padding:4px 10px;border-radius:15px;font-size:0.72rem;color:var(--secondary);}
-
-/* ✅ Subtitle Area */
-.subtitle-area{position:absolute;bottom:140px;left:0;right:0;padding:0 20px;z-index:20;pointer-events:none;}
-.subtitle-box{background:var(--subtitle-bg);backdrop-filter:blur(10px);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.08);transition:all 0.3s;}
-.subtitle-box.hidden{display:none;}
-.subtitle-label{font-size:0.65rem;color:rgba(255,255,255,0.5);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
-.subtitle-original{font-size:1rem;font-weight:500;color:rgba(255,255,255,0.9);line-height:1.4;}
-.subtitle-translated{font-size:1rem;font-weight:600;color:#34d399;line-height:1.4;}
-.subtitle-lang-flag{font-size:0.85rem;margin-left:5px;}
-
-/* ✅ Live Indicator */
-.speaking-indicator{position:absolute;bottom:200px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:8px;background:rgba(99,102,241,0.2);backdrop-filter:blur(10px);padding:6px 16px;border-radius:20px;border:1px solid rgba(99,102,241,0.3);z-index:20;}
-.speaking-indicator.show{display:flex;}
-.speaking-dots{display:flex;gap:3px;align-items:center;}
-.speaking-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:sdot 1.4s infinite;}
-.speaking-dot:nth-child(2){animation-delay:0.2s;}
-.speaking-dot:nth-child(3){animation-delay:0.4s;}
-@keyframes sdot{0%,60%,100%{transform:translateY(0);opacity:0.5;}30%{transform:translateY(-4px);opacity:1;};}
-
-/* ✅ Controls Bar - Bottom */
-.controls-bar-call{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);z-index:20;display:flex;flex-direction:column;gap:12px;}
-.controls-main{display:flex;justify-content:center;align-items:center;gap:15px;}
-.controls-secondary{display:flex;justify-content:center;align-items:center;gap:10px;}
-.ctrl-call-btn{width:56px;height:56px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:1.2rem;}
-.ctrl-call-btn.normal{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);color:white;}
-.ctrl-call-btn.normal:hover{background:rgba(255,255,255,0.25);transform:scale(1.1);}
-.ctrl-call-btn.off{background:rgba(239,68,68,0.3);color:var(--danger);}
-.ctrl-call-btn.end{width:64px;height:64px;background:var(--danger);color:white;box-shadow:0 4px 20px rgba(239,68,68,0.5);}
-.ctrl-call-btn.end:hover{transform:scale(1.1);}
-.ctrl-call-btn.active{background:rgba(99,102,241,0.4);color:var(--primary);}
-.ctrl-call-btn-sm{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;}
-.ctrl-call-btn-sm:hover{background:rgba(255,255,255,0.15);}
-.ctrl-call-btn-sm.active{background:rgba(99,102,241,0.3);color:var(--primary);}
-.ctrl-label{font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:4px;}
-.ctrl-group{display:flex;flex-direction:column;align-items:center;}
-
-/* ✅ Subtitle Settings Panel */
-.subtitle-settings{position:absolute;bottom:180px;left:20px;right:20px;background:rgba(15,23,42,0.95);backdrop-filter:blur(20px);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.08);z-index:30;display:none;}
-.subtitle-settings.show{display:block;}
-.subtitle-settings h4{font-size:0.85rem;margin-bottom:15px;color:rgba(255,255,255,0.8);}
-.settings-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.settings-label{font-size:0.82rem;color:rgba(255,255,255,0.6);}
-.settings-toggle{display:flex;gap:8px;}
-.stg-btn{padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.6);font-size:0.78rem;cursor:pointer;}
-.stg-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
-.font-size-control{display:flex;align-items:center;gap:10px;}
-.font-size-btn{width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
-.font-size-val{font-size:0.85rem;color:rgba(255,255,255,0.8);min-width:30px;text-align:center;}
-
-/* ✅ Waiting Screen */
-.waiting-screen{position:absolute;inset:0;background:linear-gradient(135deg,#0f172a,#1e293b);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:15;}
-.waiting-screen.hidden{display:none;}
-.waiting-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white;animation:wpulse 2s infinite;}
-@keyframes wpulse{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.4);}50%{box-shadow:0 0 0 20px rgba(99,102,241,0);};}
-.waiting-title{font-size:1.1rem;font-weight:600;}
-.waiting-subtitle{font-size:0.85rem;color:rgba(255,255,255,0.5);}
-.waiting-code-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 20px;cursor:pointer;text-align:center;}
-.waiting-code{font-size:1.8rem;font-weight:700;letter-spacing:0.2em;color:var(--primary);}
-.waiting-copy-hint{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:4px;}
-.waiting-link-btn{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:var(--secondary);padding:8px 16px;border-radius:20px;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;gap:8px;}
-
-/* Notification */
-.notif{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:22px;font-size:0.85rem;font-weight:600;z-index:9999;display:none;max-width:90vw;text-align:center;}
-.notif.show{display:block;animation:nshow 0.3s ease;}
-.notif.success{background:rgba(16,185,129,0.95);color:white;}
-.notif.error{background:rgba(239,68,68,0.95);color:white;}
-.notif.info{background:rgba(99,102,241,0.95);color:white;}
-.notif.warning{background:rgba(245,158,11,0.95);color:white;}
-@keyframes nshow{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
-
-/* iOS Audio Button */
-.ios-btn{display:none;position:fixed;bottom:200px;left:50%;transform:translateX(-50%);z-index:9998;padding:12px 24px;background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;border:none;border-radius:22px;font-size:0.9rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(16,185,129,0.4);}
-.ios-btn.show{display:block;}
-
-/* End Call Screen */
-.end-call-screen{position:fixed;inset:0;z-index:9996;background:linear-gradient(135deg,#0f172a,#1e293b);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px;}
-.end-call-screen.active{display:flex;}
-.end-icon{width:80px;height:80px;border-radius:50%;background:rgba(239,68,68,0.15);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--danger);}
-.end-title{font-size:1.3rem;font-weight:700;}
-.end-duration{font-size:0.9rem;color:rgba(255,255,255,0.5);}
-.end-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
-.end-btn{padding:12px 22px;border-radius:12px;border:none;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;}
-.end-btn.new{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;}
-.end-btn.home{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);}
-.end-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:15px 20px;text-align:center;min-width:100px;}
-.end-stat-val{font-size:1.5rem;font-weight:700;color:var(--primary);}
-.end-stat-label{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:3px;}
-.end-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
-</style>
-</head>
-<body>
-
-<!-- Notifications -->
-<div class="notif" id="notif"></div>
-<button class="ios-btn" id="iosBtn" onclick="activateAudio()">🔊 تفعيل الصوت</button>
-
-<!-- ===== GATE ===== -->
-<div class="gate" id="gate">
-  <div class="gate-card">
-    <div class="gate-icon"><i class="fas fa-phone"></i></div>
-    <h2 style="font-size:1.4rem;margin-bottom:8px;">مكالمة مترجمة</h2>
-    <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:25px;">أدخل كود الوصول</p>
-    <div class="gate-error" id="gateError"><i class="fas fa-circle-xmark"></i> <span id="gateErrorText">كود غير صحيح</span></div>
-    <input type="password" class="gate-input" id="gateInput" placeholder="أدخل كود الموقع" onkeypress="if(event.key==='Enter')verifyGate()">
-    <button class="gate-btn" onclick="verifyGate()"><i class="fas fa-arrow-right-to-bracket"></i> دخول</button>
-    <p style="color:rgba(255,255,255,0.3);font-size:0.72rem;margin-top:20px;">© Omar Nimer 2026</p>
-  </div>
-</div>
-
-<!-- ===== PRE-CALL ===== -->
-<div class="pre-call" id="preCall">
-  <div class="pre-call-logo">
-    <div class="pre-call-logo-icon"><i class="fas fa-language"></i></div>
-    <div class="pre-call-logo-name">TranslationCall Pro</div>
-  </div>
-
-  <div class="pre-call-preview">
-    <video id="previewVideo" autoplay playsinline muted></video>
-    <div class="pre-call-preview-off" id="previewOff">
-      <i class="fas fa-video-slash"></i>
-      <span style="font-size:0.8rem;">الكاميرا متوقفة</span>
-    </div>
-  </div>
-
-  <div class="pre-call-device-btns">
-    <button class="device-btn" id="previewMicBtn" onclick="togglePreviewMic()" title="ميكروفون"><i class="fas fa-microphone" id="previewMicIcon"></i></button>
-    <button class="device-btn" id="previewCamBtn" onclick="togglePreviewCam()" title="كاميرا"><i class="fas fa-video" id="previewCamIcon"></i></button>
-  </div>
-
-  <div class="pre-call-form">
-    <h3><i class="fas fa-phone" style="color:var(--primary);"></i> بدء مكالمة مترجمة</h3>
-
-    <div class="form-group">
-      <label>اسمك</label>
-      <input type="text" id="callName" placeholder="أدخل اسمك..." class="gate-input" style="margin-bottom:0;">
-    </div>
-
-    <div class="form-group">
-      <label>لغتك</label>
-      <select id="callLang" class="gate-input" style="margin-bottom:0;appearance:none;">
-        <option value="ar">🇸🇦 العربية</option>
-        <option value="en">🇺🇸 English</option>
-        <option value="es">🇪🇸 Español</option>
-        <option value="fr">🇫🇷 Français</option>
-        <option value="de">🇩🇪 Deutsch</option>
-        <option value="tr">🇹🇷 Türkçe</option>
-        <option value="zh">🇨🇳 中文</option>
-        <option value="ja">🇯🇵 日本語</option>
-        <option value="ru">🇷🇺 Русский</option>
-        <option value="pt">🇧🇷 Português</option>
-      </select>
-    </div>
-
-    <div class="form-group" id="joinCodeGroup" style="display:none;">
-      <label>رمز المكالمة</label>
-      <input type="text" id="callCode" placeholder="أدخل رمز المكالمة" class="gate-input" style="margin-bottom:0;text-align:center;font-size:1.3rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;" maxlength="6" oninput="this.value=this.value.toUpperCase()">
-    </div>
-
-    <div class="pre-call-btns">
-      <button class="pre-call-btn create" onclick="createCall()">
-        <i class="fas fa-plus"></i> إنشاء مكالمة
-      </button>
-      <button class="pre-call-btn join" onclick="showJoinInput()">
-        <i class="fas fa-arrow-right-to-bracket"></i> انضمام
-      </button>
-    </div>
-    <button id="joinCallBtn" style="display:none;width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;font-size:0.9rem;font-weight:600;cursor:pointer;margin-top:8px;" onclick="joinCall()">
-      <i class="fas fa-phone"></i> انضم الآن
-    </button>
-  </div>
-</div>
-
-<!-- ===== CALL SCREEN ===== -->
-<div class="call-screen" id="callScreen">
-
-  <!-- Remote Video Full Screen -->
-  <div class="remote-video-full">
-    <video id="remoteVideo" autoplay playsinline></video>
-    <div class="remote-placeholder-full" id="remotePlaceholder">
-      <div class="remote-avatar-big" id="remoteAvatarBig">؟</div>
-      <div class="remote-name-big" id="remoteNameBig">في انتظار الشريك...</div>
-      <div class="remote-status" id="remoteStatus">جاري الاتصال...</div>
-    </div>
-  </div>
-
-  <!-- Local Video Float -->
-  <div class="local-video-float top-right" id="localFloat">
-    <video id="localVideo" autoplay playsinline muted></video>
-    <div class="local-placeholder-float" id="localPlaceholder"><i class="fas fa-video-slash"></i></div>
-  </div>
-
-  <!-- Top Bar -->
-  <div class="call-info-bar">
-    <div class="call-partner-info">
-      <div class="call-partner-avatar" id="partnerAvatar">؟</div>
-      <div>
-        <div class="call-partner-name" id="partnerName">في انتظار الشريك...</div>
-        <div class="call-partner-lang" id="partnerLangDisplay">---</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="call-quality-badge" id="qualityBadge" style="display:none;">
-        <i class="fas fa-signal"></i><span>ممتاز</span>
-      </div>
-      <div class="call-timer-badge" id="callTimer">00:00</div>
-    </div>
-  </div>
-
-  <!-- Waiting Screen -->
-  <div class="waiting-screen" id="waitingScreen">
-    <div class="waiting-avatar" id="myAvatarWait">أ</div>
-    <div class="waiting-title">في انتظار الشريك...</div>
-    <div class="waiting-subtitle">شارك رمز المكالمة</div>
-    <div class="waiting-code-box" onclick="copyCallCode()">
-      <div class="waiting-code" id="waitingCode">------</div>
-      <div class="waiting-copy-hint"><i class="fas fa-copy"></i> اضغط لنسخ الرمز</div>
-    </div>
-    <button class="waiting-link-btn" onclick="copyCallLink()">
-      <i class="fas fa-link"></i> نسخ رابط الدعوة
-    </button>
-  </div>
-
-  <!-- Speaking Indicator -->
-  <div class="speaking-indicator" id="speakingIndicator">
-    <div class="speaking-dots">
-      <div class="speaking-dot"></div>
-      <div class="speaking-dot"></div>
-      <div class="speaking-dot"></div>
-    </div>
-    <span id="speakingName" style="font-size:0.8rem;color:rgba(255,255,255,0.8);">أنت تتحدث</span>
-  </div>
-
-  <!-- ✅ Subtitle Area -->
-  <div class="subtitle-area" id="subtitleArea">
-    <!-- My subtitle (what I say) -->
-    <div class="subtitle-box" id="mySubtitleBox" style="display:none;">
-      <div class="subtitle-label">أنت</div>
-      <div class="subtitle-original" id="myOriginalText"></div>
-      <div class="subtitle-translated" id="myTranslatedText"></div>
-    </div>
-    <!-- Partner subtitle -->
-    <div class="subtitle-box" id="partnerSubtitleBox" style="display:none;">
-      <div class="subtitle-label" id="partnerSubtitleLabel">شريكك</div>
-      <div class="subtitle-original" id="partnerOriginalText"></div>
-      <div class="subtitle-translated" id="partnerTranslatedText"></div>
-    </div>
-  </div>
-
-  <!-- Subtitle Settings Panel -->
-  <div class="subtitle-settings" id="subtitleSettings">
-    <h4><i class="fas fa-closed-captioning"></i> إعدادات الترجمة</h4>
-    <div class="settings-row">
-      <span class="settings-label">عرض النص</span>
-      <div class="settings-toggle">
-        <button class="stg-btn active" id="showBothBtn" onclick="setSubtitleMode('both')">الكل</button>
-        <button class="stg-btn" id="showOrigBtn" onclick="setSubtitleMode('original')">الأصلي</button>
-        <button class="stg-btn" id="showTransBtn" onclick="setSubtitleMode('translated')">الترجمة</button>
-        <button class="stg-btn" id="showNoneBtn" onclick="setSubtitleMode('none')">إخفاء</button>
-      </div>
-    </div>
-    <div class="settings-row">
-      <span class="settings-label">حجم النص</span>
-      <div class="font-size-control">
-        <button class="font-size-btn" onclick="changeFontSize(-1)">−</button>
-        <span class="font-size-val" id="fontSizeVal">16</span>
-        <button class="font-size-btn" onclick="changeFontSize(1)">+</button>
-      </div>
-    </div>
-    <div class="settings-row">
-      <span class="settings-label">موضع الترجمة</span>
-      <div class="settings-toggle">
-        <button class="stg-btn active" id="posBottomBtn" onclick="setSubtitlePos('bottom')">أسفل</button>
-        <button class="stg-btn" id="posTopBtn" onclick="setSubtitlePos('top')">أعلى</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Controls Bar -->
-  <div class="controls-bar-call">
-    <div class="controls-secondary">
-      <div class="ctrl-group">
-        <button class="ctrl-call-btn-sm" id="flipCamBtn" onclick="flipCamera()" title="قلب الكاميرا"><i class="fas fa-rotate"></i></button>
-      </div>
-      <div class="ctrl-group">
-        <button class="ctrl-call-btn-sm" id="subtitleBtn" onclick="toggleSubtitleSettings()" title="إعدادات الترجمة"><i class="fas fa-closed-captioning"></i></button>
-      </div>
-      <div class="ctrl-group">
-        <button class="ctrl-call-btn-sm" id="micToggleBtn" onclick="toggleMic()" title="ميكروفون الترجمة"><i class="fas fa-microphone" id="micToggleIcon"></i></button>
-      </div>
-      <div class="ctrl-group">
-        <button class="ctrl-call-btn-sm" id="speakerBtn" onclick="toggleSpeaker()" title="الصوت"><i class="fas fa-volume-high" id="speakerIcon"></i></button>
-      </div>
-    </div>
-    <div class="controls-main">
-      <div class="ctrl-group">
-        <button class="ctrl-call-btn normal" id="muteBtn" onclick="toggleAudio()" title="كتم"><i class="fas fa-microphone" id="muteIcon"></i></button>
-        <div class="ctrl-label">صوت</div>
-      </div>
-      <div class="ctrl-group">
-        <button class="ctrl-call-btn end" onclick="confirmEndCall()"><i class="fas fa-phone-slash"></i></button>
-        <div class="ctrl-label">إنهاء</div>
-      </div>
-      <div class="ctrl-group">
-        <button class="ctrl-call-btn normal" id="camBtn" onclick="toggleCamera()" title="كاميرا"><i class="fas fa-video" id="camIcon"></i></button>
-        <div class="ctrl-label">كاميرا</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== END CALL SCREEN ===== -->
-<div class="end-call-screen" id="endCallScreen">
-  <div class="end-icon"><i class="fas fa-phone-slash"></i></div>
-  <div class="end-title">انتهت المكالمة</div>
-  <div class="end-duration" id="endDuration">المدة: 0:00</div>
-  <div class="end-stats">
-    <div class="end-stat"><div class="end-stat-val" id="endMessages">0</div><div class="end-stat-label">ترجمة</div></div>
-    <div class="end-stat"><div class="end-stat-val" id="endLang">--</div><div class="end-stat-label">اللغات</div></div>
-  </div>
-  <div class="end-actions">
-    <button class="end-btn new" onclick="newCall()"><i class="fas fa-phone"></i> مكالمة جديدة</button>
-    <button class="end-btn home" onclick="window.location.href='index.html'"><i class="fas fa-house"></i> الرئيسية</button>
-  </div>
-</div>
 <script>
-var SERVER_URL = 'https://translationcall-server.onrender.com';
+var SERVER_URL = 'YOUR_SERVER_URL';
 
-// ============================================
-// Languages
-// ============================================
 var langs = {
   ar:{name:'العربية',flag:'🇸🇦',voice:'ar-SA'},
   en:{name:'English',flag:'🇺🇸',voice:'en-US'},
@@ -423,97 +14,72 @@ var langs = {
   pt:{name:'Português',flag:'🇧🇷',voice:'pt-BR'}
 };
 
-// ============================================
 // State
-// ============================================
-var socket = null;
-var roomId = null;
-var myName = '';
-var myLang = 'ar';
-var partnerInfo = null;
-var partnerLang = 'en';
+var socket=null,roomId=null,myName='',myLang='ar';
+var partnerInfo=null,partnerLang='en';
+var localStream=null,peerConnection=null;
+var isCameraOn=true,isAudioOn=true,isMicOn=true,isSpeakerOn=true,isFrontCamera=true;
+var previewStream=null,isPreviewMicOn=true,isPreviewCamOn=true;
+var recognition=null,isRecording=false,translationCount=0;
+var timerInterval=null,callSeconds=0;
+var subtitleMode='both',subtitleFontSize=16,subtitlePos='bottom';
+var audioActivated=false;
+var speechSettings={rate:0.88,pitch:1,volume:1};
 
-// Media
-var localStream = null;
-var peerConnection = null;
-var isCameraOn = true;
-var isAudioOn = true;
-var isMicOn = true;  // mic for translation
-var isSpeakerOn = true;
-var isFrontCamera = true;
-var previewStream = null;
-var isPreviewMicOn = true;
-var isPreviewCamOn = true;
-
-// Translation
-var recognition = null;
-var isRecording = false;
-var translationCount = 0;
-
-// Timer
-var timerInterval = null;
-var callSeconds = 0;
-
-// Subtitle Settings
-var subtitleMode = 'both';
-var subtitleFontSize = 16;
-var subtitlePos = 'bottom';
-
-// Audio
-var audioActivated = false;
-var speechSettings = {rate:0.88,pitch:1,volume:1};
-
-// RTC Config with STUN servers
-var RTC_CONFIG = {
+// ✅ RTC Config مع أكثر STUN servers
+var RTC_CONFIG={
   iceServers:[
     {urls:'stun:stun.l.google.com:19302'},
     {urls:'stun:stun1.l.google.com:19302'},
     {urls:'stun:stun2.l.google.com:19302'},
     {urls:'stun:stun3.l.google.com:19302'},
-    {urls:'stun:stun4.l.google.com:19302'}
+    {urls:'stun:stun4.l.google.com:19302'},
+    {urls:'stun:stun.cloudflare.com:3478'},
+    {urls:'stun:stun.services.mozilla.com'}
   ],
-  iceCandidatePoolSize: 10
+  iceCandidatePoolSize:10
 };
 
 // ============================================
-// ✅ Audio Activation
+// Audio
 // ============================================
 function activateAudio(){
   try{
-    var ctx = new (window.AudioContext||window.webkitAudioContext)();
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
     ctx.resume();
     window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(' ');
-    u.volume = 0.01; u.rate = 10;
+    var u=new SpeechSynthesisUtterance(' ');
+    u.volume=0.01;u.rate=10;
     window.speechSynthesis.speak(u);
-    audioActivated = true;
+    audioActivated=true;
     document.getElementById('iosBtn').classList.remove('show');
     showNotif('تم تفعيل الصوت ✅','success');
-  }catch(e){console.log('Audio activate error:',e);}
+  }catch(e){console.log('Audio error:',e);}
 }
 
 function showIOSBtn(){
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  var isMac = navigator.maxTouchPoints > 0 && /Mac/.test(navigator.userAgent);
-  if(isIOS || isMac){
+  var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  var isMac=navigator.maxTouchPoints>0&&/Mac/.test(navigator.userAgent);
+  if(isIOS||isMac){
     document.getElementById('iosBtn').classList.add('show');
     setTimeout(function(){document.getElementById('iosBtn').classList.remove('show');},15000);
   }
+}
+
+function getClientId(){
+  var id=localStorage.getItem('tcClientId');
+  if(!id){id='c_'+Math.random().toString(36).substr(2,9);localStorage.setItem('tcClientId',id);}
+  return id;
 }
 
 // ============================================
 // Socket
 // ============================================
 function initSocket(){
-  socket = io(SERVER_URL,{
-    transports:['websocket','polling'],
-    reconnection:true,
-    reconnectionAttempts:20,
-    reconnectionDelay:1000
-  });
+  socket=io(SERVER_URL,{transports:['websocket','polling'],reconnection:true,reconnectionAttempts:20,reconnectionDelay:1000});
 
   socket.on('connect',function(){
-    console.log('✅ Connected');
+    console.log('✅ Socket connected:',socket.id);
     checkAccess();
   });
 
@@ -521,22 +87,20 @@ function initSocket(){
     showNotif('انقطع الاتصال... جاري إعادة الاتصال','warning');
   });
 
-  socket.on('reconnect',function(){
-    showNotif('تم إعادة الاتصال ✅','success');
-    if(roomId) rejoinRoom();
-  });
-
   socket.on('partner-joined',function(data){
-    partnerInfo = data;
-    partnerLang = data.language;
+    console.log('✅ Partner joined:',data);
+    partnerInfo=data;
+    partnerLang=data.language;
     updatePartnerUI(data);
     hideWaiting();
     startTimer();
+    isMicOn=true;
     startTranslation();
     document.getElementById('qualityBadge').style.display='flex';
     showNotif(data.name+' انضم! 🎉','success');
     showIOSBtn();
-    setTimeout(function(){initVideoCall();},500);
+    // ✅ المضيف يبدأ الاتصال
+    setTimeout(function(){startPeerConnection(true);},800);
   });
 
   socket.on('partner-reconnected',function(data){
@@ -548,29 +112,29 @@ function initSocket(){
   });
 
   socket.on('partner-left',function(data){
-    partnerInfo = null;
+    partnerInfo=null;
     showWaiting();
     stopTimer();
     stopTranslation();
-    stopVideoCall();
+    stopPeerConnection();
     document.getElementById('qualityBadge').style.display='none';
-    showNotif(data.name+' غادر المكالمة','error');
+    showNotif((data.name||'الشريك')+' غادر المكالمة','error');
     resetPartnerUI();
   });
 
   socket.on('new-message',function(msg){
-    if(msg.senderId !== socket.id){
-      // ✅ الشريك يرى الترجمة كـ subtitle فقط (بدون صوت AI)
-      showPartnerSubtitle(msg.originalText, msg.translatedText, msg.senderLanguage, msg.targetLanguage);
+    if(msg.senderId!==socket.id){
+      // ✅ فقط subtitle - بدون صوت AI
+      showPartnerSubtitle(msg.originalText,msg.translatedText,msg.senderLanguage,msg.targetLanguage);
       translationCount++;
-      // ✅ لا نشغل صوت AI - الشريك يسمع صوتك الحقيقي عبر WebRTC
     }
   });
+
   socket.on('partner-speaking',function(data){
-    var ind = document.getElementById('speakingIndicator');
-    var name = document.getElementById('speakingName');
-    if(data.speaking && partnerInfo){
-      name.innerText = partnerInfo.name + ' يتحدث';
+    var ind=document.getElementById('speakingIndicator');
+    var name=document.getElementById('speakingName');
+    if(data.speaking&&partnerInfo){
+      name.innerText=partnerInfo.name+' يتحدث';
       ind.classList.add('show');
     }else{
       ind.classList.remove('show');
@@ -578,22 +142,34 @@ function initSocket(){
   });
 
   socket.on('partner-interim-speech',function(data){
-    if(data.text && data.text.trim() && partnerInfo){
-      document.getElementById('partnerOriginalText').innerText = data.text;
+    if(data.text&&data.text.trim()&&partnerInfo){
+      document.getElementById('partnerOriginalText').innerText=data.text;
       document.getElementById('partnerSubtitleBox').style.display='block';
+    }else{
+      document.getElementById('partnerSubtitleBox').style.display='none';
     }
   });
 
-  // WebRTC
-  socket.on('rtc-offer',function(data){handleRTCOffer(data);});
-  socket.on('rtc-answer',function(data){handleRTCAnswer(data);});
-  socket.on('rtc-ice',function(data){handleRTCIce(data);});
-  socket.on('partner-camera-toggle',function(data){
-    document.getElementById('remoteVideo').style.display=data.enabled?'block':'none';
-    document.getElementById('remotePlaceholder').style.display=data.enabled?'none':'flex';
+  // ✅ WebRTC Signaling
+  socket.on('rtc-offer',function(data){
+    console.log('📥 Received offer');
+    handleOffer(data.offer);
   });
-  socket.on('partner-audio-toggle',function(data){
-    showNotif(data.enabled?partnerInfo?.name+' فعّل الميكروفون':partnerInfo?.name+' كتم الميكروفون','info');
+
+  socket.on('rtc-answer',function(data){
+    console.log('📥 Received answer');
+    handleAnswer(data.answer);
+  });
+
+  socket.on('rtc-ice',function(data){
+    handleIce(data.candidate);
+  });
+
+  socket.on('partner-camera-toggle',function(data){
+    var rv=document.getElementById('remoteVideo');
+    var rp=document.getElementById('remotePlaceholder');
+    rv.style.display=data.enabled?'block':'none';
+    rp.style.display=data.enabled?'none':'flex';
   });
 
   socket.on('blocked',function(){alert('تم حظرك');window.location.href='index.html';});
@@ -603,42 +179,12 @@ function initSocket(){
 }
 
 // ============================================
-// Rejoin on reconnect
-// ============================================
-function rejoinRoom(){
-  if(!roomId || !myName || !myLang) return;
-  socket.emit('join-room',{
-    roomId:roomId, userName:myName, language:myLang,
-    password:'', clientId:getClientId()
-  },function(res){
-    if(res.success){
-      showNotif('تم استعادة المكالمة ✅','success');
-      if(res.partner && !partnerInfo){
-        partnerInfo = res.partner;
-        partnerLang = res.partner.language;
-        updatePartnerUI(res.partner);
-        hideWaiting();
-        if(!timerInterval) startTimer();
-        if(!isRecording) startTranslation();
-        setTimeout(function(){initVideoCall();},500);
-      }
-    }
-  });
-}
-
-function getClientId(){
-  var id = localStorage.getItem('tcClientId');
-  if(!id){id='c_'+Math.random().toString(36).substr(2,9);localStorage.setItem('tcClientId',id);}
-  return id;
-}
-
-// ============================================
 // Gate
 // ============================================
 function verifyGate(){
-  var code = document.getElementById('gateInput').value.trim();
-  var errorEl = document.getElementById('gateError');
-  var errorText = document.getElementById('gateErrorText');
+  var code=document.getElementById('gateInput').value.trim();
+  var errorEl=document.getElementById('gateError');
+  var errorText=document.getElementById('gateErrorText');
   if(!code){errorEl.style.display='block';errorText.innerText='يرجى إدخال الكود';return;}
   if(!socket||!socket.connected){errorEl.style.display='block';errorText.innerText='جاري الاتصال... حاول مرة أخرى';return;}
   socket.emit('verify-site-code',{code:code},function(res){
@@ -655,15 +201,12 @@ function verifyGate(){
 }
 
 function checkAccess(){
-  // إذا كان رابط دعوة - لا يحتاج كود
-  var params = new URLSearchParams(window.location.search);
+  var params=new URLSearchParams(window.location.search);
   if(params.get('join')){
     document.getElementById('gate').style.display='none';
     initPreCall();
     return;
   }
-
-  // إذا دخل سابقاً
   if(localStorage.getItem('tcAccess')==='ok'){
     document.getElementById('gate').style.display='none';
     initPreCall();
@@ -682,370 +225,316 @@ function initPreCall(){
 function startPreview(){
   navigator.mediaDevices.getUserMedia({video:true,audio:true})
     .then(function(stream){
-      previewStream = stream;
-      document.getElementById('previewVideo').srcObject = stream;
-      document.getElementById('previewOff').style.display = 'none';
+      previewStream=stream;
+      document.getElementById('previewVideo').srcObject=stream;
+      document.getElementById('previewOff').style.display='none';
     })
     .catch(function(e){
       console.log('Preview error:',e);
-      document.getElementById('previewOff').style.display = 'flex';
+      document.getElementById('previewOff').style.display='flex';
     });
 }
 
 function togglePreviewMic(){
-  isPreviewMicOn = !isPreviewMicOn;
-  if(previewStream){
-    previewStream.getAudioTracks().forEach(function(t){t.enabled=isPreviewMicOn;});
-  }
-  var btn = document.getElementById('previewMicBtn');
-  var icon = document.getElementById('previewMicIcon');
+  isPreviewMicOn=!isPreviewMicOn;
+  if(previewStream) previewStream.getAudioTracks().forEach(function(t){t.enabled=isPreviewMicOn;});
+  var btn=document.getElementById('previewMicBtn');
+  var icon=document.getElementById('previewMicIcon');
   btn.classList.toggle('off',!isPreviewMicOn);
-  icon.className = isPreviewMicOn ? 'fas fa-microphone' : 'fas fa-microphone-slash';
+  icon.className=isPreviewMicOn?'fas fa-microphone':'fas fa-microphone-slash';
 }
 
 function togglePreviewCam(){
-  isPreviewCamOn = !isPreviewCamOn;
-  if(previewStream){
-    previewStream.getVideoTracks().forEach(function(t){t.enabled=isPreviewCamOn;});
-  }
-  var btn = document.getElementById('previewCamBtn');
-  var icon = document.getElementById('previewCamIcon');
+  isPreviewCamOn=!isPreviewCamOn;
+  if(previewStream) previewStream.getVideoTracks().forEach(function(t){t.enabled=isPreviewCamOn;});
+  var btn=document.getElementById('previewCamBtn');
+  var icon=document.getElementById('previewCamIcon');
   btn.classList.toggle('off',!isPreviewCamOn);
-  icon.className = isPreviewCamOn ? 'fas fa-video' : 'fas fa-video-slash';
-  document.getElementById('previewOff').style.display = isPreviewCamOn ? 'none' : 'flex';
+  icon.className=isPreviewCamOn?'fas fa-video':'fas fa-video-slash';
+  document.getElementById('previewOff').style.display=isPreviewCamOn?'none':'flex';
 }
 
 function showJoinInput(){
-  var group = document.getElementById('joinCodeGroup');
-  var joinBtn = document.getElementById('joinCallBtn');
-  group.style.display = group.style.display==='none' ? 'block' : 'none';
-  joinBtn.style.display = joinBtn.style.display==='none' ? 'block' : 'none';
+  var group=document.getElementById('joinCodeGroup');
+  var btn=document.getElementById('joinCallBtn');
+  var isHidden=group.style.display==='none';
+  group.style.display=isHidden?'block':'none';
+  btn.style.display=isHidden?'block':'none';
 }
 
 // ============================================
-// Create / Join Call
+// Create / Join
 // ============================================
 function createCall(){
-  var name = document.getElementById('callName').value.trim();
-  var lang = document.getElementById('callLang').value;
+  var name=document.getElementById('callName').value.trim();
+  var lang=document.getElementById('callLang').value;
   if(!name){showNotif('يرجى إدخال اسمك','error');return;}
-  myName = name; myLang = lang;
-
-  socket.emit('create-room',{
-    userName:name, language:lang,
-    isPrivate:false, password:null,
-    clientId:getClientId()
-  },function(res){
+  myName=name;myLang=lang;
+  socket.emit('create-room',{userName:name,language:lang,isPrivate:false,password:null,clientId:getClientId()},function(res){
     if(res.success){
-      roomId = res.roomId;
-      localStorage.setItem('tcSession',JSON.stringify({roomId:roomId,myName:myName,myLang:myLang,timestamp:Date.now()}));
+      roomId=res.roomId;
+      saveSession();
       enterCallScreen(true);
-    }else{
-      showNotif(res.error||'حدث خطأ','error');
-    }
+    }else{showNotif(res.error||'حدث خطأ','error');}
   });
 }
 
 function joinCall(){
-  var name = document.getElementById('callName').value.trim();
-  var lang = document.getElementById('callLang').value;
-  var code = document.getElementById('callCode').value.trim().toUpperCase();
+  var name=document.getElementById('callName').value.trim();
+  var lang=document.getElementById('callLang').value;
+  var code=document.getElementById('callCode').value.trim().toUpperCase();
   if(!name){showNotif('يرجى إدخال اسمك','error');return;}
-  if(!code||code.length!==6){showNotif('يرجى إدخال رمز المكالمة (6 أحرف)','error');return;}
-  myName = name; myLang = lang;
-
-  socket.emit('join-room',{
-    roomId:code, userName:name, language:lang,
-    password:'', clientId:getClientId()
-  },function(res){
+  if(!code||code.length!==6){showNotif('يرجى إدخال رمز المكالمة','error');return;}
+  myName=name;myLang=lang;
+  socket.emit('join-room',{roomId:code,userName:name,language:lang,password:'',clientId:getClientId()},function(res){
     if(res.success){
-      roomId = res.roomId;
-      if(res.partner){
-        partnerInfo = res.partner;
-        partnerLang = res.partner.language;
-      }
-      localStorage.setItem('tcSession',JSON.stringify({roomId:roomId,myName:myName,myLang:myLang,timestamp:Date.now()}));
+      roomId=res.roomId;
+      if(res.partner){partnerInfo=res.partner;partnerLang=res.partner.language;}
+      saveSession();
       enterCallScreen(false);
       if(res.partner){
         updatePartnerUI(res.partner);
         hideWaiting();
         startTimer();
+        isMicOn=true;
         startTranslation();
-        setTimeout(function(){initVideoCall();},500);
         showIOSBtn();
+        // ✅ الشريك الذي ينضم يبدأ الاتصال أيضاً
+        setTimeout(function(){startPeerConnection(false);},800);
       }
-    }else{
-      showNotif(res.error||'حدث خطأ','error');
-    }
+    }else{showNotif(res.error||'حدث خطأ','error');}
   });
+}
+
+function saveSession(){
+  localStorage.setItem('tcSession',JSON.stringify({roomId:roomId,myName:myName,myLang:myLang,timestamp:Date.now()}));
 }
 
 // ============================================
 // Enter Call Screen
 // ============================================
 function enterCallScreen(isHost){
-  // Stop preview
-  if(previewStream){
-    previewStream.getTracks().forEach(function(t){t.stop();});
-    previewStream = null;
-  }
-
+  if(previewStream){previewStream.getTracks().forEach(function(t){t.stop();});previewStream=null;}
   document.getElementById('preCall').classList.remove('active');
   document.getElementById('callScreen').classList.add('active');
+  document.getElementById('waitingCode').innerText=roomId;
+  document.getElementById('myAvatarWait').innerText=myName.charAt(0).toUpperCase();
 
-  // Update my info
-  document.getElementById('waitingCode').innerText = roomId;
-  document.getElementById('myAvatarWait').innerText = myName.charAt(0).toUpperCase();
-
-  if(isHost){
-    showWaiting();
-  }
-
-  // Setup local video
-  setupLocalVideo();
+  // ✅ احصل على الكاميرا والميكروفون
+  getLocalMedia(function(){
+    if(isHost) showWaiting();
+  });
 }
 
 // ============================================
-// Local Video Setup
+// ✅ Get Local Media
 // ============================================
-function setupLocalVideo(){
-  var constraints = {
-    video:{
-      facingMode: isFrontCamera ? 'user' : 'environment',
-      width:{ideal:1280},
-      height:{ideal:720}
-    },
-    audio:true
+function getLocalMedia(callback){
+  var constraints={
+    video:{facingMode:isFrontCamera?'user':'environment',width:{ideal:1280},height:{ideal:720}},
+    audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}
   };
 
   navigator.mediaDevices.getUserMedia(constraints)
     .then(function(stream){
-      localStream = stream;
-      document.getElementById('localVideo').srcObject = stream;
-      document.getElementById('localPlaceholder').style.display = 'none';
+      localStream=stream;
+      var lv=document.getElementById('localVideo');
+      lv.srcObject=stream;
+      lv.style.display='block';
+      document.getElementById('localPlaceholder').style.display='none';
+      console.log('✅ Local media ready');
+      if(callback) callback();
     })
     .catch(function(e){
-      console.log('Local video error:',e);
-      // Try without video
-      navigator.mediaDevices.getUserMedia({audio:true, video:false})
+      console.error('Media error:',e);
+      showNotif('تعذر الوصول للكاميرا، سيتم الاتصال بالصوت فقط','warning');
+      // Try audio only
+      navigator.mediaDevices.getUserMedia({audio:true})
         .then(function(stream){
-          localStream = stream;
-          showNotif('لا توجد كاميرا، سيتم الاتصال بالصوت فقط','warning');
+          localStream=stream;
+          console.log('✅ Audio only ready');
+          if(callback) callback();
         })
         .catch(function(e2){
-          console.log('Audio only error:',e2);
+          console.error('Audio error:',e2);
+          showNotif('تعذر الوصول للميكروفون','error');
+          if(callback) callback();
         });
     });
 }
 
 // ============================================
-// WebRTC
+// ✅ WebRTC - Simple & Reliable
 // ============================================
-function initVideoCall(){
-  if(!localStream){
-    console.log('No local stream, getting media first...');
-    navigator.mediaDevices.getUserMedia({
-      video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},
-      audio:true
-    }).then(function(stream){
-      localStream = stream;
-      document.getElementById('localVideo').srcObject = stream;
-      document.getElementById('localPlaceholder').style.display = 'none';
-      setupPeerConnection();
-    }).catch(function(e){
-      console.error('Media error:',e);
-      // Try audio only
-      navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
-        localStream = stream;
-        setupPeerConnection();
-      }).catch(function(e2){console.error('Audio error:',e2);});
-    });
-    return;
-  }
-  setupPeerConnection();
-}
+function startPeerConnection(isInitiator){
+  console.log('🔗 Starting peer connection, isInitiator:',isInitiator);
 
-function setupPeerConnection(){
+  // Clean up old connection
   if(peerConnection){
     try{peerConnection.close();}catch(e){}
+    peerConnection=null;
   }
 
-  peerConnection = new RTCPeerConnection(RTC_CONFIG);
+  // Create new connection
+  peerConnection=new RTCPeerConnection(RTC_CONFIG);
+  console.log('✅ PeerConnection created');
 
-  // ✅ أضف كل المسارات (فيديو + صوت حقيقي)
-  localStream.getTracks().forEach(function(track){
-    peerConnection.addTrack(track, localStream);
-  });
+  // Add local tracks
+  if(localStream){
+    localStream.getTracks().forEach(function(track){
+      peerConnection.addTrack(track,localStream);
+      console.log('✅ Added track:',track.kind);
+    });
+  }
 
-  // ✅ استقبل فيديو وصوت الشريك الحقيقي
-  peerConnection.ontrack = function(event){
-    console.log('✅ Received remote track:', event.track.kind);
-    var remoteVideo = document.getElementById('remoteVideo');
-    if(event.streams && event.streams[0]){
-      remoteVideo.srcObject = event.streams[0];
+  // Handle remote tracks
+  peerConnection.ontrack=function(event){
+    console.log('📥 Remote track received:',event.track.kind);
+    var remoteVideo=document.getElementById('remoteVideo');
+    if(event.streams&&event.streams[0]){
+      remoteVideo.srcObject=event.streams[0];
+      remoteVideo.play().catch(function(e){console.log('Remote video play error:',e);});
     }
-    remoteVideo.style.display = 'block';
-    document.getElementById('remotePlaceholder').style.display = 'none';
-    document.getElementById('qualityBadge').style.display = 'flex';
+    remoteVideo.style.display='block';
+    document.getElementById('remotePlaceholder').style.display='none';
+    document.getElementById('qualityBadge').style.display='flex';
   };
 
   // ICE candidates
-  peerConnection.onicecandidate = function(event){
-    if(event.candidate && socket && roomId){
-      socket.emit('rtc-ice',{roomId:roomId, candidate:event.candidate});
+  peerConnection.onicecandidate=function(event){
+    if(event.candidate){
+      socket.emit('rtc-ice',{roomId:roomId,candidate:event.candidate});
     }
   };
 
-  peerConnection.oniceconnectionstatechange = function(){
+  // Connection state
+  peerConnection.oniceconnectionstatechange=function(){
     if(!peerConnection) return;
-    var state = peerConnection.iceConnectionState;
-    console.log('ICE state:', state);
-    if(state === 'connected' || state === 'completed'){
-      showNotif('✅ تم الاتصال بالفيديو والصوت','success');
-    }else if(state === 'failed'){
+    var state=peerConnection.iceConnectionState;
+    console.log('ICE state:',state);
+    if(state==='connected'||state==='completed'){
+      showNotif('✅ اتصال الفيديو ممتاز!','success');
+    }else if(state==='failed'){
       showNotif('⚠️ مشكلة في الاتصال','warning');
       try{peerConnection.restartIce();}catch(e){}
-    }else if(state === 'disconnected'){
-      showNotif('جاري إعادة الاتصال...','warning');
     }
   };
 
-  // ✅ إذا كان الشريك موجوداً، أرسل offer
-  if(partnerInfo){
-    createAndSendOffer();
+  peerConnection.onconnectionstatechange=function(){
+    if(!peerConnection) return;
+    console.log('Connection state:',peerConnection.connectionState);
+  };
+
+  // ✅ إذا كان المبادر، أنشئ offer
+  if(isInitiator){
+    setTimeout(function(){createOffer();},500);
   }
 }
 
-async function createAndSendOffer(){
+async function createOffer(){
   try{
-    var offer = await peerConnection.createOffer({
+    if(!peerConnection) return;
+    console.log('📤 Creating offer...');
+    var offer=await peerConnection.createOffer({
       offerToReceiveAudio:true,
       offerToReceiveVideo:true
     });
     await peerConnection.setLocalDescription(offer);
-    socket.emit('rtc-offer',{roomId:roomId, offer:offer});
+    socket.emit('rtc-offer',{roomId:roomId,offer:offer});
+    console.log('📤 Offer sent');
   }catch(e){console.error('Create offer error:',e);}
 }
 
-async function handleRTCOffer(data){
+async function handleOffer(offer){
   try{
-    // ✅ إذا لم يكن هناك peerConnection، أنشئ واحداً
+    console.log('📥 Handling offer...');
     if(!peerConnection){
-      if(!localStream){
-        try{
-          localStream = await navigator.mediaDevices.getUserMedia({
-            video:{facingMode:'user'},
-            audio:true
-          });
-          document.getElementById('localVideo').srcObject = localStream;
-          document.getElementById('localPlaceholder').style.display = 'none';
-        }catch(e){
-          try{
-            localStream = await navigator.mediaDevices.getUserMedia({audio:true});
-          }catch(e2){console.error('No media:',e2);return;}
-        }
-      }
-      setupPeerConnection();
+      console.log('No peer connection, creating one...');
+      startPeerConnection(false);
+      await new Promise(function(r){setTimeout(r,300);});
     }
-
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
-    var answer = await peerConnection.createAnswer();
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    var answer=await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
-    socket.emit('rtc-answer',{roomId:roomId, answer:answer});
-    console.log('✅ Answer sent');
+    socket.emit('rtc-answer',{roomId:roomId,answer:answer});
+    console.log('📤 Answer sent');
   }catch(e){console.error('Handle offer error:',e);}
 }
 
-async function handleRTCAnswer(data){
+async function handleAnswer(answer){
   try{
-    if(peerConnection && peerConnection.signalingState !== 'stable'){
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-    }
+    if(!peerConnection){console.log('No peer connection for answer');return;}
+    if(peerConnection.signalingState==='stable'){console.log('Already stable');return;}
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    console.log('✅ Answer set successfully');
   }catch(e){console.error('Handle answer error:',e);}
 }
 
-async function handleRTCIce(data){
+async function handleIce(candidate){
   try{
-    if(peerConnection && data.candidate){
-      await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+    if(peerConnection&&candidate){
+      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     }
   }catch(e){console.error('ICE error:',e);}
 }
 
-function stopVideoCall(){
-  if(localStream){localStream.getTracks().forEach(function(t){t.stop();});localStream=null;}
-  if(peerConnection){peerConnection.close();peerConnection=null;}
-  document.getElementById('remoteVideo').srcObject = null;
-  document.getElementById('remoteVideo').style.display = 'none';
-  document.getElementById('remotePlaceholder').style.display = 'flex';
-  document.getElementById('localPlaceholder').style.display = 'flex';
+function stopPeerConnection(){
+  if(peerConnection){try{peerConnection.close();}catch(e){}peerConnection=null;}
+  var rv=document.getElementById('remoteVideo');
+  rv.srcObject=null;rv.style.display='none';
+  document.getElementById('remotePlaceholder').style.display='flex';
+  document.getElementById('qualityBadge').style.display='none';
 }
 
 // ============================================
-// ✅ Translation (Speech Recognition)
+// ✅ Translation
 // ============================================
 function startTranslation(){
-  if(isRecording || !isMicOn) return;
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(isRecording||!isMicOn) return;
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){showNotif('متصفحك لا يدعم التعرف على الصوت','error');return;}
 
-  recognition = new SR();
-  recognition.lang = langs[myLang] ? langs[myLang].voice : 'ar-SA';
-  recognition.continuous = false;
-  recognition.interimResults = true;
+  recognition=new SR();
+  recognition.lang=langs[myLang]?langs[myLang].voice:'ar-SA';
+  recognition.continuous=false;
+  recognition.interimResults=true;
 
-  recognition.onstart = function(){
-    isRecording = true;
-    var ind = document.getElementById('speakingIndicator');
-    document.getElementById('speakingName').innerText = 'أنت تتحدث';
-    ind.classList.add('show');
-    socket.emit('speaking',{roomId:roomId, speaking:true});
+  recognition.onstart=function(){
+    isRecording=true;
+    document.getElementById('speakingName').innerText='أنت تتحدث';
+    document.getElementById('speakingIndicator').classList.add('show');
+    socket.emit('speaking',{roomId:roomId,speaking:true});
   };
 
-  recognition.onresult = function(e){
-    var interim = '';
-    var final = '';
-
+  recognition.onresult=function(e){
+    var interim='',final='';
     for(var i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal){
-        final += e.results[i][0].transcript;
-      }else{
-        interim += e.results[i][0].transcript;
-      }
+      if(e.results[i].isFinal) final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
     }
-
-    // Show interim subtitle
     if(interim){
-      showMySubtitle(interim, '', myLang, partnerLang, true);
-      socket.emit('interim-speech',{roomId:roomId, text:interim});
+      showMySubtitle(interim,'',myLang,partnerLang,true);
+      socket.emit('interim-speech',{roomId:roomId,text:interim});
     }
-
-    // Final - translate and send
     if(final.trim()){
       translateAndSend(final.trim());
-      socket.emit('interim-speech',{roomId:roomId, text:''});
+      socket.emit('interim-speech',{roomId:roomId,text:''});
     }
   };
 
-  recognition.onerror = function(e){
-    if(e.error === 'not-allowed'){
-      showNotif('يرجى السماح بالوصول للميكروفون','error');
-    }
-    isRecording = false;
+  recognition.onerror=function(e){
+    if(e.error==='not-allowed') showNotif('يرجى السماح بالميكروفون','error');
+    isRecording=false;
   };
 
-  recognition.onend = function(){
+  recognition.onend=function(){
     document.getElementById('speakingIndicator').classList.remove('show');
-    socket.emit('speaking',{roomId:roomId, speaking:false});
-    isRecording = false;
-
-    // Auto restart if mic is on
-    if(isMicOn && partnerInfo){
+    socket.emit('speaking',{roomId:roomId,speaking:false});
+    isRecording=false;
+    if(isMicOn&&partnerInfo){
       setTimeout(function(){
-        if(isMicOn && partnerInfo && !isRecording){
-          startTranslation();
-        }
-      }, 300);
+        if(isMicOn&&partnerInfo&&!isRecording) startTranslation();
+      },300);
     }
   };
 
@@ -1053,544 +542,336 @@ function startTranslation(){
 }
 
 function stopTranslation(){
-  isMicOn = false;
-  isRecording = false;
+  isRecording=false;
   if(recognition){try{recognition.stop();}catch(e){}}
   document.getElementById('speakingIndicator').classList.remove('show');
-  if(socket && roomId) socket.emit('speaking',{roomId:roomId, speaking:false});
+  if(socket&&roomId) socket.emit('speaking',{roomId:roomId,speaking:false});
 }
 
-// ============================================
-// ✅ Translate & Send
-// ============================================
 async function translateAndSend(text){
-  if(!text || !partnerInfo) return;
-  var tLang = partnerInfo.language;
-
+  if(!text||!partnerInfo) return;
+  var tLang=partnerInfo.language;
   try{
-    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+myLang+'&tl='+tLang+'&dt=t&q='+encodeURIComponent(text);
-    var res = await fetch(url);
-    var data = await res.json();
-    var translated = '';
-    if(data && data[0]) data[0].forEach(function(item){if(item&&item[0])translated+=item[0];});
-
+    var url='https://translate.googleapis.com/translate_a/single?client=gtx&sl='+myLang+'&tl='+tLang+'&dt=t&q='+encodeURIComponent(text);
+    var res=await fetch(url);
+    var data=await res.json();
+    var translated='';
+    if(data&&data[0]) data[0].forEach(function(item){if(item&&item[0])translated+=item[0];});
     if(translated){
-      // Show my subtitle
-      showMySubtitle(text, translated, myLang, tLang, false);
-
-      // Send to partner
+      showMySubtitle(text,translated,myLang,tLang,false);
       socket.emit('voice-message',{
-        roomId:roomId,
-        originalText:text,
-        translatedText:translated,
-        senderName:myName,
-        senderLanguage:myLang,
-        targetLanguage:tLang
+        roomId:roomId,originalText:text,translatedText:translated,
+        senderName:myName,senderLanguage:myLang,targetLanguage:tLang
       });
-
       translationCount++;
     }
-  }catch(e){
-    console.error('Translation error:',e);
-  }
+  }catch(e){console.error('Translation error:',e);}
 }
 
 // ============================================
-// ✅ Subtitle Display
+// Subtitle Display
 // ============================================
-function showMySubtitle(original, translated, fromLang, toLang, isInterim){
-  var box = document.getElementById('mySubtitleBox');
-  var origEl = document.getElementById('myOriginalText');
-  var transEl = document.getElementById('myTranslatedText');
-
-  if(subtitleMode === 'none'){box.style.display='none';return;}
-
-  box.style.display = 'block';
-  box.style.opacity = isInterim ? '0.7' : '1';
-
-  var fromFlag = langs[fromLang] ? langs[fromLang].flag : '';
-  var toFlag = langs[toLang] ? langs[toLang].flag : '';
-
-  if(subtitleMode === 'original' || subtitleMode === 'both'){
-    origEl.innerHTML = fromFlag + ' ' + original;
-    origEl.style.fontSize = subtitleFontSize + 'px';
-    origEl.style.display = 'block';
-  }else{
-    origEl.style.display = 'none';
-  }
-
-  if((subtitleMode === 'translated' || subtitleMode === 'both') && translated){
-    transEl.innerHTML = toFlag + ' ' + translated;
-    transEl.style.fontSize = subtitleFontSize + 'px';
-    transEl.style.display = 'block';
-  }else{
-    transEl.style.display = 'none';
-  }
-
-  // Auto hide after 5 seconds
+function showMySubtitle(original,translated,fromLang,toLang,isInterim){
+  var box=document.getElementById('mySubtitleBox');
+  var origEl=document.getElementById('myOriginalText');
+  var transEl=document.getElementById('myTranslatedText');
+  if(subtitleMode==='none'){box.style.display='none';return;}
+  box.style.display='block';
+  box.style.opacity=isInterim?'0.7':'1';
+  var ff=langs[fromLang]?langs[fromLang].flag:'';
+  var tf=langs[toLang]?langs[toLang].flag:'';
+  if(subtitleMode==='original'||subtitleMode==='both'){
+    origEl.innerHTML=ff+' '+original;
+    origEl.style.fontSize=subtitleFontSize+'px';
+    origEl.style.display='block';
+  }else{origEl.style.display='none';}
+  if((subtitleMode==='translated'||subtitleMode==='both')&&translated){
+    transEl.innerHTML=tf+' '+translated;
+    transEl.style.fontSize=subtitleFontSize+'px';
+    transEl.style.display='block';
+  }else{transEl.style.display='none';}
   if(!isInterim){
-    clearTimeout(box._hideTimer);
-    box._hideTimer = setTimeout(function(){
-      box.style.opacity = '0';
+    clearTimeout(box._t);
+    box._t=setTimeout(function(){
+      box.style.opacity='0';
       setTimeout(function(){box.style.display='none';box.style.opacity='1';},300);
     },5000);
   }
 }
 
-function showPartnerSubtitle(original, translated, fromLang, toLang){
-  var box = document.getElementById('partnerSubtitleBox');
-  var origEl = document.getElementById('partnerOriginalText');
-  var transEl = document.getElementById('partnerTranslatedText');
-  var label = document.getElementById('partnerSubtitleLabel');
-
-  if(subtitleMode === 'none'){box.style.display='none';return;}
-
-  box.style.display = 'block';
-  label.innerText = partnerInfo ? partnerInfo.name : 'شريكك';
-
-  var fromFlag = langs[fromLang] ? langs[fromLang].flag : '';
-  var toFlag = langs[toLang] ? langs[toLang].flag : '';
-
-  if(subtitleMode === 'original' || subtitleMode === 'both'){
-    origEl.innerHTML = fromFlag + ' ' + original;
-    origEl.style.fontSize = subtitleFontSize + 'px';
-    origEl.style.display = 'block';
+function showPartnerSubtitle(original,translated,fromLang,toLang){
+  var box=document.getElementById('partnerSubtitleBox');
+  var origEl=document.getElementById('partnerOriginalText');
+  var transEl=document.getElementById('partnerTranslatedText');
+  var label=document.getElementById('partnerSubtitleLabel');
+  if(subtitleMode==='none'){box.style.display='none';return;}
+  box.style.display='block';
+  label.innerText=partnerInfo?partnerInfo.name:'شريكك';
+  var ff=langs[fromLang]?langs[fromLang].flag:'';
+  var tf=langs[toLang]?langs[toLang].flag:'';
+  if(subtitleMode==='original'||subtitleMode==='both'){
+    origEl.innerHTML=ff+' '+original;
+    origEl.style.fontSize=subtitleFontSize+'px';
+    origEl.style.display='block';
   }else{origEl.style.display='none';}
-
-  if(subtitleMode === 'translated' || subtitleMode === 'both'){
-    transEl.innerHTML = toFlag + ' ' + translated;
-    transEl.style.fontSize = subtitleFontSize + 'px';
-    transEl.style.display = 'block';
+  if(subtitleMode==='translated'||subtitleMode==='both'){
+    transEl.innerHTML=tf+' '+translated;
+    transEl.style.fontSize=subtitleFontSize+'px';
+    transEl.style.display='block';
   }else{transEl.style.display='none';}
-
-  clearTimeout(box._hideTimer);
-  box._hideTimer = setTimeout(function(){
+  clearTimeout(box._t);
+  box._t=setTimeout(function(){
     box.style.opacity='0';
     setTimeout(function(){box.style.display='none';box.style.opacity='1';},300);
   },5000);
 }
 
 // ============================================
-// ✅ Speak Text
-// ============================================
-function speakText(text, lang){
-  if(!text || !isSpeakerOn) return;
-
-  var cleanText = text.trim();
-  if(!cleanText) return;
-
-  var voiceLang = langs[lang] ? langs[lang].voice : 'en-US';
-
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  var isMac = navigator.maxTouchPoints > 0 && /Mac/.test(navigator.userAgent);
-
-  if((isIOS || isMac) && !audioActivated){
-    document.getElementById('iosBtn').classList.add('show');
-    return;
-  }
-
-  function doSpeak(){
-    window.speechSynthesis.cancel();
-    var voices = window.speechSynthesis.getVoices();
-    var utt = new SpeechSynthesisUtterance(cleanText);
-    utt.lang = voiceLang;
-    utt.rate = speechSettings.rate || 0.88;
-    utt.pitch = speechSettings.pitch || 1;
-    utt.volume = speechSettings.volume || 1;
-
-    var voice = null;
-    for(var i=0;i<voices.length;i++){
-      if(voices[i].lang === voiceLang){voice=voices[i];break;}
-    }
-    if(!voice){
-      for(var i=0;i<voices.length;i++){
-        if(voices[i].lang && voices[i].lang.toLowerCase().startsWith(lang.toLowerCase())){voice=voices[i];break;}
-      }
-    }
-    if(voice) utt.voice = voice;
-
-    var k = null;
-    utt.onstart = function(){
-      k = setInterval(function(){
-        if(window.speechSynthesis.speaking){
-          window.speechSynthesis.pause();
-          window.speechSynthesis.resume();
-        }else{clearInterval(k);}
-      },5000);
-    };
-    utt.onend = function(){if(k)clearInterval(k);};
-    utt.onerror = function(){if(k)clearInterval(k);};
-
-    window.speechSynthesis.speak(utt);
-  }
-
-  var voices = window.speechSynthesis.getVoices();
-  if(voices.length > 0) doSpeak();
-  else{
-    window.speechSynthesis.onvoiceschanged = function(){doSpeak();};
-    setTimeout(doSpeak, 800);
-  }
-}
-
-// ============================================
 // Controls
 // ============================================
 function toggleAudio(){
-  isAudioOn = !isAudioOn;
-  if(localStream){
-    localStream.getAudioTracks().forEach(function(t){t.enabled=isAudioOn;});
-  }
-  var btn = document.getElementById('muteBtn');
-  var icon = document.getElementById('muteIcon');
-  btn.classList.toggle('off',!isAudioOn);
-  icon.className = isAudioOn ? 'fas fa-microphone' : 'fas fa-microphone-slash';
-  if(socket && roomId) socket.emit('partner-audio-toggle',{roomId:roomId, enabled:isAudioOn});
+  isAudioOn=!isAudioOn;
+  if(localStream) localStream.getAudioTracks().forEach(function(t){t.enabled=isAudioOn;});
+  document.getElementById('muteBtn').classList.toggle('off',!isAudioOn);
+  document.getElementById('muteIcon').className=isAudioOn?'fas fa-microphone':'fas fa-microphone-slash';
+  if(socket&&roomId) socket.emit('partner-audio-toggle',{roomId:roomId,enabled:isAudioOn});
   showNotif(isAudioOn?'تم تشغيل الصوت 🎤':'تم كتم الصوت 🔇','info');
 }
 
 function toggleCamera(){
-  isCameraOn = !isCameraOn;
-  if(localStream){
-    localStream.getVideoTracks().forEach(function(t){t.enabled=isCameraOn;});
-  }
-  var btn = document.getElementById('camBtn');
-  var icon = document.getElementById('camIcon');
-  btn.classList.toggle('off',!isCameraOn);
-  icon.className = isCameraOn ? 'fas fa-video' : 'fas fa-video-slash';
+  isCameraOn=!isCameraOn;
+  if(localStream) localStream.getVideoTracks().forEach(function(t){t.enabled=isCameraOn;});
+  document.getElementById('camBtn').classList.toggle('off',!isCameraOn);
+  document.getElementById('camIcon').className=isCameraOn?'fas fa-video':'fas fa-video-slash';
   document.getElementById('localFloat').classList.toggle('camera-off',!isCameraOn);
-  document.getElementById('localPlaceholder').style.display = isCameraOn ? 'none' : 'flex';
-  if(socket && roomId) socket.emit('partner-camera-toggle',{roomId:roomId, enabled:isCameraOn});
+  document.getElementById('localPlaceholder').style.display=isCameraOn?'none':'flex';
+  if(socket&&roomId) socket.emit('partner-camera-toggle',{roomId:roomId,enabled:isCameraOn});
   showNotif(isCameraOn?'تم تشغيل الكاميرا 📷':'تم إيقاف الكاميرا 📷','info');
 }
 
 function toggleMic(){
-  isMicOn = !isMicOn;
-  var btn = document.getElementById('micToggleBtn');
-  var icon = document.getElementById('micToggleIcon');
-  btn.classList.toggle('active',isMicOn);
-  icon.className = isMicOn ? 'fas fa-microphone' : 'fas fa-microphone-slash';
-
-  if(isMicOn && partnerInfo){
-    startTranslation();
-    showNotif('تم تفعيل ميكروفون الترجمة 🎤','success');
-  }else{
-    stopTranslation();
-    isMicOn = false;
-    showNotif('تم إيقاف ميكروفون الترجمة','info');
-  }
+  isMicOn=!isMicOn;
+  document.getElementById('micToggleBtn').classList.toggle('active',isMicOn);
+  document.getElementById('micToggleIcon').className=isMicOn?'fas fa-microphone':'fas fa-microphone-slash';
+  if(isMicOn&&partnerInfo){startTranslation();showNotif('تم تفعيل ترجمة الصوت 🎤','success');}
+  else{stopTranslation();isMicOn=false;showNotif('تم إيقاف ترجمة الصوت','info');}
 }
 
 function toggleSpeaker(){
-  isSpeakerOn = !isSpeakerOn;
-  var btn = document.getElementById('speakerBtn');
-  var icon = document.getElementById('speakerIcon');
-  btn.classList.toggle('active',!isSpeakerOn);
-  icon.className = isSpeakerOn ? 'fas fa-volume-high' : 'fas fa-volume-xmark';
+  isSpeakerOn=!isSpeakerOn;
+  document.getElementById('speakerBtn').classList.toggle('active',!isSpeakerOn);
+  document.getElementById('speakerIcon').className=isSpeakerOn?'fas fa-volume-high':'fas fa-volume-xmark';
   if(!isSpeakerOn) window.speechSynthesis.cancel();
-  showNotif(isSpeakerOn?'تم تشغيل الصوت 🔊':'تم إيقاف الصوت 🔇','info');
+  showNotif(isSpeakerOn?'تم تشغيل صوت الترجمة 🔊':'تم إيقاف صوت الترجمة','info');
 }
 
 function flipCamera(){
-  isFrontCamera = !isFrontCamera;
-  if(localStream){
-    localStream.getVideoTracks().forEach(function(t){t.stop();});
-  }
-
+  isFrontCamera=!isFrontCamera;
+  if(localStream){localStream.getVideoTracks().forEach(function(t){t.stop();});}
   navigator.mediaDevices.getUserMedia({
-    video:{facingMode: isFrontCamera ? 'user' : 'environment'},
-    audio:true
+    video:{facingMode:isFrontCamera?'user':'environment'},
+    audio:{echoCancellation:true,noiseSuppression:true}
   }).then(function(stream){
-    localStream = stream;
-    document.getElementById('localVideo').srcObject = stream;
-    document.getElementById('localPlaceholder').style.display = 'none';
-
-    // Replace tracks in peer connection
+    var oldAudio=localStream?localStream.getAudioTracks()[0]:null;
+    localStream=stream;
+    document.getElementById('localVideo').srcObject=stream;
+    document.getElementById('localPlaceholder').style.display='none';
     if(peerConnection){
-      var videoTrack = stream.getVideoTracks()[0];
-      var sender = peerConnection.getSenders().find(function(s){return s.track && s.track.kind==='video';});
-      if(sender && videoTrack) sender.replaceTrack(videoTrack);
+      var vt=stream.getVideoTracks()[0];
+      var sender=peerConnection.getSenders().find(function(s){return s.track&&s.track.kind==='video';});
+      if(sender&&vt) sender.replaceTrack(vt);
     }
     showNotif(isFrontCamera?'كاميرا أمامية':'كاميرا خلفية','info');
-  }).catch(function(e){
-    console.error('Flip camera error:',e);
-    showNotif('تعذر قلب الكاميرا','error');
-  });
+  }).catch(function(e){showNotif('تعذر قلب الكاميرا','error');});
 }
 
 // ============================================
 // Subtitle Settings
 // ============================================
 function toggleSubtitleSettings(){
-  var panel = document.getElementById('subtitleSettings');
-  panel.classList.toggle('show');
+  var p=document.getElementById('subtitleSettings');
+  p.classList.toggle('show');
   document.getElementById('subtitleBtn').classList.toggle('active');
 }
 
 function setSubtitleMode(mode){
-  subtitleMode = mode;
+  subtitleMode=mode;
   document.querySelectorAll('#subtitleSettings .stg-btn').forEach(function(b){b.classList.remove('active');});
-  var map = {both:'showBothBtn',original:'showOrigBtn',translated:'showTransBtn',none:'showNoneBtn'};
+  var map={both:'showBothBtn',original:'showOrigBtn',translated:'showTransBtn',none:'showNoneBtn'};
   if(map[mode]) document.getElementById(map[mode]).classList.add('active');
-  showNotif('تم تغيير عرض الترجمة','info');
 }
 
 function changeFontSize(delta){
-  subtitleFontSize = Math.max(12, Math.min(24, subtitleFontSize + delta));
-  document.getElementById('fontSizeVal').innerText = subtitleFontSize;
-  document.querySelectorAll('.subtitle-original,.subtitle-translated').forEach(function(el){
-    el.style.fontSize = subtitleFontSize + 'px';
-  });
+  subtitleFontSize=Math.max(12,Math.min(26,subtitleFontSize+delta));
+  document.getElementById('fontSizeVal').innerText=subtitleFontSize;
+  document.querySelectorAll('.subtitle-original,.subtitle-translated').forEach(function(el){el.style.fontSize=subtitleFontSize+'px';});
 }
 
 function setSubtitlePos(pos){
-  subtitlePos = pos;
-  var area = document.getElementById('subtitleArea');
+  subtitlePos=pos;
+  var area=document.getElementById('subtitleArea');
   document.getElementById('posBottomBtn').classList.toggle('active',pos==='bottom');
   document.getElementById('posTopBtn').classList.toggle('active',pos==='top');
-  if(pos === 'top'){
-    area.style.bottom = 'auto';
-    area.style.top = '80px';
-  }else{
-    area.style.top = 'auto';
-    area.style.bottom = '140px';
-  }
+  if(pos==='top'){area.style.bottom='auto';area.style.top='80px';}
+  else{area.style.top='auto';area.style.bottom='140px';}
 }
 
 // ============================================
-// Waiting Screen
+// Waiting / Partner UI
 // ============================================
-function showWaiting(){
-  var ws = document.getElementById('waitingScreen');
-  ws.classList.remove('hidden');
-}
-function hideWaiting(){
-  document.getElementById('waitingScreen').classList.add('hidden');
-}
+function showWaiting(){document.getElementById('waitingScreen').classList.remove('hidden');}
+function hideWaiting(){document.getElementById('waitingScreen').classList.add('hidden');}
 
-// ============================================
-// Partner UI
-// ============================================
 function updatePartnerUI(data){
-  document.getElementById('partnerAvatar').innerText = data.name.charAt(0).toUpperCase();
-  document.getElementById('partnerName').innerText = data.name;
-  document.getElementById('partnerLangDisplay').innerText = (langs[data.language]?langs[data.language].flag:'')+' '+(langs[data.language]?langs[data.language].name:data.language);
-  document.getElementById('remoteAvatarBig').innerText = data.name.charAt(0).toUpperCase();
-  document.getElementById('remoteNameBig').innerText = data.name;
-  document.getElementById('remoteStatus').innerText = 'متصل';
+  document.getElementById('partnerAvatar').innerText=data.name.charAt(0).toUpperCase();
+  document.getElementById('partnerName').innerText=data.name;
+  document.getElementById('partnerLangDisplay').innerText=(langs[data.language]?langs[data.language].flag:'')+' '+(langs[data.language]?langs[data.language].name:data.language);
+  document.getElementById('remoteAvatarBig').innerText=data.name.charAt(0).toUpperCase();
+  document.getElementById('remoteNameBig').innerText=data.name;
+  document.getElementById('remoteStatus').innerText='متصل';
 }
 
 function resetPartnerUI(){
-  document.getElementById('partnerAvatar').innerText = '؟';
-  document.getElementById('partnerName').innerText = 'في انتظار الشريك...';
-  document.getElementById('partnerLangDisplay').innerText = '---';
-  document.getElementById('remoteAvatarBig').innerText = '؟';
-  document.getElementById('remoteNameBig').innerText = 'في انتظار الشريك...';
-  document.getElementById('remoteStatus').innerText = 'جاري الاتصال...';
-  showWaiting();
+  document.getElementById('partnerAvatar').innerText='؟';
+  document.getElementById('partnerName').innerText='في انتظار الشريك...';
+  document.getElementById('partnerLangDisplay').innerText='---';
+  document.getElementById('remoteAvatarBig').innerText='؟';
+  document.getElementById('remoteNameBig').innerText='في انتظار الشريك...';
+  document.getElementById('remoteStatus').innerText='جاري الاتصال...';
+  document.getElementById('remoteVideo').srcObject=null;
+  document.getElementById('remoteVideo').style.display='none';
+  document.getElementById('remotePlaceholder').style.display='flex';
 }
 
 // ============================================
 // Timer
 // ============================================
 function startTimer(){
-  var start = Date.now();
-  timerInterval = setInterval(function(){
-    callSeconds = Math.floor((Date.now()-start)/1000);
-    var m = Math.floor(callSeconds/60);
-    var s = callSeconds % 60;
-    document.getElementById('callTimer').innerText = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  var start=Date.now();
+  timerInterval=setInterval(function(){
+    callSeconds=Math.floor((Date.now()-start)/1000);
+    var m=Math.floor(callSeconds/60),s=callSeconds%60;
+    document.getElementById('callTimer').innerText=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
   },1000);
 }
-
-function stopTimer(){
-  clearInterval(timerInterval);
-  timerInterval = null;
-}
+function stopTimer(){clearInterval(timerInterval);timerInterval=null;}
 
 // ============================================
 // Copy
 // ============================================
 function copyCallCode(){
   if(!roomId) return;
-  navigator.clipboard.writeText(roomId).then(function(){
-    showNotif('تم نسخ الرمز 📋','success');
-  });
+  navigator.clipboard.writeText(roomId).then(function(){showNotif('تم نسخ الرمز 📋','success');});
 }
 
 function copyCallLink(){
-  var link = window.location.href.split('?')[0] + '?join=' + roomId;
-  navigator.clipboard.writeText(link).then(function(){
-    showNotif('تم نسخ رابط الدعوة 🔗','success');
-  });
+  var base=window.location.href.split('?')[0];
+  navigator.clipboard.writeText(base+'?join='+roomId).then(function(){showNotif('تم نسخ رابط الدعوة 🔗','success');});
 }
 
 // ============================================
 // End Call
 // ============================================
-function confirmEndCall(){
-  if(confirm('هل تريد إنهاء المكالمة؟')) endCall();
-}
+function confirmEndCall(){if(confirm('هل تريد إنهاء المكالمة؟'))endCall();}
 
 function endCall(){
   stopTranslation();
-  stopVideoCall();
+  stopPeerConnection();
+  if(localStream){localStream.getTracks().forEach(function(t){t.stop();});localStream=null;}
   stopTimer();
   window.speechSynthesis.cancel();
-
-  if(socket && roomId) socket.emit('leave-room',{roomId:roomId});
-
-  // Show end screen
+  if(socket&&roomId) socket.emit('leave-room',{roomId:roomId});
   document.getElementById('callScreen').classList.remove('active');
   document.getElementById('endCallScreen').classList.add('active');
-
-  var m = Math.floor(callSeconds/60);
-  var s = callSeconds % 60;
-  document.getElementById('endDuration').innerText = 'المدة: '+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-  document.getElementById('endMessages').innerText = translationCount;
-  document.getElementById('endLang').innerText = (langs[myLang]?langs[myLang].flag:'')+(partnerInfo&&langs[partnerInfo.language]?'→'+langs[partnerInfo.language].flag:'');
-
+  var m=Math.floor(callSeconds/60),s=callSeconds%60;
+  document.getElementById('endDuration').innerText='المدة: '+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  document.getElementById('endMessages').innerText=translationCount;
+  document.getElementById('endLang').innerText=(langs[myLang]?langs[myLang].flag:'')+(partnerInfo&&langs[partnerInfo.language]?'→'+langs[partnerInfo.language].flag:'');
   localStorage.removeItem('tcSession');
-  roomId = null;
-  partnerInfo = null;
+  roomId=null;partnerInfo=null;
 }
 
 function newCall(){
   document.getElementById('endCallScreen').classList.remove('active');
-  translationCount = 0;
-  callSeconds = 0;
-  document.getElementById('callTimer').innerText = '00:00';
-  document.getElementById('callCode').value = '';
-  document.getElementById('joinCodeGroup').style.display = 'none';
-  document.getElementById('joinCallBtn').style.display = 'none';
+  translationCount=0;callSeconds=0;
+  document.getElementById('callTimer').innerText='00:00';
+  document.getElementById('callCode').value='';
+  document.getElementById('joinCodeGroup').style.display='none';
+  document.getElementById('joinCallBtn').style.display='none';
   document.getElementById('preCall').classList.add('active');
   startPreview();
 }
 
 // ============================================
-// Draggable Local Video
+// Draggable
 // ============================================
 function initDraggable(){
-  var el = document.getElementById('localFloat');
-  var isDragging = false;
-  var startX, startY, startRight, startTop;
-
-  el.addEventListener('mousedown',function(e){
-    isDragging=true;
-    startX=e.clientX;startY=e.clientY;
-    var rect=el.getBoundingClientRect();
-    startRight=window.innerWidth-rect.right;
-    startTop=rect.top;
-    el.style.cursor='grabbing';
-    e.preventDefault();
-  });
-
-  el.addEventListener('touchstart',function(e){
-    isDragging=true;
-    var t=e.touches[0];
-    startX=t.clientX;startY=t.clientY;
-    var rect=el.getBoundingClientRect();
-    startRight=window.innerWidth-rect.right;
-    startTop=rect.top;
-    e.preventDefault();
-  },{passive:false});
-
-  document.addEventListener('mousemove',function(e){
-    if(!isDragging) return;
-    var dx=e.clientX-startX;var dy=e.clientY-startY;
-    var newRight=Math.max(10,Math.min(startRight-dx,window.innerWidth-el.offsetWidth-10));
-    var newTop=Math.max(10,Math.min(startTop+dy,window.innerHeight-el.offsetHeight-10));
-    el.style.right=newRight+'px';el.style.left='auto';el.style.top=newTop+'px';
-  });
-
-  document.addEventListener('touchmove',function(e){
-    if(!isDragging) return;
-    var t=e.touches[0];
-    var dx=t.clientX-startX;var dy=t.clientY-startY;
-    var newRight=Math.max(10,Math.min(startRight-dx,window.innerWidth-el.offsetWidth-10));
-    var newTop=Math.max(10,Math.min(startTop+dy,window.innerHeight-el.offsetHeight-10));
-    el.style.right=newRight+'px';el.style.left='auto';el.style.top=newTop+'px';
-    e.preventDefault();
-  },{passive:false});
-
+  var el=document.getElementById('localFloat');
+  var isDragging=false,startX,startY,startRight,startTop;
+  el.addEventListener('mousedown',function(e){isDragging=true;startX=e.clientX;startY=e.clientY;var r=el.getBoundingClientRect();startRight=window.innerWidth-r.right;startTop=r.top;el.style.cursor='grabbing';e.preventDefault();});
+  el.addEventListener('touchstart',function(e){isDragging=true;var t=e.touches[0];startX=t.clientX;startY=t.clientY;var r=el.getBoundingClientRect();startRight=window.innerWidth-r.right;startTop=r.top;e.preventDefault();},{passive:false});
+  document.addEventListener('mousemove',function(e){if(!isDragging)return;var dx=e.clientX-startX,dy=e.clientY-startY;el.style.right=Math.max(10,Math.min(startRight-dx,window.innerWidth-el.offsetWidth-10))+'px';el.style.left='auto';el.style.top=Math.max(10,Math.min(startTop+dy,window.innerHeight-el.offsetHeight-10))+'px';});
+  document.addEventListener('touchmove',function(e){if(!isDragging)return;var t=e.touches[0];var dx=t.clientX-startX,dy=t.clientY-startY;el.style.right=Math.max(10,Math.min(startRight-dx,window.innerWidth-el.offsetWidth-10))+'px';el.style.left='auto';el.style.top=Math.max(10,Math.min(startTop+dy,window.innerHeight-el.offsetHeight-10))+'px';e.preventDefault();},{passive:false});
   document.addEventListener('mouseup',function(){isDragging=false;el.style.cursor='grab';});
   document.addEventListener('touchend',function(){isDragging=false;});
 }
 
 // ============================================
-// Auto Join from URL
+// Auto Join
 // ============================================
 function checkAutoJoin(){
-  var params = new URLSearchParams(window.location.search);
-  var joinCode = params.get('join');
+  var params=new URLSearchParams(window.location.search);
+  var joinCode=params.get('join');
   if(joinCode){
-    document.getElementById('callCode').value = joinCode.toUpperCase();
-    document.getElementById('joinCodeGroup').style.display = 'block';
-    document.getElementById('joinCallBtn').style.display = 'block';
-    showNotif('رمز المكالمة: '+joinCode+' - أدخل اسمك وانضم!','info');
+    document.getElementById('callCode').value=joinCode.toUpperCase();
+    document.getElementById('joinCodeGroup').style.display='block';
+    document.getElementById('joinCallBtn').style.display='block';
+    showNotif('رمز المكالمة: '+joinCode,'info');
   }
 }
 
 // ============================================
 // Notification
 // ============================================
-function showNotif(msg, type){
-  var el = document.getElementById('notif');
-  el.innerText = msg;
-  el.className = 'notif show '+(type||'info');
+function showNotif(msg,type){
+  var el=document.getElementById('notif');
+  el.innerText=msg;el.className='notif show '+(type||'info');
   setTimeout(function(){el.classList.remove('show');},3500);
 }
 
 // ============================================
-// ✅ Keep alive on mobile background
+// ✅ Keep alive on background
 // ============================================
-document.addEventListener('visibilitychange', function(){
-  if(document.hidden){
-    console.log('App in background - keeping connection alive');
-    // Keep WebRTC alive
-    if(peerConnection){
-      var state = peerConnection.iceConnectionState;
-      console.log('ICE state on background:', state);
-    }
-  }else{
-    console.log('App in foreground');
-    // Restart translation if needed
-    if(partnerInfo && isMicOn && !isRecording){
-      startTranslation();
+document.addEventListener('visibilitychange',function(){
+  if(!document.hidden){
+    if(partnerInfo&&isMicOn&&!isRecording) startTranslation();
+    if(peerConnection&&peerConnection.iceConnectionState==='disconnected'){
+      try{peerConnection.restartIce();}catch(e){}
     }
   }
 });
 
 // ============================================
-// ✅ Init
+// Init
 // ============================================
-window.onload = function(){
+window.onload=function(){
   window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = function(){window.speechSynthesis.getVoices();};
+  window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};
 
-  // Silent activate on first interaction
-  var activated = false;
+  var activated=false;
   function silentActivate(){
-    if(activated) return; activated = true;
-    try{
-      var ctx = new (window.AudioContext||window.webkitAudioContext)();
-      ctx.resume();
-      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      var isMac = navigator.maxTouchPoints > 0 && /Mac/.test(navigator.userAgent);
-      if(!isIOS && !isMac){
-        window.speechSynthesis.cancel();
-        var u = new SpeechSynthesisUtterance(' ');
-        u.volume=0.01;u.rate=10;
-        window.speechSynthesis.speak(u);
-      }
-    }catch(e){}
+    if(activated) return;activated=true;
+    try{new(window.AudioContext||window.webkitAudioContext)().resume();}catch(e){}
+    var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isMac=navigator.maxTouchPoints>0&&/Mac/.test(navigator.userAgent);
+    if(!isIOS&&!isMac){
+      try{window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(' ');u.volume=0.01;u.rate=10;window.speechSynthesis.speak(u);}catch(e){}
+    }
   }
-  document.addEventListener('click', silentActivate);
-  document.addEventListener('touchstart', silentActivate);
+  document.addEventListener('click',silentActivate);
+  document.addEventListener('touchstart',silentActivate);
 
-  // Service Worker
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(function(){});
-  }
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 
   initDraggable();
   initSocket();
