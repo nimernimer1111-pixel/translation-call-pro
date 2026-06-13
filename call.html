@@ -1,5 +1,411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TranslationCall - مكالمة مترجمة</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --primary:#6366f1;--secondary:#10b981;--danger:#ef4444;
+  --warning:#f59e0b;--bg:#000;--text:#fff;
+  --subtitle-bg:rgba(0,0,0,0.75);
+  --controls-bg:rgba(0,0,0,0.6);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--text);font-family:'Segoe UI',Arial,sans-serif;max-width:100vw;}
+
+/* ===== GATE ===== */
+.gate{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0f172a,#1e293b);display:flex;align-items:center;justify-content:center;}
+.gate-card{background:rgba(30,41,59,0.95);backdrop-filter:blur(20px);border-radius:24px;padding:40px;width:100%;max-width:420px;border:1px solid rgba(99,102,241,0.3);text-align:center;margin:20px;}
+.gate-icon{width:70px;height:70px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:white;margin:0 auto 20px;}
+.gate-error{color:var(--danger);font-size:0.85rem;margin-bottom:12px;display:none;padding:8px;background:rgba(239,68,68,0.1);border-radius:8px;}
+.gate-input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:0.95rem;margin-bottom:16px;}
+.gate-input:focus{outline:none;border-color:var(--primary);}
+.gate-input::placeholder{color:rgba(255,255,255,0.4);}
+.gate-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;font-size:1rem;font-weight:700;cursor:pointer;}
+
+/* ===== PRE-CALL SCREEN ===== */
+.pre-call{position:fixed;inset:0;z-index:9998;background:linear-gradient(135deg,#0f172a,#1e293b);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+.pre-call.active{display:flex;}
+.pre-call-logo{display:flex;align-items:center;gap:12px;margin-bottom:40px;}
+.pre-call-logo-icon{width:50px;height:50px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:white;}
+.pre-call-logo-name{font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.pre-call-preview{width:280px;height:200px;border-radius:20px;overflow:hidden;background:#1a1a2e;position:relative;margin-bottom:30px;border:2px solid rgba(99,102,241,0.3);}
+.pre-call-preview video{width:100%;height:100%;object-fit:cover;}
+.pre-call-preview-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:rgba(255,255,255,0.5);}
+.pre-call-preview-off i{font-size:2.5rem;}
+.pre-call-form{background:rgba(30,41,59,0.8);border-radius:20px;padding:25px;width:100%;max-width:400px;border:1px solid rgba(255,255,255,0.06);}
+.pre-call-form h3{font-size:1.1rem;margin-bottom:20px;text-align:center;color:rgba(255,255,255,0.9);}
+.form-group{margin-bottom:16px;}
+.form-group label{font-size:0.82rem;color:rgba(255,255,255,0.6);display:block;margin-bottom:6px;}
+.form-group input,.form-group select{width:100%;padding:11px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:0.9rem;}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);}
+.form-group select option{background:#1e293b;}
+.pre-call-btns{display:flex;gap:10px;margin-top:5px;}
+.pre-call-btn{flex:1;padding:12px;border-radius:12px;border:none;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.pre-call-btn.create{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;}
+.pre-call-btn.join{background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;}
+.pre-call-device-btns{display:flex;gap:10px;margin-bottom:16px;justify-content:center;}
+.device-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.device-btn.off{background:rgba(239,68,68,0.2);color:var(--danger);border-color:rgba(239,68,68,0.3);}
+
+/* ===== CALL SCREEN ===== */
+.call-screen{position:fixed;inset:0;z-index:9997;background:#000;display:none;}
+.call-screen.active{display:block;}
+
+/* Remote Video - Full Screen */
+.remote-video-full{position:absolute;inset:0;background:#111;}
+#remoteVideo{width:100%;height:100%;object-fit:cover;}
+.remote-placeholder-full{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;background:linear-gradient(135deg,#0f172a,#1e293b);}
+.remote-avatar-big{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--secondary),#14b8a6);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;color:white;box-shadow:0 0 40px rgba(16,185,129,0.3);}
+.remote-name-big{font-size:1.2rem;font-weight:600;color:rgba(255,255,255,0.9);}
+.remote-status{font-size:0.85rem;color:rgba(255,255,255,0.5);}
+
+/* Local Video - Small Floating */
+.local-video-float{position:absolute;border-radius:16px;overflow:hidden;background:#1a1a2e;border:2px solid rgba(99,102,241,0.5);box-shadow:0 8px 32px rgba(0,0,0,0.6);cursor:grab;z-index:10;transition:border-color 0.3s;}
+.local-video-float:active{cursor:grabbing;}
+.local-video-float.top-right{top:20px;right:20px;width:120px;height:90px;}
+@media(min-width:600px){.local-video-float.top-right{width:160px;height:120px;}}
+.local-video-float.camera-off{border-color:rgba(239,68,68,0.5);}
+#localVideo{width:100%;height:100%;object-fit:cover;display:block;}
+.local-placeholder-float{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#111;color:rgba(255,255,255,0.3);font-size:1.5rem;}
+
+/* Call Info Bar - Top */
+.call-info-bar{position:absolute;top:0;left:0;right:0;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(0,0,0,0.6),transparent);z-index:20;}
+.call-partner-info{display:flex;align-items:center;gap:10px;}
+.call-partner-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--secondary),#14b8a6);display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700;color:white;}
+.call-partner-name{font-size:0.9rem;font-weight:600;}
+.call-partner-lang{font-size:0.72rem;color:rgba(255,255,255,0.6);}
+.call-timer-badge{background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);padding:5px 12px;border-radius:20px;font-size:0.82rem;font-variant-numeric:tabular-nums;}
+.call-quality-badge{display:flex;align-items:center;gap:5px;background:rgba(16,185,129,0.2);padding:4px 10px;border-radius:15px;font-size:0.72rem;color:var(--secondary);}
+
+/* ✅ Subtitle Area */
+.subtitle-area{position:absolute;bottom:140px;left:0;right:0;padding:0 20px;z-index:20;pointer-events:none;}
+.subtitle-box{background:var(--subtitle-bg);backdrop-filter:blur(10px);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.08);transition:all 0.3s;}
+.subtitle-box.hidden{display:none;}
+.subtitle-label{font-size:0.65rem;color:rgba(255,255,255,0.5);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.subtitle-original{font-size:1rem;font-weight:500;color:rgba(255,255,255,0.9);line-height:1.4;}
+.subtitle-translated{font-size:1rem;font-weight:600;color:#34d399;line-height:1.4;}
+.subtitle-lang-flag{font-size:0.85rem;margin-left:5px;}
+
+/* ✅ Live Indicator */
+.speaking-indicator{position:absolute;bottom:200px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:8px;background:rgba(99,102,241,0.2);backdrop-filter:blur(10px);padding:6px 16px;border-radius:20px;border:1px solid rgba(99,102,241,0.3);z-index:20;}
+.speaking-indicator.show{display:flex;}
+.speaking-dots{display:flex;gap:3px;align-items:center;}
+.speaking-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:sdot 1.4s infinite;}
+.speaking-dot:nth-child(2){animation-delay:0.2s;}
+.speaking-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes sdot{0%,60%,100%{transform:translateY(0);opacity:0.5;}30%{transform:translateY(-4px);opacity:1;};}
+
+/* ✅ Controls Bar - Bottom */
+.controls-bar-call{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);z-index:20;display:flex;flex-direction:column;gap:12px;}
+.controls-main{display:flex;justify-content:center;align-items:center;gap:15px;}
+.controls-secondary{display:flex;justify-content:center;align-items:center;gap:10px;}
+.ctrl-call-btn{width:56px;height:56px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:1.2rem;}
+.ctrl-call-btn.normal{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);color:white;}
+.ctrl-call-btn.normal:hover{background:rgba(255,255,255,0.25);transform:scale(1.1);}
+.ctrl-call-btn.off{background:rgba(239,68,68,0.3);color:var(--danger);}
+.ctrl-call-btn.end{width:64px;height:64px;background:var(--danger);color:white;box-shadow:0 4px 20px rgba(239,68,68,0.5);}
+.ctrl-call-btn.end:hover{transform:scale(1.1);}
+.ctrl-call-btn.active{background:rgba(99,102,241,0.4);color:var(--primary);}
+.ctrl-call-btn-sm{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;}
+.ctrl-call-btn-sm:hover{background:rgba(255,255,255,0.15);}
+.ctrl-call-btn-sm.active{background:rgba(99,102,241,0.3);color:var(--primary);}
+.ctrl-label{font-size:0.6rem;color:rgba(255,255,255,0.5);text-align:center;margin-top:4px;}
+.ctrl-group{display:flex;flex-direction:column;align-items:center;}
+
+/* ✅ Subtitle Settings Panel */
+.subtitle-settings{position:absolute;bottom:180px;left:20px;right:20px;background:rgba(15,23,42,0.95);backdrop-filter:blur(20px);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.08);z-index:30;display:none;}
+.subtitle-settings.show{display:block;}
+.subtitle-settings h4{font-size:0.85rem;margin-bottom:15px;color:rgba(255,255,255,0.8);}
+.settings-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.settings-label{font-size:0.82rem;color:rgba(255,255,255,0.6);}
+.settings-toggle{display:flex;gap:8px;}
+.stg-btn{padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.6);font-size:0.78rem;cursor:pointer;}
+.stg-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
+.font-size-control{display:flex;align-items:center;gap:10px;}
+.font-size-btn{width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.font-size-val{font-size:0.85rem;color:rgba(255,255,255,0.8);min-width:30px;text-align:center;}
+
+/* ✅ Waiting Screen */
+.waiting-screen{position:absolute;inset:0;background:linear-gradient(135deg,#0f172a,#1e293b);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:15;}
+.waiting-screen.hidden{display:none;}
+.waiting-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:white;animation:wpulse 2s infinite;}
+@keyframes wpulse{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,0.4);}50%{box-shadow:0 0 0 20px rgba(99,102,241,0);};}
+.waiting-title{font-size:1.1rem;font-weight:600;}
+.waiting-subtitle{font-size:0.85rem;color:rgba(255,255,255,0.5);}
+.waiting-code-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 20px;cursor:pointer;text-align:center;}
+.waiting-code{font-size:1.8rem;font-weight:700;letter-spacing:0.2em;color:var(--primary);}
+.waiting-copy-hint{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:4px;}
+.waiting-link-btn{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:var(--secondary);padding:8px 16px;border-radius:20px;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;gap:8px;}
+
+/* Notification */
+.notif{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:22px;font-size:0.85rem;font-weight:600;z-index:9999;display:none;max-width:90vw;text-align:center;}
+.notif.show{display:block;animation:nshow 0.3s ease;}
+.notif.success{background:rgba(16,185,129,0.95);color:white;}
+.notif.error{background:rgba(239,68,68,0.95);color:white;}
+.notif.info{background:rgba(99,102,241,0.95);color:white;}
+.notif.warning{background:rgba(245,158,11,0.95);color:white;}
+@keyframes nshow{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);};}
+
+/* iOS Audio Button */
+.ios-btn{display:none;position:fixed;bottom:200px;left:50%;transform:translateX(-50%);z-index:9998;padding:12px 24px;background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;border:none;border-radius:22px;font-size:0.9rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(16,185,129,0.4);}
+.ios-btn.show{display:block;}
+
+/* End Call Screen */
+.end-call-screen{position:fixed;inset:0;z-index:9996;background:linear-gradient(135deg,#0f172a,#1e293b);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px;}
+.end-call-screen.active{display:flex;}
+.end-icon{width:80px;height:80px;border-radius:50%;background:rgba(239,68,68,0.15);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--danger);}
+.end-title{font-size:1.3rem;font-weight:700;}
+.end-duration{font-size:0.9rem;color:rgba(255,255,255,0.5);}
+.end-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.end-btn{padding:12px 22px;border-radius:12px;border:none;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.end-btn.new{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:white;}
+.end-btn.home{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);}
+.end-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:15px 20px;text-align:center;min-width:100px;}
+.end-stat-val{font-size:1.5rem;font-weight:700;color:var(--primary);}
+.end-stat-label{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:3px;}
+.end-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+</style>
+</head>
+<body>
+
+<!-- Notifications -->
+<div class="notif" id="notif"></div>
+<button class="ios-btn" id="iosBtn" onclick="activateAudio()">🔊 تفعيل الصوت</button>
+
+<!-- ===== GATE ===== -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-icon"><i class="fas fa-phone"></i></div>
+    <h2 style="font-size:1.4rem;margin-bottom:8px;">مكالمة مترجمة</h2>
+    <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:25px;">أدخل كود الوصول</p>
+    <div class="gate-error" id="gateError"><i class="fas fa-circle-xmark"></i> <span id="gateErrorText">كود غير صحيح</span></div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="أدخل كود الموقع" onkeypress="if(event.key==='Enter')verifyGate()">
+    <button class="gate-btn" onclick="verifyGate()"><i class="fas fa-arrow-right-to-bracket"></i> دخول</button>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.72rem;margin-top:20px;">© Omar Nimer 2026</p>
+  </div>
+</div>
+
+<!-- ===== PRE-CALL ===== -->
+<div class="pre-call" id="preCall">
+  <div class="pre-call-logo">
+    <div class="pre-call-logo-icon"><i class="fas fa-language"></i></div>
+    <div class="pre-call-logo-name">TranslationCall Pro</div>
+  </div>
+
+  <div class="pre-call-preview">
+    <video id="previewVideo" autoplay playsinline muted></video>
+    <div class="pre-call-preview-off" id="previewOff">
+      <i class="fas fa-video-slash"></i>
+      <span style="font-size:0.8rem;">الكاميرا متوقفة</span>
+    </div>
+  </div>
+
+  <div class="pre-call-device-btns">
+    <button class="device-btn" id="previewMicBtn" onclick="togglePreviewMic()" title="ميكروفون"><i class="fas fa-microphone" id="previewMicIcon"></i></button>
+    <button class="device-btn" id="previewCamBtn" onclick="togglePreviewCam()" title="كاميرا"><i class="fas fa-video" id="previewCamIcon"></i></button>
+  </div>
+
+  <div class="pre-call-form">
+    <h3><i class="fas fa-phone" style="color:var(--primary);"></i> بدء مكالمة مترجمة</h3>
+
+    <div class="form-group">
+      <label>اسمك</label>
+      <input type="text" id="callName" placeholder="أدخل اسمك..." class="gate-input" style="margin-bottom:0;">
+    </div>
+
+    <div class="form-group">
+      <label>لغتك</label>
+      <select id="callLang" class="gate-input" style="margin-bottom:0;appearance:none;">
+        <option value="ar">🇸🇦 العربية</option>
+        <option value="en">🇺🇸 English</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="tr">🇹🇷 Türkçe</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="ja">🇯🇵 日本語</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="pt">🇧🇷 Português</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="joinCodeGroup" style="display:none;">
+      <label>رمز المكالمة</label>
+      <input type="text" id="callCode" placeholder="أدخل رمز المكالمة" class="gate-input" style="margin-bottom:0;text-align:center;font-size:1.3rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;" maxlength="6" oninput="this.value=this.value.toUpperCase()">
+    </div>
+
+    <div class="pre-call-btns">
+      <button class="pre-call-btn create" onclick="createCall()">
+        <i class="fas fa-plus"></i> إنشاء مكالمة
+      </button>
+      <button class="pre-call-btn join" onclick="showJoinInput()">
+        <i class="fas fa-arrow-right-to-bracket"></i> انضمام
+      </button>
+    </div>
+    <button id="joinCallBtn" style="display:none;width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--secondary),#14b8a6);color:white;font-size:0.9rem;font-weight:600;cursor:pointer;margin-top:8px;" onclick="joinCall()">
+      <i class="fas fa-phone"></i> انضم الآن
+    </button>
+  </div>
+</div>
+
+<!-- ===== CALL SCREEN ===== -->
+<div class="call-screen" id="callScreen">
+
+  <!-- Remote Video Full Screen -->
+  <div class="remote-video-full">
+    <video id="remoteVideo" autoplay playsinline></video>
+    <div class="remote-placeholder-full" id="remotePlaceholder">
+      <div class="remote-avatar-big" id="remoteAvatarBig">؟</div>
+      <div class="remote-name-big" id="remoteNameBig">في انتظار الشريك...</div>
+      <div class="remote-status" id="remoteStatus">جاري الاتصال...</div>
+    </div>
+  </div>
+
+  <!-- Local Video Float -->
+  <div class="local-video-float top-right" id="localFloat">
+    <video id="localVideo" autoplay playsinline muted></video>
+    <div class="local-placeholder-float" id="localPlaceholder"><i class="fas fa-video-slash"></i></div>
+  </div>
+
+  <!-- Top Bar -->
+  <div class="call-info-bar">
+    <div class="call-partner-info">
+      <div class="call-partner-avatar" id="partnerAvatar">؟</div>
+      <div>
+        <div class="call-partner-name" id="partnerName">في انتظار الشريك...</div>
+        <div class="call-partner-lang" id="partnerLangDisplay">---</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="call-quality-badge" id="qualityBadge" style="display:none;">
+        <i class="fas fa-signal"></i><span>ممتاز</span>
+      </div>
+      <div class="call-timer-badge" id="callTimer">00:00</div>
+    </div>
+  </div>
+
+  <!-- Waiting Screen -->
+  <div class="waiting-screen" id="waitingScreen">
+    <div class="waiting-avatar" id="myAvatarWait">أ</div>
+    <div class="waiting-title">في انتظار الشريك...</div>
+    <div class="waiting-subtitle">شارك رمز المكالمة</div>
+    <div class="waiting-code-box" onclick="copyCallCode()">
+      <div class="waiting-code" id="waitingCode">------</div>
+      <div class="waiting-copy-hint"><i class="fas fa-copy"></i> اضغط لنسخ الرمز</div>
+    </div>
+    <button class="waiting-link-btn" onclick="copyCallLink()">
+      <i class="fas fa-link"></i> نسخ رابط الدعوة
+    </button>
+  </div>
+
+  <!-- Speaking Indicator -->
+  <div class="speaking-indicator" id="speakingIndicator">
+    <div class="speaking-dots">
+      <div class="speaking-dot"></div>
+      <div class="speaking-dot"></div>
+      <div class="speaking-dot"></div>
+    </div>
+    <span id="speakingName" style="font-size:0.8rem;color:rgba(255,255,255,0.8);">أنت تتحدث</span>
+  </div>
+
+  <!-- ✅ Subtitle Area -->
+  <div class="subtitle-area" id="subtitleArea">
+    <!-- My subtitle (what I say) -->
+    <div class="subtitle-box" id="mySubtitleBox" style="display:none;">
+      <div class="subtitle-label">أنت</div>
+      <div class="subtitle-original" id="myOriginalText"></div>
+      <div class="subtitle-translated" id="myTranslatedText"></div>
+    </div>
+    <!-- Partner subtitle -->
+    <div class="subtitle-box" id="partnerSubtitleBox" style="display:none;">
+      <div class="subtitle-label" id="partnerSubtitleLabel">شريكك</div>
+      <div class="subtitle-original" id="partnerOriginalText"></div>
+      <div class="subtitle-translated" id="partnerTranslatedText"></div>
+    </div>
+  </div>
+
+  <!-- Subtitle Settings Panel -->
+  <div class="subtitle-settings" id="subtitleSettings">
+    <h4><i class="fas fa-closed-captioning"></i> إعدادات الترجمة</h4>
+    <div class="settings-row">
+      <span class="settings-label">عرض النص</span>
+      <div class="settings-toggle">
+        <button class="stg-btn active" id="showBothBtn" onclick="setSubtitleMode('both')">الكل</button>
+        <button class="stg-btn" id="showOrigBtn" onclick="setSubtitleMode('original')">الأصلي</button>
+        <button class="stg-btn" id="showTransBtn" onclick="setSubtitleMode('translated')">الترجمة</button>
+        <button class="stg-btn" id="showNoneBtn" onclick="setSubtitleMode('none')">إخفاء</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">حجم النص</span>
+      <div class="font-size-control">
+        <button class="font-size-btn" onclick="changeFontSize(-1)">−</button>
+        <span class="font-size-val" id="fontSizeVal">16</span>
+        <button class="font-size-btn" onclick="changeFontSize(1)">+</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">موضع الترجمة</span>
+      <div class="settings-toggle">
+        <button class="stg-btn active" id="posBottomBtn" onclick="setSubtitlePos('bottom')">أسفل</button>
+        <button class="stg-btn" id="posTopBtn" onclick="setSubtitlePos('top')">أعلى</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Bar -->
+  <div class="controls-bar-call">
+    <div class="controls-secondary">
+      <div class="ctrl-group">
+        <button class="ctrl-call-btn-sm" id="flipCamBtn" onclick="flipCamera()" title="قلب الكاميرا"><i class="fas fa-rotate"></i></button>
+      </div>
+      <div class="ctrl-group">
+        <button class="ctrl-call-btn-sm" id="subtitleBtn" onclick="toggleSubtitleSettings()" title="إعدادات الترجمة"><i class="fas fa-closed-captioning"></i></button>
+      </div>
+      <div class="ctrl-group">
+        <button class="ctrl-call-btn-sm" id="micToggleBtn" onclick="toggleMic()" title="ميكروفون الترجمة"><i class="fas fa-microphone" id="micToggleIcon"></i></button>
+      </div>
+      <div class="ctrl-group">
+        <button class="ctrl-call-btn-sm" id="speakerBtn" onclick="toggleSpeaker()" title="الصوت"><i class="fas fa-volume-high" id="speakerIcon"></i></button>
+      </div>
+    </div>
+    <div class="controls-main">
+      <div class="ctrl-group">
+        <button class="ctrl-call-btn normal" id="muteBtn" onclick="toggleAudio()" title="كتم"><i class="fas fa-microphone" id="muteIcon"></i></button>
+        <div class="ctrl-label">صوت</div>
+      </div>
+      <div class="ctrl-group">
+        <button class="ctrl-call-btn end" onclick="confirmEndCall()"><i class="fas fa-phone-slash"></i></button>
+        <div class="ctrl-label">إنهاء</div>
+      </div>
+      <div class="ctrl-group">
+        <button class="ctrl-call-btn normal" id="camBtn" onclick="toggleCamera()" title="كاميرا"><i class="fas fa-video" id="camIcon"></i></button>
+        <div class="ctrl-label">كاميرا</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== END CALL SCREEN ===== -->
+<div class="end-call-screen" id="endCallScreen">
+  <div class="end-icon"><i class="fas fa-phone-slash"></i></div>
+  <div class="end-title">انتهت المكالمة</div>
+  <div class="end-duration" id="endDuration">المدة: 0:00</div>
+  <div class="end-stats">
+    <div class="end-stat"><div class="end-stat-val" id="endMessages">0</div><div class="end-stat-label">ترجمة</div></div>
+    <div class="end-stat"><div class="end-stat-val" id="endLang">--</div><div class="end-stat-label">اللغات</div></div>
+  </div>
+  <div class="end-actions">
+    <button class="end-btn new" onclick="newCall()"><i class="fas fa-phone"></i> مكالمة جديدة</button>
+    <button class="end-btn home" onclick="window.location.href='index.html'"><i class="fas fa-house"></i> الرئيسية</button>
+  </div>
+</div>
 <script>
-var SERVER_URL = 'https://translationcall-server.onrender.com';
+var SERVER_URL = 'YOUR_SERVER_URL';
 
 var langs = {
   ar:{name:'العربية',flag:'🇸🇦',voice:'ar-SA'},
@@ -877,5 +1283,7 @@ window.onload=function(){
   initSocket();
 };
 </script>
+</body>
+</html>
 </body>
 </html>
