@@ -656,6 +656,15 @@ function verifyGate(){
 }
 
 function checkAccess(){
+  // إذا كان رابط دعوة - لا يحتاج كود
+  var params = new URLSearchParams(window.location.search);
+  if(params.get('join')){
+    document.getElementById('gate').style.display='none';
+    initPreCall();
+    return;
+  }
+
+  // إذا دخل سابقاً
   if(localStorage.getItem('tcAccess')==='ok'){
     document.getElementById('gate').style.display='none';
     initPreCall();
